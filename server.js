@@ -3,15 +3,16 @@
 require("dotenv").config();
 
 const Fastify = require("fastify");
+const app = Fastify();
 
-const app = Fastify({ logger: process.env.LOG === 'true' });
-
-const appService = require("./server/fasfity.config.js");
+const appService = require("./server/app.js");
 app.register(appService);
 
 app.listen(process.env.PORT, (err) => {
-  if (err) {
-    app.log.error(err);
-    process.exit(1);
-  }
+  if (!err) return console.log("\x1b[32m%s\x1b[0m", `√`, "Server is up");
+
+  app.log.error(err);
+  process.exit(1);
 });
+
+process.on("unhandledRejection", (error) => console.error(error));

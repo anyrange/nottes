@@ -4,11 +4,10 @@ export const state = () => ({
 
 export const actions = {
   async nuxtServerInit({ commit, dispatch }) {
-    await dispatch("checkAuth");
+    // await dispatch("checkAuth");
   },
   async checkAuth({ commit }) {
-    console.log('ABOBA')
-    const isAuth = await this.$axios.$get("/api/auth/check");
+    const isAuth = (await this.$axios.$get("/api/auth/me")) || false;
     commit("setAuth", isAuth);
   },
 };
