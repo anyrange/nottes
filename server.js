@@ -11,7 +11,7 @@ app.register(appService)
 app.listen(process.env.PORT, '0.0.0.0', (err) => {
   if (!err) return console.log('\x1B[32m%s\x1B[0m', `√`, 'Server is up')
 
-  app.log.error(err)
+  console.error(err)
   process.exit(1)
 })
 
