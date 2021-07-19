@@ -1,7 +1,6 @@
 <template>
   <main>
-    <h1>nottes</h1>
-    <p>Hello World!</p>
+    <h1 class="h-title">New Paste</h1>
   </main>
 </template>
 

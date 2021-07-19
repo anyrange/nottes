@@ -1,18 +1,21 @@
 <template>
   <main>
-    <h1>Authentication</h1>
-    <div class="form">
-      <div class="form-element">
-        <label for="user">Username</label>
-        <input id="user" v-model="user" type="text" />
-      </div>
-      <div class="form-element">
-        <label for="password">Password</label>
-        <input id="password" v-model="password" type="password" />
-      </div>
-      <button @click="login">Login</button>
-      <p v-if="loginError">{{ loginError }}</p>
+    <h1 class="h-title">Authentication</h1>
+    <form class="flex flex-col gap-3 mt-4" @submit.prevent="submit()">
+      <base-input v-model="user.username" label="Username" />
+      <base-input v-model="user.password" label="Password" />
+      <base-button type="submit" w-full color="primary" label="Login" />
+    </form>
+    <div class="mt-4">
+      <h2>Default data</h2>
+      <pre>
+user {
+  username: string1,
+  password: stringst
+}
+      </pre>
     </div>
+    <p v-if="error" class="mt-2 bg-red-200 p-3 rounded-sm">{{ error }}</p>
   </main>
 </template>
 
@@ -20,9 +23,11 @@
 export default {
   data() {
     return {
-      user: '',
-      password: '',
-      loginError: '',
+      user: {
+        username: '',
+        password: '',
+      },
+      error: '',
     }
   },
   head() {
@@ -42,16 +47,12 @@ export default {
     }
   },
   methods: {
-    async login() {
+    async submit() {
       try {
-        await this.$axios.post('/api/auth/login', {
-          user: this.user,
-          password: this.password,
-        })
-        await this.$store.dispatch('checkAuth')
+        await this.$store.dispatch('login', this.user)
         this.$router.push('/')
-      } catch (err) {
-        this.loginError = err.response.data.message
+      } catch (error) {
+        this.error = error.response.data.message
       }
     },
   },

@@ -1,7 +1,12 @@
 <template>
-  <div class="mb-4 dark:bg-gray-900">
+  <div>
     <navbar />
-    <nuxt />
+    <div class="container mt-4">
+      <div class="flex justify-between">
+        <nuxt />
+        <sidebar />
+      </div>
+    </div>
   </div>
 </template>
 
