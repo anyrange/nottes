@@ -21,6 +21,7 @@ module.exports = async function (fastify) {
             },
           },
         },
+        tags: ['auth'],
       },
     },
     async (request, reply) => {

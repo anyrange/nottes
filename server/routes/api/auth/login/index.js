@@ -9,6 +9,7 @@ module.exports = async function (fastify) {
       schema: {
         body: fastify.getSchema('user'),
         response: { X00: fastify.getSchema('message') },
+        tags: ['auth'],
       },
     },
     async (request, reply) => {
