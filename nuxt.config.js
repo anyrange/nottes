@@ -28,7 +28,7 @@ export default {
   buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/color-mode', '@nuxtjs/tailwindcss'],
   modules: ['@nuxtjs/axios', '@nuxtjs/sitemap'],
   axios: {
-    baseURL: `${process.env.BASE_URL}api`,
+    baseURL: `${process.env.BASE_URL}/api`,
   },
   tailwindcss: {
     exposeConfig: true,
