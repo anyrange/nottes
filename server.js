@@ -9,7 +9,7 @@ const appService = require('./server/app.js')
 app.register(appService)
 
 app.listen(process.env.PORT, '0.0.0.0', (err) => {
-  if (!err) return console.log('\x1B[32m%s\x1B[0m', '√', `Server is up and available on ${process.env.BASE_URL}`)
+  if (!err) return console.log('\x1B[32m%s\x1B[0m', '√', `App is available on ${process.env.BASE_URL}`)
 
   console.error(err)
   process.exit(1)
