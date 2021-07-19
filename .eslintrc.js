@@ -13,6 +13,14 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'require-await': 'off',
   },
+  overrides: [
+    {
+      files: ['server/**', 'server.js'],
+      rules: {
+        'require-await': 'off',
+        'no-console': 'off',
+      },
+    },
+  ],
 }

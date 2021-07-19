@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-4 dark:bg-gray-900">
     <navbar />
     <nuxt />
   </div>
@@ -9,9 +9,7 @@
 export default {
   head() {
     return {
-      link: [
-        { rel: 'canonical', href: `${process.env.baseUrl}${this.$route.path}` },
-      ],
+      link: [{ rel: 'canonical', href: `${process.env.baseUrl}${this.$route.path}` }],
       meta: [
         {
           hid: 'og:url',

@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development node server.js ",
+    "dev": "cross-env NODE_ENV=development node server.js",
     "dev:server": "cross-env NODE_ENV=development DEVELOPMENT=server nodemon node --trace-warnings server.js --watch server",
     "build": "nuxt build",
-    "start": "cross-env NODE_ENV=production node server.js"
+    "prestart": "npm run build",
+    "start": "cross-env NODE_ENV=production node server.js",
+    "lint": "eslint --ext .js,.vue .",
+    "lint:prod": "cross-env NODE_ENV=production npm run lint",
+    "lint-fix": "eslint --ext .js,.vue . --fix"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/sitemap": "^2.4.0",
     "bcrypt": "^5.0.1",
     "core-js": "^3.15.1",
     "dotenv": "^9.0.2",
@@ -26,6 +31,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",
+    "@nuxtjs/color-mode": "^2.0.10",
     "@nuxtjs/eslint-config": "^6.0.1",
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/tailwindcss": "^4.2.0",
