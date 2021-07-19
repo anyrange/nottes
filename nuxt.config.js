@@ -19,7 +19,7 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   css: ['@/assets/css/main.css'],
-  plugins: [],
+  plugins: ['~/plugins/axios'],
   components: true,
   telemetry: false,
   router: {
@@ -28,7 +28,7 @@ export default {
   buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/color-mode', '@nuxtjs/tailwindcss'],
   modules: ['@nuxtjs/axios', '@nuxtjs/sitemap'],
   axios: {
-    baseURL: process.env.BASE_URL,
+    baseURL: `${process.env.BASE_URL}api`,
   },
   tailwindcss: {
     exposeConfig: true,
