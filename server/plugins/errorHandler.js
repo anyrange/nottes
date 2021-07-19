@@ -1,8 +1,10 @@
+'use strict'
+
 const fp = require('fastify-plugin')
 
 const plugin = fp(async function plugin(fastify) {
   fastify.setErrorHandler((err, req, reply) => {
-    const { validation, code, message, name } = err
+    const { validation, code, message } = err
 
     if (validation) {
       const { statusCode, message } = validate(err)

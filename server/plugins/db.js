@@ -14,8 +14,11 @@ module.exports = fp(async function (fastify) {
   const db = mongoose.connection
   db.on('error', console.error.bind(console, 'connection error:'))
   db.once('open', function () {
-    console.log('\x1b[32m%s\x1b[0m', `√`, 'Database connected')
+    console.log('\x1B[32m%s\x1B[0m', `√`, 'Database connected')
   })
 
-  fastify.decorate('db', { User: require('../models/User.js') })
+  fastify.decorate('db', {
+    User: require('../models/User.js'),
+    Token: require('../models/Token.js'),
+  })
 })

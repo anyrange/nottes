@@ -10,6 +10,6 @@ module.exports = fp(async function (fastify) {
       uiConfig: { deepLinking: true, displayRequestDuration: true },
       exposeRoute: true,
     })
-    console.log('\x1b[36m%s\x1b[0m', `i`, `Docs: ${process.env.BASE_URL}docs`)
+    console.log('\x1B[36m%s\x1B[0m', `i`, `Docs: ${process.env.BASE_URL}docs`)
   }
 })

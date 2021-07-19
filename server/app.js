@@ -9,8 +9,6 @@ module.exports = async function (fastify) {
     credentials: true,
   })
 
-  fastify.register(require('fastify-jwt'), { secret: process.env.SECRET })
-
   fastify.register(AutoLoad, { dir: path.join(__dirname, 'plugins') })
   fastify.register(AutoLoad, { dir: path.join(__dirname, 'schemas') })
   fastify.register(AutoLoad, {

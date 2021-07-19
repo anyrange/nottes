@@ -20,10 +20,12 @@ module.exports = async function (fastify) {
       const isCorrect = await bcrypt.compare(password, user.password)
       if (!isCorrect) return reply.code(400).send({ message: 'Wrong password', statusCode: 400 })
 
-      const token = fastify.jwt.sign({ _id: user._id })
+      const { accessToken, refreshToken } = await fastify.generateTokens(user._id)
 
-      reply.setCookie('session', token, fastify.cookieOptions)
-      reply.send({ message: 'Success', statusCode: 200 })
+      reply.setCookie('accessToken', accessToken, fastify.cookieOptions)
+      reply.setCookie('refreshToken', refreshToken, fastify.cookieOptions)
+
+      reply.send({ message: 'OK', statusCode: 200 })
     }
   )
 }
