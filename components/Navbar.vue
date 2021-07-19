@@ -1,11 +1,14 @@
 <template>
-  <header>
-    <div>nottes</div>
+  <header class="flex flex-row">
+    <div class="text-2xl">nottes</div>
     <nav>
       <nuxt-link to="/">Home</nuxt-link>
-      <nuxt-link to="/login" v-if="!isAuth">Login</nuxt-link>
-      {{ isAuth }}
-      <button @click="logout" v-if="isAuth">Logout</button>
+      <nuxt-link v-if="!isAuth" to="/login">Login</nuxt-link>
+      <div>
+        isAuth =
+        {{ isAuth }}
+      </div>
+      <button v-if="isAuth" @click="logout">Logout</button>
     </nav>
   </header>
 </template>
@@ -14,19 +17,19 @@
 export default {
   computed: {
     isAuth() {
-      return this.$store.state.isAuth;
+      return this.$store.state.isAuth
     },
   },
   methods: {
     async logout() {
       try {
-        await this.$axios.delete("/api/auth/logout");
-        await this.$store.dispatch("checkAuth");
-        this.$router.push("/");
+        await this.$axios.delete('/api/auth/logout')
+        await this.$store.dispatch('checkAuth')
+        this.$router.push('/')
       } catch (err) {
-        console.log(err.response.data.message);
+        console.log(err.response.data.message)
       }
     },
   },
-};
+}
 </script>

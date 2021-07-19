@@ -4,11 +4,11 @@
     <div class="form">
       <div class="form-element">
         <label for="user">Username</label>
-        <input type="text" v-model="user" id="user" />
+        <input id="user" v-model="user" type="text" />
       </div>
       <div class="form-element">
         <label for="password">Password</label>
-        <input type="password" v-model="password" id="password" />
+        <input id="password" v-model="password" type="password" />
       </div>
       <button @click="login">Login</button>
       <p v-if="loginError">{{ loginError }}</p>
@@ -18,38 +18,42 @@
 
 <script>
 export default {
-  head() {
-    let title = "Login";
-    let description = "Login page";
-    return {
-      title: title,
-      meta: [
-        { hid: "description", name: "description", content: description },
-        { hid: "og:title", property: "og:title", content: title },
-        { hid: "og:description", property: "og:description", content: description },
-      ],
-    };
-  },
   data() {
     return {
-      user: "",
-      password: "",
-      loginError: "",
-    };
+      user: '',
+      password: '',
+      loginError: '',
+    }
+  },
+  head() {
+    const title = 'Login'
+    const description = 'Login page'
+    return {
+      title,
+      meta: [
+        { hid: 'description', name: 'description', content: description },
+        { hid: 'og:title', property: 'og:title', content: title },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: description,
+        },
+      ],
+    }
   },
   methods: {
     async login() {
       try {
-        await this.$axios.post("/api/auth/login", {
+        await this.$axios.post('/api/auth/login', {
           user: this.user,
           password: this.password,
-        });
-        await this.$store.dispatch("checkAuth");
-        this.$router.push("/");
+        })
+        await this.$store.dispatch('checkAuth')
+        this.$router.push('/')
       } catch (err) {
-        this.loginError = err.response.data.message;
+        this.loginError = err.response.data.message
       }
     },
   },
-};
+}
 </script>

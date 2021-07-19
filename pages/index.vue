@@ -8,17 +8,21 @@
 <script>
 export default {
   head() {
-    let title = "nottes";
-    let description = "nottes-description";
+    const title = 'nottes'
+    const description = 'nottes-description'
 
     return {
-      title: title,
+      title,
       meta: [
-        { hid: "description", name: "description", content: description },
-        { hid: "og:title", property: "og:title", content: title },
-        { hid: "og:description", property: "og:description", content: description },
+        { hid: 'description', name: 'description', content: description },
+        { hid: 'og:title', property: 'og:title', content: title },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: description,
+        },
       ],
-    };
+    }
   },
-};
+}
 </script>

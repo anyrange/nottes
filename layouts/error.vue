@@ -7,7 +7,12 @@
 
 <script>
 export default {
-  props: ["error"],
-  layout: "default",
-};
+  layout: 'default',
+  props: {
+    error: {
+      type: Object,
+      required: true,
+    },
+  },
+}
 </script>
