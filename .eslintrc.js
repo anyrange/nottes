@@ -11,8 +11,8 @@ module.exports = {
   extends: ['@nuxtjs', 'plugin:nuxt/recommended', 'prettier'],
   plugins: [],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 2 : 0,
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'require-await': 'off',
   },
 }
