@@ -1,6 +1,9 @@
 <template>
-  <main>
-    <h1>Error {{ error.statusCode }}</h1>
+  <main class="h-main">
+    <div>
+      <h1 class="h-title">Error {{ error.statusCode }}</h1>
+      <h2>{{ error.message }}</h2>
+    </div>
     <nuxt-link to="/">Go to main page</nuxt-link>
   </main>
 </template>

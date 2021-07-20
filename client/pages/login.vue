@@ -1,21 +1,14 @@
 <template>
-  <main>
-    <h1 class="h-title">Authentication</h1>
-    <form class="flex flex-col gap-3 mt-4" @submit.prevent="submit()">
-      <base-input v-model="user.username" label="Username" />
-      <base-input v-model="user.password" label="Password" />
-      <base-button type="submit" w-full color="primary" label="Login" />
+  <main class="h-main">
+    <h1 class="h-title">Login</h1>
+    <form class="flex flex-col gap-3" @submit.prevent="submit()">
+      <base-input v-model="user.username" label="Username" placeholder="Username" />
+      <base-input v-model="user.password" label="Password" type="password" placeholder="Password" />
+      <base-button type="submit" w-full color="primary" label="Log In" />
+      <div v-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <span class="block sm:inline">{{ error }}</span>
+      </div>
     </form>
-    <div class="mt-4">
-      <h2>Default data</h2>
-      <pre>
-user {
-  username: string1,
-  password: stringst
-}
-      </pre>
-    </div>
-    <p v-if="error" class="mt-2 bg-red-200 p-3 rounded-sm">{{ error }}</p>
   </main>
 </template>
 
@@ -31,7 +24,7 @@ export default {
     }
   },
   head() {
-    const title = 'Login'
+    const title = 'Login - nottes'
     const description = 'Login page'
     return {
       title,

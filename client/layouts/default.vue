@@ -1,12 +1,17 @@
 <template>
-  <div>
-    <navbar />
-    <div class="container mt-4">
-      <div class="flex justify-between">
-        <nuxt />
-        <sidebar />
+  <div class="flex flex-col h-screen justify-between">
+    <the-header />
+    <div class="h-container mb-auto">
+      <div class="flex flex-col sm:flex-row mt-4 gap-4 justify-between">
+        <div class="sm:w-3/4 w-full">
+          <nuxt />
+        </div>
+        <div class="w-auto">
+          <the-sidebar />
+        </div>
       </div>
     </div>
+    <the-footer />
   </div>
 </template>
 
