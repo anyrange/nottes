@@ -24,6 +24,13 @@ export const actions = {
       return Promise.reject(err)
     }
   },
+  async signup({ dispatch }, credentials) {
+    try {
+      await this.$axios.post('/auth/signup', credentials)
+    } catch (err) {
+      return Promise.reject(err)
+    }
+  },
   async logout({ dispatch }) {
     try {
       await this.$axios.delete('/auth/logout')
