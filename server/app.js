@@ -21,7 +21,7 @@ module.exports = async function (fastify) {
       exposeRoute: true,
       hideUntagged: true,
     })
-    console.log('\x1B[36m%s\x1B[0m', `i`, `Docs: ${process.env.BASE_URL}docs`)
+    console.log('\x1B[36m%s\x1B[0m', `i`, `Docs: ${process.env.BASE_URL}/docs`)
   }
 
   fastify.register(AutoLoad, { dir: path.join(__dirname, 'plugins') })
