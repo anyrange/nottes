@@ -5,7 +5,7 @@ require('dotenv').config()
 const Fastify = require('fastify')
 const app = Fastify()
 
-const appService = require('./server/app.js')
+const appService = require('./app.js')
 app.register(appService)
 
 app.listen(process.env.PORT, '0.0.0.0', (err) => {
