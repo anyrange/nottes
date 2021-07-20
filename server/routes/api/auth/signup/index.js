@@ -20,8 +20,11 @@ module.exports = async function (fastify) {
 
       const { _id } = await fastify.db.User.create({ username, password: hashedPassword }).catch((err) => {
         if (err.code === 11000) {
-          reply.code(400).send({ statusCode: 400, message: `Username ${err.keyValue.username} is already taken` })
+          return reply
+            .code(400)
+            .send({ statusCode: 400, message: `Username ${err.keyValue.username} is already taken` })
         }
+        console.log(err)
       })
 
       const { accessToken, refreshToken } = await fastify.generateTokens(_id)
@@ -29,7 +32,7 @@ module.exports = async function (fastify) {
       reply.setCookie('accessToken', accessToken, fastify.cookieOptions)
       reply.setCookie('refreshToken', refreshToken, fastify.cookieOptions)
 
-      reply.send({ message: 'OK', statusCode: 200 })
+      reply.send({ message: 'OK', statusCode: 201 })
     }
   )
 }
