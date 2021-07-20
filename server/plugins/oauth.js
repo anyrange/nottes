@@ -14,7 +14,7 @@ module.exports = fp(async function (fastify) {
       auth: oauthPlugin.GOOGLE_CONFIGURATION,
     },
     startRedirectPath: '/api/oauth/google',
-    callbackUri: `${process.env.BASE_URL}api/oauth/callback`,
+    callbackUri: `${process.env.BASE_URL}/api/oauth/callback`,
     scope: ['profile', 'email'],
     schema: { tags: ['oauth'] },
   })

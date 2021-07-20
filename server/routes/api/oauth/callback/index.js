@@ -20,7 +20,7 @@ module.exports = async function (fastify) {
     reply.setCookie('accessToken', accessToken, fastify.cookieOptions)
     reply.setCookie('refreshToken', refreshToken, fastify.cookieOptions)
 
-    if (!user.username) return reply.redirect(`${process.env.BASE_URL}profile`)
+    if (!user.username) return reply.redirect(`${process.env.BASE_URL}/profile`)
     reply.redirect(`${process.env.BASE_URL}`)
   })
 }
