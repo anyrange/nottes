@@ -16,6 +16,8 @@ module.exports = async function (fastify) {
       const res = await fastify.db.Token.deleteOne({ user: _id, token: request.cookies.refreshToken })
       if (res.deletedCount === 0) {
         await fastify.db.Token.deleteMany({ user: _id })
+        reply.clearCookie('accessToken', fastify.cookieOptions)
+        reply.clearCookie('refreshToken', fastify.cookieOptions)
         return reply.code(401).send({ message: 'Invalid token', statusCode: 401 })
       }
 

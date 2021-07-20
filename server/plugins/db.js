@@ -19,6 +19,7 @@ module.exports = fp(async function (fastify) {
 
   fastify.decorate('db', {
     User: require('../models/User.js'),
+    Paste: require('../models/Paste.js'),
     Token: require('../models/Token.js'),
   })
 })

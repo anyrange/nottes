@@ -18,6 +18,7 @@
     "@nuxtjs/sitemap": "^2.4.0",
     "bcrypt": "^5.0.1",
     "core-js": "^3.15.1",
+    "cryptr": "^6.0.2",
     "dotenv": "^9.0.2",
     "fastify": "^3.19.1",
     "fastify-autoload": "^3.8.0",
@@ -30,7 +31,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.3",
     "node-fetch": "^2.6.1",
-    "nuxt": "^2.15.7"
+    "nuxt": "^2.15.7",
+    "short-unique-id": "^4.3.3"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",

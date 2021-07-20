@@ -8,8 +8,8 @@ module.exports = fp(async function (fastify) {
     name: 'googleOAuth2',
     credentials: {
       client: {
-        id: process.env.CLIENT_ID,
-        secret: process.env.CLIENT_SECRET,
+        id: process.env.GOOGLE_CLIENT_ID,
+        secret: process.env.GOOGLE_CLIENT_SECRET,
       },
       auth: oauthPlugin.GOOGLE_CONFIGURATION,
     },
