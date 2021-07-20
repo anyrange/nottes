@@ -9,3 +9,9 @@ body {
 .h-title {
   @apply text-2xl font-normal;
 }
+.h-main {
+  @apply flex flex-col gap-3;
+}
+.h-container {
+  @apply container p-2 sm:p-0;
+}

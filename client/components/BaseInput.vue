@@ -1,27 +1,9 @@
 <template>
-  <div class="flex flex-col gap-2">
-    <label v-if="label" :for="label" class="dark:text-gray-300 text-lg font-normal">
+  <div class="base-input">
+    <label v-if="label.length" :for="label" class="label">
       {{ label }}
     </label>
-    <input
-      v-bind="$attrs"
-      :id="label"
-      :value="value"
-      class="
-        w-full
-        px-4
-        py-2
-        border
-        rounded-sm
-        dark:border-gray-600-spotify
-        dark:bg-gray-700-spotify
-        placeholder-gray-400
-        focus:ring-2 focus:ring-opacity-50
-        focus:outline-none
-        disabled:opacity-40
-      "
-      @input="onInput"
-    />
+    <input v-bind="$attrs" :value="value" class="input" @input="onInput" />
   </div>
 </template>
 
@@ -35,7 +17,8 @@ export default {
     },
     label: {
       type: String,
-      required: true,
+      required: false,
+      default: '',
     },
   },
   methods: {
@@ -45,3 +28,23 @@ export default {
   },
 }
 </script>
+
+<style lang="postcss">
+.base-input {
+  @apply flex flex-col gap-2;
+}
+.base-input .label {
+  @apply dark:text-gray-300 text-gray-600 text-base font-semibold;
+}
+.base-input .input {
+  @apply w-full h-10 px-3 base-input-default;
+}
+.base-input-default {
+  @apply border rounded;
+  @apply placeholder-black dark:placeholder-white placeholder-opacity-20 dark:placeholder-opacity-20;
+  @apply border-gray-300 dark:border-gray-600-spotify;
+  @apply bg-white dark:bg-gray-700-spotify;
+  @apply hover:border-black dark:hover:border-white hover:border-opacity-30 dark:hover:border-opacity-10;
+  @apply focus:ring-2 focus:outline-none focus:border-transparent;
+}
+</style>

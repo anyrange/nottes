@@ -1,8 +1,5 @@
 <template>
   <div class="base-button-container">
-    <span v-if="title" class="base-button-title">
-      {{ title }}
-    </span>
     <button
       class="base-button"
       :type="type"
@@ -65,11 +62,6 @@ export default {
       required: false,
       default: '',
     },
-    title: {
-      type: String,
-      required: false,
-      default: '',
-    },
     loading: {
       type: Boolean,
       required: false,
@@ -122,19 +114,19 @@ export default {
 
 <style lang="postcss">
 .base-button-container {
-  @apply flex gap-2 items-center;
+  @apply h-10;
 }
 .base-button {
-  @apply flex rounded-sm duration-200 transition-colors items-center justify-center uppercase text-center select-none text-sm font-medium focus:outline-none focus:ring-2;
+  @apply flex rounded duration-200 transition-colors items-center justify-center text-center select-none text-base font-normal focus:outline-none focus:ring-2;
 }
 .base-button-title {
   @apply select-none;
 }
 .base-button-round {
-  @apply h-9 w-9 rounded-full;
+  @apply h-full w-10 rounded-full;
 }
 .base-button-default {
-  @apply h-9 px-4;
+  @apply h-full px-4;
 }
 .base-button-disabled {
   @apply opacity-20;
@@ -146,7 +138,7 @@ export default {
   @apply rounded-full;
 }
 .base-button-flat {
-  @apply hover:bg-black hover:bg-opacity-10;
+  @apply hover:bg-black hover:bg-opacity-10 dark:hover:bg-white dark:hover:bg-opacity-10 border dark:border-white dark:border-opacity-10;
 }
 .base-button-primary {
   @apply focus:ring-blue-200 dark:focus:ring-blue-400 text-white bg-blue-500 hover:bg-blue-600;
