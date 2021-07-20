@@ -17,6 +17,8 @@ module.exports = fp(async function (fastify) {
   fastify.decorate('verifyToken', verify)
 
   fastify.decorate('authenticate', async function (request, reply) {
+    if (!request.cookies.accessToken) return reply.code(401).send({ message: 'Unauthorized', statusCode: 401 })
+
     request._id = await verify(request.cookies.accessToken, process.env.ACCESS_TOKEN_SECRET).catch((err) => {
       if (err.name === 'TokenExpiredError') return reply.code(403).send({ message: 'Token expired', statusCode: 403 })
       reply.code(401).send({ message: 'Invalid token', statusCode: 401 })
