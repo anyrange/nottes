@@ -19,17 +19,28 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  css: ['@/assets/css/main.css'],
-  plugins: ['~/plugins/axios'],
+  css: ['@/assets/css/main.css', '@/assets/css/tooltip.css'],
+  plugins: ['~/plugins/axios.js', '~/plugins/dates.js', '~/plugins/directives.js', '~/plugins/vue-unique-id.js'],
   components: true,
   telemetry: false,
+  loading: {
+    color: '#3b82f6',
+  },
   router: {
     prefetchLinks: false,
   },
-  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/color-mode', '@nuxtjs/tailwindcss'],
+  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/color-mode', '@nuxtjs/fontawesome', '@nuxtjs/tailwindcss'],
   modules: ['@nuxtjs/axios', '@nuxtjs/sitemap'],
   axios: {
     baseURL: `${process.env.BASE_URL}/api`,
+  },
+  fontawesome: {
+    component: 'fa',
+    icons: {
+      solid: true,
+      regular: true,
+      brands: true,
+    },
   },
   tailwindcss: {
     exposeConfig: true,
