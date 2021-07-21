@@ -14,6 +14,7 @@
 
 <script>
 export default {
+  middleware: ['auth-forbidden'],
   data() {
     return {
       user: {
