@@ -1,19 +1,11 @@
 <template>
-  <header class="flex h-20 border-b border-gray-200 dark:border-gray-700-spotify">
+  <header class="flex py-3 lg:py-6 border-b default-border">
     <div class="flex items-center justify-between h-container">
       <nuxt-link class="text-2xl font-normal" to="/">nottes</nuxt-link>
-      <nav class="flex gap-2 items-center">
-        <base-select
-          v-model="$colorMode.preference"
-          :options="[
-            { label: 'System', value: 'system' },
-            { label: 'Light', value: 'light' },
-            { label: 'Dark', value: 'dark' },
-          ]"
-        />
-        <template v-if="!user.isLoggedIn">
-          <base-button color="primary" @click="$router.push('/login')"> Login </base-button>
-          <base-button color="flat" @click="$router.push('/signup')"> Sing up </base-button>
+      <nav class="sm:flex gap-2 items-center hidden">
+        <template v-if="!user.authenticated">
+          <base-button color="flat" aria-label="Sign up" @click="$router.push('/signup')"> Sign up </base-button>
+          <base-button color="primary" aria-label="Login" @click="$router.push('/login')"> Login </base-button>
         </template>
         <template v-else>
           <base-button color="flat" @click="logout"> Logout </base-button>

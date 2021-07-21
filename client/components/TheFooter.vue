@@ -1,6 +1,9 @@
 <template>
-  <footer class="border-t border-b border-gray-200 dark:border-gray-700-spotify">
-    <div class="h-container h-20 flex items-center">nottes {{ currentYear }}</div>
+  <footer class="border-t default-border">
+    <div class="h-container h-16 flex gap-3 justify-between items-center">
+      <span>nottes@{{ currentYear }}</span>
+      <theme-toggler />
+    </div>
   </footer>
 </template>
 

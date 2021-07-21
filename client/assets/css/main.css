@@ -7,11 +7,25 @@ body {
 }
 
 .h-title {
-  @apply text-2xl font-normal;
+  @apply text-2xl font-normal text-gray-550-spotify dark:text-gray-200;
 }
 .h-main {
-  @apply flex flex-col gap-3;
+  @apply flex flex-col gap-6;
+}
+.link {
+  @apply text-base text-blue-500 hover:underline;
 }
 .h-container {
-  @apply container p-2 sm:p-0;
+  @apply container lg:px-22 md:px-16 px-2;
+}
+.default-border {
+  @apply border-gray-200 dark:border-gray-700-spotify;
+}
+.custom-element {
+  @apply border rounded;
+  @apply placeholder-black dark:placeholder-white placeholder-opacity-20 dark:placeholder-opacity-20;
+  @apply border-gray-300 dark:border-gray-600-spotify;
+  @apply bg-white dark:bg-gray-700-spotify;
+  @apply hover:border-black dark:hover:border-white hover:border-opacity-30 dark:hover:border-opacity-10;
+  @apply focus:ring-2 focus:outline-none focus:border-transparent;
 }

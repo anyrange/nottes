@@ -1,8 +1,8 @@
 <template>
   <main class="h-main">
     <h1 class="h-title">New Paste</h1>
-    <div class="flex gap-3 items-center">
-      <base-input id="paste-title" v-model="paste.title" placeholder="Paste Title" />
+    <div class="flex flex-row gap-3">
+      <base-input v-model="paste.title" placeholder="Paste Title" />
       <base-select
         v-model="paste.code"
         :options="[
@@ -10,10 +10,10 @@
           { label: 'C++', value: 'cpp' },
         ]"
       />
-      <base-button color="primary" label="Paste" />
+      <base-button aria-label="create new paste" color="primary" label="Paste" />
     </div>
     <base-textarea v-model="paste.content" placeholder="hello world" name="paste" cols="30" rows="15" />
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-3 lg:w-1/4 md:w-9/12 w-full">
       <div class="flex gap-3">
         <base-select
           v-model="paste.expiration"
@@ -33,7 +33,7 @@
           label="Paste Visibility"
         />
       </div>
-      <base-input id="paste-password" v-model="paste.password" placeholder="Password (Optional)" />
+      <base-input v-model="paste.password" placeholder="Password (Optional)" />
     </div>
   </main>
 </template>

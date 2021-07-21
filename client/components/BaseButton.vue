@@ -2,6 +2,7 @@
   <div class="base-button-container">
     <button
       class="base-button"
+      v-bind="$attrs"
       :type="type"
       :disabled="disabled || loading"
       :class="buttonClass"
@@ -117,7 +118,8 @@ export default {
   @apply h-10;
 }
 .base-button {
-  @apply flex rounded duration-200 transition-colors items-center justify-center text-center select-none text-base font-normal focus:outline-none focus:ring-2;
+  @apply flex rounded items-center justify-center text-center select-none text-base font-normal;
+  @apply focus:outline-none focus:ring-2;
 }
 .base-button-title {
   @apply select-none;
@@ -138,7 +140,9 @@ export default {
   @apply rounded-full;
 }
 .base-button-flat {
-  @apply hover:bg-black hover:bg-opacity-10 dark:hover:bg-white dark:hover:bg-opacity-10 border dark:border-white dark:border-opacity-10;
+  @apply hover:border-black dark:hover:border-white hover:border-opacity-30 dark:hover:border-opacity-10;
+  @apply border border-gray-300 dark:border-gray-600-spotify;
+  @apply bg-white dark:bg-gray-700-spotify;
 }
 .base-button-primary {
   @apply focus:ring-blue-200 dark:focus:ring-blue-400 text-white bg-blue-500 hover:bg-blue-600;
