@@ -7,7 +7,7 @@ module.exports = async function (fastify) {
     async (request, reply) => {
       reply.clearCookie('accessToken', fastify.cookieOptions)
       reply.clearCookie('refreshToken', fastify.cookieOptions)
-      reply.send({ message: 'OK', statusCode: 200 })
+      reply.send({ message: 'OK' })
       await fastify.db.Token.deleteOne({ token: request.cookies.refreshToken })
     }
   )

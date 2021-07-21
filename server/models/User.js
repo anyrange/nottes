@@ -11,11 +11,12 @@ const schema = new Schema({
     unique: true,
     default: () => `user_${uid()}`,
   },
+  email: { type: String, required: true, unique: true },
   password: { type: String },
   avatar: { type: String },
-  email: { type: String },
   oauth_uid: { type: String },
   platform: { type: String, default: 'Direct', required: true },
+  registered: { type: Date, default: Date.new },
 })
 
 module.exports = model('User', schema)

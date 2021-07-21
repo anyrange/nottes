@@ -10,6 +10,7 @@ module.exports = async function (fastify) {
             type: 'object',
             properties: {
               authenticated: { type: 'boolean' },
+              tokenExpired: { type: 'boolean' },
               statusCode: { type: 'number' },
             },
           },
@@ -19,7 +20,8 @@ module.exports = async function (fastify) {
       preValidation: [fastify.authenticate],
     },
     async (request, reply) => {
-      reply.send({ authenticated: request.isAuthenticated, statusCode: 200 })
+      const { isAuthenticated, tokenExpired } = request
+      reply.send({ authenticated: isAuthenticated, tokenExpired })
     }
   )
 }

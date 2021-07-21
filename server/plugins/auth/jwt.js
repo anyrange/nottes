@@ -7,13 +7,17 @@ const jwt = require('jsonwebtoken')
 module.exports = fp(async function (fastify) {
   fastify.decorateRequest('isAuthenticated', false)
   fastify.decorateRequest('_id', '')
+  fastify.decorateRequest('tokenExpired', false)
 
   const verify = async (token, secret) => {
     const verify = promisify(jwt.verify)
+
     const { _id } = await verify(token, secret).catch((e) => {
-      const message = e.name === 'TokenExpiredError' ? 'Token expired' : 'Invalid token'
+      const isExpired = e.name === 'TokenExpiredError'
+
+      const message = isExpired ? 'Token expired' : 'Invalid token'
       const err = new Error(message)
-      err.code = e.name === 'TokenExpiredError' ? 403 : 401
+      err.code = isExpired ? 403 : 401
       throw err
     })
     return _id
@@ -22,11 +26,21 @@ module.exports = fp(async function (fastify) {
   fastify.decorate('verifyToken', verify)
 
   fastify.decorate('authenticate', async function (request, reply) {
-    if (!request.cookies.accessToken) return reply.code(401).send({ message: 'Unauthorized', statusCode: 401 })
-
-    request._id = await verify(request.cookies.accessToken, process.env.ACCESS_TOKEN_SECRET)
-
+    if (!request.cookies.accessToken) return
     request.isAuthenticated = true
+
+    request._id = await verify(request.cookies.accessToken, process.env.ACCESS_TOKEN_SECRET).catch((e) => {
+      if (e.code === 403) {
+        request.tokenExpired = true
+        return ''
+      }
+      throw e
+    })
+  })
+
+  fastify.decorate('requireAuth', async function (request, reply) {
+    if (!request.isAuthenticated) return reply.code(401).send({ message: 'Unauthorized', statusCode: 401 })
+    if (request.tokenExpired) return reply.code(403).send({ message: 'Token expired', statusCode: 403 })
   })
 
   fastify.decorate('generateTokens', async (_id) => {

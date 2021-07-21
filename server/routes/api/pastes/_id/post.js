@@ -18,31 +18,29 @@ module.exports = async function (fastify) {
           properties: { password: { type: 'string' } },
         },
         response: {
-          200: fastify.getSchema('message'),
+          XXX: fastify.getSchema('message'),
         },
+        preValidation: [fastify.authenticate, fastify.requireAuth],
         tags: ['paste'],
       },
     },
     async (request, reply) => {
       const paste = await fastify.db.Paste.findOne({ id: request.params.id }, '-_id -views -date').lean()
-      if (!paste) return reply.code(404).send({ message: 'Paste not found', statusCode: 404 })
+      if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
-      if (!request.cookies.accessToken) return reply.code(403).send({ message: 'Forbidden', statusCode: 403 })
-      const requestorId = await fastify.verifyToken(request.cookies.accessToken, process.env.ACCESS_TOKEN_SECRET)
-      if (paste.visibility === 'private' && requestorId !== String(paste.user)) {
-        return reply.code(403).send({ message: 'Forbidden', statusCode: 403 })
+      if (paste.visibility === 'private' && request._id !== String(paste.user)) {
+        return reply.code(403).send({ message: 'Forbidden' })
       }
 
-      if (paste.password && !request.query.password)
-        return reply.code(403).send({ message: 'Password required', statusCode: 403 })
+      if (paste.password && !request.query.password) return reply.code(403).send({ message: 'Password required' })
       if (paste.password && !(await bcrypt.compare(request.query.password, paste.password)))
-        return reply.code(403).send({ message: 'Wrong password', statusCode: 403 })
+        return reply.code(403).send({ message: 'Wrong password' })
 
       const uid = new ShortUniqueId()
       paste.id = uid()
-      paste.user = requestorId
+      paste.user = request._id
       await fastify.db.Paste.create(paste)
-      reply.send({ message: 'OK', statusCode: 200 })
+      reply.code(201).send({ message: 'OK' })
     }
   )
 }

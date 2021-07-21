@@ -11,13 +11,12 @@ module.exports = async function (fastify) {
     ).then((res) => res.json())
 
     const user = await fastify.db.User.findOneAndUpdate(
-      { oauth_uid: id },
-      { email, avatar: picture, platform: 'Google' },
-      { new: true, upsert: true, projection: '_id username', setDefaultsOnInsert: true }
+      { email },
+      { oauth_uid: id, avatar: picture, platform: 'Google' },
+      { new: true, upsert: true, projection: '_id username verified', setDefaultsOnInsert: true }
     )
 
     const { accessToken, refreshToken } = await fastify.generateTokens(user._id)
-
     reply.setCookie('accessToken', accessToken, fastify.cookieOptions)
     reply.setCookie('refreshToken', refreshToken, fastify.cookieOptions)
 

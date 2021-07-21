@@ -7,32 +7,42 @@ module.exports = async function (fastify) {
     '',
     {
       schema: {
-        body: fastify.getSchema('user'),
+        body: {
+          type: 'object',
+          required: ['username', 'password', 'email'],
+          properties: {
+            username: { type: 'string', minLength: 3, maxLength: 30 },
+            password: { type: 'string', minLength: 8, maxLength: 20 },
+            email: { type: 'string' },
+          },
+        },
         response: { X00: fastify.getSchema('message') },
         tags: ['auth'],
       },
     },
     async (request, reply) => {
-      const { username, password } = request.body
+      const { username, password, email } = request.body
 
       const saltRounds = 10
       const hashedPassword = await bcrypt.hash(password, saltRounds)
 
-      const { _id } = await fastify.db.User.create({ username, password: hashedPassword }).catch((err) => {
-        if (err.code === 11000) {
-          return reply
-            .code(400)
-            .send({ statusCode: 400, message: `Username ${err.keyValue.username} is already taken` })
-        }
-        console.log(err)
-      })
+      const user = await fastify.db.User.findOne({ $or: [{ username }, { email }] })
 
+      if (user) {
+        return reply.code(400).send({
+          message: `${user.username === username ? `Username ${username}` : `Email ${email}`} already exist`,
+        })
+      }
+
+      const { _id } = await fastify.db.User.create({ username, password: hashedPassword, email })
+
+      await fastify.sendmail(email, _id)
       const { accessToken, refreshToken } = await fastify.generateTokens(_id)
 
       reply.setCookie('accessToken', accessToken, fastify.cookieOptions)
       reply.setCookie('refreshToken', refreshToken, fastify.cookieOptions)
 
-      reply.send({ message: 'OK', statusCode: 201 })
+      reply.code(201).send({ message: 'OK' })
     }
   )
 }

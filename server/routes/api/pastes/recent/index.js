@@ -5,11 +5,9 @@ module.exports = async function (fastify) {
     '',
     {
       schema: {
-        description: 'Archive',
         querystring: {
           type: 'object',
           properties: {
-            page: { type: 'number', minimum: 1 },
             range: { type: 'number', minimum: 3 },
           },
         },
@@ -26,15 +24,28 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const range = request.query.range || 10
-      const page = request.query.page - 1 || 0
+      const range = request.query.range || 12
 
-      const pastes = await fastify.db.Paste.find({ visibility: { $ne: 'private' } }, 'title date id code -_id')
+      const pastes = await fastify.db.Paste.find(
+        { visibility: { $nin: ['unlisted', 'private'] } },
+        'title user id date -_id'
+      )
         .sort('-date')
-        .skip(page * range)
         .limit(range)
 
-      reply.send({ pastes, statusCode: 200 })
+      const authors = await Promise.all(
+        pastes.map((paste) =>
+          paste.user
+            ? fastify.db.User.findOne({ _id: paste.user }, 'username avatar -_id').lean()
+            : { username: 'Guest', avatar: '' }
+        )
+      )
+
+      reply.send({
+        pastes: pastes.map((pasta, index) => {
+          return { title: pasta.title, date: pasta.date, id: pasta.id, author: authors[index] }
+        }),
+      })
     }
   )
 }

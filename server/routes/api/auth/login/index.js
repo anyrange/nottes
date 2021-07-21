@@ -7,29 +7,36 @@ module.exports = async function (fastify) {
     '',
     {
       schema: {
-        body: fastify.getSchema('user'),
-        response: { X00: fastify.getSchema('message') },
+        body: {
+          type: 'object',
+          properties: {
+            username: { type: 'string', minLength: 3, maxLength: 30 },
+            password: { type: 'string', minLength: 8, maxLength: 20 },
+          },
+          required: ['username', 'password'],
+        },
+        response: { XXX: fastify.getSchema('message') },
         tags: ['auth'],
       },
     },
     async (request, reply) => {
       const { username, password } = request.body
-      const user = await fastify.db.User.findOne({ username })
-      if (!user) return reply.code(404).send({ message: 'User not found', statusCode: 404 })
+
+      const user = await fastify.db.User.findOne({ $or: [{ username }, { email: username }] })
+      if (!user) return reply.code(404).send({ message: 'User not found' })
+
       if (!user.password)
-        return reply
-          .code(403)
-          .send({ message: `This account can only be accessed by ${user.platform}`, statusCode: 403 })
+        return reply.code(403).send({ message: `This account can only be accessed by ${user.platform}` })
 
       const isCorrect = await bcrypt.compare(password, user.password)
-      if (!isCorrect) return reply.code(400).send({ message: 'Wrong password', statusCode: 400 })
+      if (!isCorrect) return reply.code(400).send({ message: 'Wrong password' })
 
       const { accessToken, refreshToken } = await fastify.generateTokens(user._id)
 
       reply.setCookie('accessToken', accessToken, fastify.cookieOptions)
       reply.setCookie('refreshToken', refreshToken, fastify.cookieOptions)
 
-      reply.send({ message: 'OK', statusCode: 200 })
+      reply.send({ message: 'OK' })
     }
   )
 }

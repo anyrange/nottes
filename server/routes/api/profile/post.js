@@ -19,17 +19,15 @@ module.exports = async function (fastify) {
     async (request, reply) => {
       const res = await fastify.db.User.updateOne({ _id: request._id }, { username: request.body.username }).catch(
         (err) => {
-          if (err.code === 11000) {
-            return reply
-              .code(400)
-              .send({ statusCode: 400, message: `Username ${err.keyValue.username} is already taken` })
-          }
+          if (err.code === 11000)
+            return reply.code(400).send({ message: `Username ${err.keyValue.username} is already taken` })
+
           console.log(err)
         }
       )
 
-      if (res.nModified === 0) return reply.send({ message: 'Nothing changed', statusCode: 200 })
-      reply.send({ message: 'OK', statusCode: 200 })
+      if (res.nModified === 0) return reply.send({ message: 'Nothing changed' })
+      reply.send({ message: 'OK' })
     }
   )
 }

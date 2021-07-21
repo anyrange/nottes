@@ -28,7 +28,7 @@ module.exports = async function (fastify) {
       const { username } = request.query
       const res = await fastify.db.User.findOne({ username })
 
-      reply.send({ statusCode: 200, available: !res })
+      reply.send({ available: !res })
     }
   )
 }
