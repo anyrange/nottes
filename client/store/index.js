@@ -1,20 +1,23 @@
 export const state = () => ({
   user: {
-    isLoggedIn: false,
+    authenticated: false,
   },
 })
+
+export const mutations = {
+  SET_USER(state, response) {
+    state.user = response
+  },
+}
 
 export const actions = {
   async nuxtServerInit({ dispatch }) {
     await dispatch('checkAuth')
   },
   async checkAuth({ commit }) {
-    try {
-      const { authenticated } = await this.$axios.$get('/users/me')
-      commit('SET_USER', { isLoggedIn: authenticated })
-    } catch (err) {
-      commit('SET_USER', { isLoggedIn: false })
-    }
+    const { authenticated, tokenExpired } = await this.$axios.$get('/users/me')
+    if (tokenExpired) await this.$axios.$get('/auth/refreshToken')
+    commit('SET_USER', { authenticated })
   },
   async login({ dispatch }, credentials) {
     try {
@@ -27,6 +30,7 @@ export const actions = {
   async signup({ dispatch }, credentials) {
     try {
       await this.$axios.post('/auth/signup', credentials)
+      await dispatch('checkAuth')
     } catch (err) {
       return Promise.reject(err)
     }
@@ -38,14 +42,5 @@ export const actions = {
     } catch (err) {
       return Promise.reject(err)
     }
-  },
-}
-
-export const mutations = {
-  SET_USER(state, response) {
-    state.user = response
-  },
-  REMOVE_USER: (state) => {
-    state.user.isLoggedIn = false
   },
 }
