@@ -16,9 +16,9 @@ module.exports = async function (fastify) {
           properties: { password: { type: 'string' } },
         },
         response: { XXX: fastify.getSchema('message') },
-        preValidation: [fastify.authenticate, fastify.requireAuth],
         tags: ['paste'],
       },
+      preValidation: [fastify.authenticate, fastify.requireAuth],
     },
     async (request, reply) => {
       const paste = await fastify.db.Paste.findOne({ id: request.params.id }).lean()

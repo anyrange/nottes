@@ -18,11 +18,12 @@ module.exports = async function (fastify) {
           properties: { password: { type: 'string' } },
         },
         response: {
+          201: { type: 'object', properties: { id: { type: 'string' }, statusCode: { type: 'number' } } },
           XXX: fastify.getSchema('message'),
         },
-        preValidation: [fastify.authenticate, fastify.requireAuth],
         tags: ['paste'],
       },
+      preValidation: [fastify.authenticate, fastify.requireAuth],
     },
     async (request, reply) => {
       const paste = await fastify.db.Paste.findOne({ id: request.params.id }, '-_id -views -date').lean()
@@ -40,7 +41,7 @@ module.exports = async function (fastify) {
       paste.id = uid()
       paste.user = request._id
       await fastify.db.Paste.create(paste)
-      reply.code(201).send({ message: 'OK' })
+      reply.code(201).send({ id: paste.id })
     }
   )
 }

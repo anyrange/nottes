@@ -20,7 +20,7 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const user = await fastify.db.User.findOne({ _id: request._id }, 'avatar email username')
+      const user = await fastify.db.User.findById(request._id, 'avatar email username')
 
       reply.send({
         avatar: user.avatar || '',

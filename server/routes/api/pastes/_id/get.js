@@ -47,7 +47,7 @@ module.exports = async function (fastify) {
         return reply.code(403).send({ message: 'Wrong password' })
 
       const user = paste.user
-        ? await fastify.db.User.findOne({ _id: paste.user }, 'username avatar -_id').lean()
+        ? await fastify.db.User.findById(paste.user, 'username avatar -_id').lean()
         : { username: 'Guest', avatar: '' }
 
       reply.send({

@@ -14,7 +14,6 @@ const schema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String },
   avatar: { type: String },
-  oauth_uid: { type: String },
   platform: { type: String, default: 'Direct', required: true },
   registered: { type: Date, default: Date.new },
 })

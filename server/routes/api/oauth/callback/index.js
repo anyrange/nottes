@@ -6,13 +6,13 @@ module.exports = async function (fastify) {
   fastify.get('', { schema: { tags: ['oauth'] } }, async (request, reply) => {
     const token = await fastify.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(request)
 
-    const { id, email, picture } = await fetch(
+    const { email, picture } = await fetch(
       `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${token.access_token}`
     ).then((res) => res.json())
 
     const user = await fastify.db.User.findOneAndUpdate(
       { email },
-      { oauth_uid: id, avatar: picture, platform: 'Google' },
+      { avatar: picture, platform: 'Google' },
       { new: true, upsert: true, projection: '_id username verified', setDefaultsOnInsert: true }
     )
 

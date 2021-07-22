@@ -26,17 +26,14 @@ module.exports = async function (fastify) {
     async (request, reply) => {
       const range = request.query.range || 12
 
-      const pastes = await fastify.db.Paste.find(
-        { visibility: { $nin: ['unlisted', 'private'] } },
-        'title user id date -_id'
-      )
+      const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title user id date -_id')
         .sort('-date')
         .limit(range)
 
       const authors = await Promise.all(
         pastes.map((paste) =>
           paste.user
-            ? fastify.db.User.findOne({ _id: paste.user }, 'username avatar -_id').lean()
+            ? fastify.db.User.findById(paste.user, 'username avatar -_id').lean()
             : { username: 'Guest', avatar: '' }
         )
       )

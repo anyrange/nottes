@@ -29,9 +29,9 @@ module.exports = async function (fastify) {
           },
         },
         response: { XXX: fastify.getSchema('message') },
-        preValidation: [fastify.authenticate, fastify.requireAuth],
         tags: ['paste'],
       },
+      preValidation: [fastify.authenticate, fastify.requireAuth],
     },
     async (request, reply) => {
       const filter = { id: request.params.id }
