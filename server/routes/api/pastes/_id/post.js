@@ -29,7 +29,7 @@ module.exports = async function (fastify) {
       const paste = await fastify.db.Paste.findOne({ id: request.params.id }, '-_id -views -date').lean()
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
-      if (paste.visibility === 'private' && request._id !== String(paste.user)) {
+      if (paste.visibility === 'private' && request._id !== String(paste.author)) {
         return reply.code(403).send({ message: 'Forbidden' })
       }
 
@@ -39,7 +39,7 @@ module.exports = async function (fastify) {
 
       const uid = new ShortUniqueId()
       paste.id = uid()
-      paste.user = request._id
+      paste.author = request._id
       await fastify.db.Paste.create(paste)
       reply.code(201).send({ id: paste.id })
     }

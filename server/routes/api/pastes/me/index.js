@@ -5,9 +5,11 @@ module.exports = async function (fastify) {
     '',
     {
       schema: {
+        description: 'Archive',
         querystring: {
           type: 'object',
           properties: {
+            page: { type: 'number', minimum: 1 },
             range: { type: 'number', minimum: 3 },
           },
         },
@@ -22,19 +24,16 @@ module.exports = async function (fastify) {
         },
         tags: ['paste'],
       },
+      preValidation: [fastify.authenticate, fastify.requireAuth],
     },
     async (request, reply) => {
-      const range = request.query.range || 12
+      const range = request.query.range || 10
+      const page = request.query.page - 1 || 0
 
-      const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author id date -_id')
+      const pastes = await fastify.db.Paste.find({ author: request._id }, 'title date id code -_id')
         .sort('-date')
+        .skip(page * range)
         .limit(range)
-        .populate('author')
-        .lean()
-
-      pastes.forEach((paste) => {
-        if (!paste.author) paste.author = { username: 'Guest', avatar: '' }
-      })
 
       reply.send({ pastes })
     }

@@ -28,7 +28,9 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const paste = await fastify.db.Paste.findOneAndUpdate({ id: request.params.id }, { $inc: { views: 1 } }).lean()
+      const paste = await fastify.db.Paste.findOneAndUpdate({ id: request.params.id }, { $inc: { views: 1 } })
+        .populate('author')
+        .lean()
 
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
@@ -39,29 +41,17 @@ module.exports = async function (fastify) {
 
       if (paste.visibility === 'private' && request.cookies.accessToken) {
         const authorId = await fastify.verifyToken(request.cookies.accessToken, process.env.ACCESS_TOKEN_SECRET)
-        if (authorId !== String(paste.user)) return reply.code(403).send({ message: 'Private paste' })
+        if (authorId !== String(paste.author._id)) return reply.code(403).send({ message: 'Private paste' })
       }
 
       if (paste.password && !request.query.password) return reply.code(403).send({ message: 'Password required' })
       if (paste.password && !(await bcrypt.compare(request.query.password, paste.password)))
         return reply.code(403).send({ message: 'Wrong password' })
 
-      const user = paste.user
-        ? await fastify.db.User.findById(paste.user, 'username avatar -_id').lean()
-        : { username: 'Guest', avatar: '' }
+      if (!paste.author) paste.author = { username: 'Guest', avatar: '' }
+      paste.content = fastify.decrypt(paste.content)
 
-      reply.send({
-        paste: {
-          id: paste.id,
-          title: paste.title,
-          content: fastify.decrypt(paste.content),
-          author: user,
-          date: paste.date,
-          views: paste.views,
-          code: paste.code,
-          expiry: paste.expiry,
-        },
-      })
+      reply.send({ paste })
     }
   )
 }

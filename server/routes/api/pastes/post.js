@@ -37,10 +37,10 @@ module.exports = async function (fastify) {
     async (request, reply) => {
       const paste = request.body
       if (request.cookies.accessToken) {
-        paste.user = await fastify.verifyToken(request.cookies.accessToken, process.env.ACCESS_TOKEN_SECRET)
+        paste.author = await fastify.verifyToken(request.cookies.accessToken, process.env.ACCESS_TOKEN_SECRET)
       }
 
-      if (!paste.user && request.body.visibility === 'private') return reply.code(403).send({ message: 'Forbidden' })
+      if (!paste.author && request.body.visibility === 'private') return reply.code(403).send({ message: 'Forbidden' })
 
       if (request.body.expiry) paste.expiry = getExpiryDate(request.body.expiry)
       if (request.body.password) paste.password = await bcrypt.hash(request.body.password, 10)

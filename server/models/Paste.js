@@ -6,7 +6,7 @@ const schema = new Schema({
   id: { type: String, unique: true, required: true },
   title: { type: String, required: true },
   content: { type: String, required: true },
-  user: { type: Schema.Types.ObjectId, ref: 'User' },
+  author: { type: Schema.Types.ObjectId, ref: 'User' },
   code: { type: String, default: 'text' },
   visibility: { type: String, default: 'public' },
   expiry: { type: Date },
