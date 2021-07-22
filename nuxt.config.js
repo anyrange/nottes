@@ -19,7 +19,7 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  css: ['@/assets/css/main.css', '@/assets/css/tooltip.css'],
+  css: ['@/assets/css/main.css', '@/assets/css/hint.min.css'],
   plugins: ['~/plugins/axios.js', '~/plugins/dates.js', '~/plugins/directives.js', '~/plugins/vue-unique-id.js'],
   components: true,
   telemetry: false,
