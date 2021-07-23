@@ -4,6 +4,7 @@ module.exports = async function (fastify) {
   fastify.get(
     '',
     {
+      websocket: true,
       schema: {
         querystring: {
           type: 'object',
@@ -14,7 +15,7 @@ module.exports = async function (fastify) {
         tags: ['paste'],
       },
     },
-    async (request, reply) => {
+    async (connection, request) => {
       const range = request.query.range || 12
 
       const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author id date -_id')
@@ -28,7 +29,7 @@ module.exports = async function (fastify) {
         paste.author = { username: 'Guest', avatar: '' }
       })
 
-      pastes.forEach((paste) => reply.sse({ event: 'paste', data: paste }))
+      pastes.forEach((paste) => connection.socket.send(JSON.stringify(paste)))
 
       const inserts = fastify.db.Paste.watch([{ $match: { operationType: 'insert' } }])
 
@@ -39,11 +40,11 @@ module.exports = async function (fastify) {
             .lean()
 
           if (!paste.author) paste.author = { username: 'Guest', avatar: '' }
-          reply.sse({ event: 'paste', data: paste })
+          connection.socket.send(JSON.stringify(paste))
         }
       })
 
-      request.socket.on('close', () => inserts.driverChangeStream.close())
+      connection.socket.on('close', () => inserts.driverChangeStream.close())
     }
   )
 }

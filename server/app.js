@@ -24,7 +24,7 @@ module.exports = async function (fastify) {
     console.log('\x1B[36m%s\x1B[0m', `i`, `Docs: ${process.env.BASE_URL}/docs`)
   }
 
-  fastify.register(require('fastify-sse'))
+  fastify.register(require('fastify-websocket'))
 
   fastify.register(AutoLoad, { dir: path.join(__dirname, 'plugins') })
   fastify.register(AutoLoad, { dir: path.join(__dirname, 'schemas') })
