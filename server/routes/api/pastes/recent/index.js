@@ -18,7 +18,7 @@ module.exports = async function (fastify) {
     async (connection, request) => {
       const range = request.query.range || 12
 
-      const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author id date -_id')
+      const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author id date')
         .sort('date')
         .limit(range)
         .populate('author', 'username avatar -_id')
@@ -29,18 +29,26 @@ module.exports = async function (fastify) {
         paste.author = { username: 'Guest', avatar: '' }
       })
 
-      pastes.forEach((paste) => connection.socket.send(JSON.stringify(paste)))
+      pastes.forEach((paste) => connection.socket.send(JSON.stringify({ event: 'insert', paste })))
 
-      const inserts = fastify.db.Paste.watch([{ $match: { operationType: 'insert' } }])
+      const inserts = fastify.db.Paste.watch([{ $match: { operationType: { $in: ['insert', 'delete'] } } }])
 
       inserts.on('change', async (data) => {
-        if (data.fullDocument.visibility === 'public') {
-          const paste = await fastify.db.Paste.findById(data.fullDocument._id, 'title author id date -_id')
-            .populate('author', 'username avatar -_id')
-            .lean()
+        switch (data.operationType) {
+          case 'delete':
+            connection.socket.send(JSON.stringify({ event: data.operationType, paste: { _id: data.documentKey._id } }))
+            break
+          case 'insert': {
+            if (data.fullDocument.visibility !== 'public') break
 
-          if (!paste.author) paste.author = { username: 'Guest', avatar: '' }
-          connection.socket.send(JSON.stringify(paste))
+            const paste = await fastify.db.Paste.findById(data.fullDocument._id, 'title author id date')
+              .populate('author', 'username avatar -_id')
+              .lean()
+
+            if (!paste.author) paste.author = { username: 'Guest', avatar: '' }
+            connection.socket.send(JSON.stringify({ event: data.operationType, paste }))
+            break
+          }
         }
       })
 
