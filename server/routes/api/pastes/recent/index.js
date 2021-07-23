@@ -38,6 +38,7 @@ module.exports = async function (fastify) {
             .populate('author', 'username avatar -_id')
             .lean()
 
+          if (!paste.author) paste.author = { username: 'Guest', avatar: '' }
           reply.sse({ event: 'paste', data: paste })
         }
       })
