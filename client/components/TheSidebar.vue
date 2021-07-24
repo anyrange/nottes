@@ -1,33 +1,35 @@
 <template>
-  <aside class="flex flex-col gap-3">
+  <aside class="flex flex-col gap-4">
     <h1 class="h-title">Recent Pastes</h1>
-    <div class="flex flex-col gap-3">
-      <div v-for="paste in pastes" :key="paste.id" class="flex items-center justify-between">
-        <div class="flex flex-col w-full">
-          <nuxt-link class="link truncate w-11/12" :to="'/' + paste.id">
+    <transition-group tag="div" name="list" class="flex flex-col gap-3">
+      <div v-for="paste in pastes" :key="paste.id" class="flex flex-row gap-2 items-center justify-between">
+        <div class="flex flex-col w-10/12">
+          <nuxt-link class="link truncate" :to="'/' + paste.id">
             {{ paste.title }}
           </nuxt-link>
-          <div class="text-xs">
-            <span>by </span>
-            <template v-if="paste.author.username !== 'Guest'">
-              <nuxt-link class="hover:underline" :to="'/user/' + paste.author.username">
-                <i>{{ paste.author.username }}</i>
-              </nuxt-link>
-            </template>
-            <template v-else>
+          <div class="text-xs truncate">
+            <span>by</span>
+            <nuxt-link
+              :class="[paste.author.username === 'Guest' ? 'pointer-events-none' : 'hover:underline']"
+              :to="'/user/' + paste.author.username || 'Guest'"
+            >
               <i>{{ paste.author.username }}</i>
-            </template>
+            </nuxt-link>
           </div>
         </div>
-        <span v-tooltip:bottom-left="$timePassedFrom(paste.date)">
-          <fa :icon="['far', 'clock']" />
-        </span>
+        <div>
+          <span v-tooltip:bottom-left="$timePassedFrom(paste.date)">
+            <fa :icon="['far', 'clock']" />
+          </span>
+        </div>
       </div>
-    </div>
+    </transition-group>
   </aside>
 </template>
 
 <script>
+import { getRecentPastes } from '@/api'
+
 export default {
   name: 'TheSidebar',
   data() {
@@ -35,20 +37,8 @@ export default {
       pastes: [],
     }
   },
-  mounted() {
-    const evtStream = new EventSource(`${process.env.baseUrl}/api/pastes/recent`)
-    const pastes = this.pastes
-
-    evtStream.onmessage = (event) => {
-      const { data: paste } = JSON.parse(event.data)
-      pastes.push(paste)
-      if (pastes.length > 10) pastes.pop()
-    }
-
-    evtStream.onerror = (err) => {
-      console.error('EventSource failed:', err)
-      evtStream.close()
-    }
+  created() {
+    this.pastes = getRecentPastes()
   },
 }
 </script>
