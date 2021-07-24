@@ -1,5 +1,7 @@
 # nottes
 
+[![Uptime Robot](https://img.shields.io/uptimerobot/status/m788752184-036e7d73b566588f9bb3ede3?label=heroku)](https://stats.uptimerobot.com/kXD0runRnw/788752184)
+
 ## Build Setup
 
 ```bash
