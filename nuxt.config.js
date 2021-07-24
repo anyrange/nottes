@@ -20,7 +20,7 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   css: ['@/assets/css/main.css', '@/assets/css/hint.min.css'],
-  plugins: ['~/plugins/axios.js', '~/plugins/dates.js', '~/plugins/directives.js', '~/plugins/vue-unique-id.js'],
+  plugins: ['~/plugins/dates.js', '~/plugins/directives.js', '~/plugins/vue-unique-id.js'],
   components: true,
   telemetry: false,
   loading: {
@@ -30,10 +30,7 @@ export default {
     prefetchLinks: false,
   },
   buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/color-mode', '@nuxtjs/fontawesome', '@nuxtjs/tailwindcss'],
-  modules: ['@nuxtjs/axios', '@nuxtjs/sitemap'],
-  axios: {
-    baseURL: `${process.env.BASE_URL}/api`,
-  },
+  modules: ['@nuxtjs/sitemap'],
   fontawesome: {
     component: 'fa',
     icons: {
@@ -46,27 +43,6 @@ export default {
     exposeConfig: true,
   },
   colorMode: {
-    classSuffix: '',
-  },
-  build: {
-    extractCSS: true,
-    babel: {
-      plugins: [
-        [
-          '@babel/plugin-proposal-private-methods',
-          {
-            loose: true,
-          },
-        ],
-      ],
-    },
-  },
-  render: {
-    asyncScripts: true,
-    csp: false,
-  },
-  workbox: {
-    cacheAssets: false, // for /*
-    offline: false, // for /_nuxt/*
+    classSuffix: '', // Required to work with Tailwind CSS
   },
 }

@@ -1,3 +1,5 @@
+import { checkAuth, refreshToken, login, signup, logout } from '@/api'
+
 export const state = () => ({
   user: {
     authenticated: false,
@@ -15,13 +17,17 @@ export const actions = {
     await dispatch('checkAuth')
   },
   async checkAuth({ commit }) {
-    const { authenticated, tokenExpired } = await this.$axios.$get('/users/me')
-    if (tokenExpired) await this.$axios.$get('/auth/refreshToken')
-    commit('SET_USER', { authenticated })
+    try {
+      const { authenticated, tokenExpired } = await checkAuth()
+      if (tokenExpired) await refreshToken()
+      commit('SET_USER', { authenticated })
+    } catch (error) {
+      commit('SET_USER', { authenticated: false })
+    }
   },
   async login({ dispatch }, credentials) {
     try {
-      await this.$axios.post('/auth/login', credentials)
+      await login(credentials)
       await dispatch('checkAuth')
     } catch (err) {
       return Promise.reject(err)
@@ -29,7 +35,7 @@ export const actions = {
   },
   async signup({ dispatch }, credentials) {
     try {
-      await this.$axios.post('/auth/signup', credentials)
+      await signup(credentials)
       await dispatch('checkAuth')
     } catch (err) {
       return Promise.reject(err)
@@ -37,7 +43,7 @@ export const actions = {
   },
   async logout({ dispatch }) {
     try {
-      await this.$axios.delete('/auth/logout')
+      await logout()
       await dispatch('checkAuth')
     } catch (err) {
       return Promise.reject(err)
