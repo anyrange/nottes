@@ -19,7 +19,7 @@ module.exports = async function (fastify) {
       const range = request.query.range || 12
 
       const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author id date')
-        .sort('date')
+        .sort('-date')
         .limit(range)
         .populate('author', 'username avatar -_id')
         .lean()
@@ -29,7 +29,7 @@ module.exports = async function (fastify) {
         paste.author = { username: 'Guest', avatar: '' }
       })
 
-      pastes.forEach((paste) => connection.socket.send(JSON.stringify({ event: 'insert', paste })))
+      pastes.reverse().forEach((paste) => connection.socket.send(JSON.stringify({ event: 'insert', paste })))
 
       const inserts = fastify.db.Paste.watch([{ $match: { operationType: { $in: ['insert', 'delete'] } } }])
 
