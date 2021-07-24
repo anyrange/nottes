@@ -3,8 +3,8 @@
     <the-header />
     <div class="h-container mb-auto">
       <div class="flex flex-col sm:flex-row sm:mt-8 lg:gap-x-20 gap-x-12 gap-y-3 justify-between">
-        <nuxt class="lg:w-4/5 sm:w-2/3 w-full" />
-        <the-sidebar class="lg:w-1/5 sm:w-1/3 w-full" />
+        <nuxt class="xl:w-4/5 sm:w-2/3 w-full" />
+        <the-sidebar class="xl:w-1/5 sm:w-1/3 w-full flex-none" />
       </div>
     </div>
     <the-footer />
