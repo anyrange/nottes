@@ -1,5 +1,5 @@
 <template>
-  <textarea id="paste" v-bind="$attrs" :value="value" class="base-textarea custom-element" />
+  <textarea id="paste" v-bind="$attrs" :value="value" class="base-textarea custom-element" @input="handleInput" />
 </template>
 
 <script>
@@ -12,7 +12,7 @@ export default {
     },
   },
   methods: {
-    onInput(event) {
+    handleInput(event) {
       this.$emit('input', event.target.value)
     },
   },

@@ -1,7 +1,7 @@
 <template>
   <div class="base-input">
     <label v-if="label.length" :for="$id(label)" class="label">{{ label }}</label>
-    <input v-bind="$attrs" :id="$id(label)" :value="value" class="input custom-element" @input="onInput" />
+    <input v-bind="$attrs" :id="$id(label)" :value="value" class="input custom-element" @input="handleInput" />
   </div>
 </template>
 
@@ -20,7 +20,7 @@ export default {
     },
   },
   methods: {
-    onInput(event) {
+    handleInput(event) {
       this.$emit('input', event.target.value)
     },
   },
