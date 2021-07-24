@@ -1,22 +1,8 @@
-import axios from 'axios'
+import api from '@/services/apiClient'
 
 let pastes = []
 
 const RECONNECTION_DELAY = 1000
-
-const api = axios.create({
-  baseURL: `${process.env.baseUrl}/api`,
-  withCredentials: true,
-})
-
-api.interceptors.response.use(
-  (response) => {
-    return response.data
-  },
-  (error) => {
-    return Promise.reject(error)
-  }
-)
 
 export const checkAuth = () => {
   return api.get('/users/me')
