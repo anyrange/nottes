@@ -30,7 +30,7 @@ module.exports = async function (fastify) {
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
       if (paste.visibility === 'private' && request._id !== String(paste.author)) {
-        return reply.code(403).send({ message: 'Forbidden' })
+        return reply.code(403).send({ message: 'Private paste' })
       }
 
       if (paste.password && !request.query.password) return reply.code(403).send({ message: 'Password required' })

@@ -48,7 +48,6 @@ module.exports = async function (fastify) {
       if (paste.password && !(await bcrypt.compare(request.query.password, paste.password)))
         return reply.code(403).send({ message: 'Wrong password' })
 
-      if (!paste.author) paste.author = { username: 'Guest', avatar: '' }
       paste.content = fastify.decrypt(paste.content)
 
       reply.send({ paste })

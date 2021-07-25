@@ -13,6 +13,7 @@ module.exports = fp(async function (fastify) {
       content: { type: 'string' },
       author: {
         type: 'object',
+        default: { username: 'Guest', avatar: '' },
         properties: {
           username: { type: 'string' },
           avatar: { type: 'string' },

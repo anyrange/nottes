@@ -38,10 +38,11 @@ module.exports = async function (fastify) {
       const paste = await fastify.db.Paste.findOne(filter).lean()
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
-      if (request._id !== String(paste.author)) return reply.code(403).send({ message: 'Forbidden' })
+      if (request._id !== String(paste.author)) return reply.code(403).send({ message: 'Not your paste' })
 
-      if (paste.password && !request.query.password) return reply.code(403).send({ message: 'Password required' })
-      if (paste.password && !(await bcrypt.compare(request.query.password, paste.password)))
+      const password = request.query.password
+      if (paste.password && !password) return reply.code(403).send({ message: 'Password required' })
+      if (paste.password && !(await bcrypt.compare(password, paste.password)))
         return reply.code(403).send({ message: 'Wrong password' })
 
       const newData = request.body

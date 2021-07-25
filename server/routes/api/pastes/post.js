@@ -18,7 +18,7 @@ module.exports = async function (fastify) {
             content: { type: 'string' },
             code: { type: 'string' },
             visibility: { type: 'string', pattern: '^(public|private|unlisted)$' },
-            expiry: { type: 'string', pattern: '^(never|10m|1h|1d|1w|2w|1month)$' },
+            expiration: { type: 'string', pattern: '^(never|10m|1h|1d|1w|2w|1month)$' },
             password: { type: 'string' },
           },
         },
@@ -40,16 +40,16 @@ module.exports = async function (fastify) {
         paste.author = await fastify.verifyToken(request.cookies.accessToken, process.env.ACCESS_TOKEN_SECRET)
       }
 
-      if (!paste.author && request.body.visibility === 'private') return reply.code(403).send({ message: 'Forbidden' })
+      if (!paste.author && paste.visibility === 'private')
+        return reply.code(403).send({ message: 'Guests cannot create private pastes' })
 
-      if (request.body.expiry) paste.expiry = getExpiryDate(request.body.expiry)
-      if (request.body.password) paste.password = await bcrypt.hash(request.body.password, 10)
+      if (paste.expiration) paste.expiry = getExpiryDate(paste.expiration)
+      if (paste.password) paste.password = await bcrypt.hash(paste.password, 10)
 
       paste.content = fastify.encrypt(paste.content)
 
       const uid = new ShortUniqueId()
       paste.id = uid()
-
       const res = await fastify.db.Paste.create(paste)
 
       reply.send({ id: res.id })
