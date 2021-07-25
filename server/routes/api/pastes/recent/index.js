@@ -1,5 +1,7 @@
 'use strict'
 
+const fastJson = require('fast-json-stringify')
+
 module.exports = async function (fastify) {
   fastify.get(
     '',
@@ -24,19 +26,18 @@ module.exports = async function (fastify) {
         .populate('author', 'username avatar -_id')
         .lean()
 
-      pastes.forEach((paste) => {
-        if (paste.author) return
-        paste.author = { username: 'Guest', avatar: '' }
-      })
+      const schema = fastify.getSchema('paste')
+      schema.properties._id = { type: 'string' }
+      const stringify = fastJson({ type: 'object', properties: { event: { type: 'string' }, paste: schema } })
 
-      pastes.reverse().forEach((paste) => connection.socket.send(JSON.stringify({ event: 'insert', paste })))
+      pastes.reverse().forEach((paste) => connection.socket.send(stringify({ event: 'insert', paste })))
 
       const inserts = fastify.db.Paste.watch([{ $match: { operationType: { $in: ['insert', 'delete'] } } }])
 
       inserts.on('change', async (data) => {
         switch (data.operationType) {
           case 'delete':
-            connection.socket.send(JSON.stringify({ event: data.operationType, paste: { _id: data.documentKey._id } }))
+            connection.socket.send(stringify({ event: data.operationType, paste: { _id: data.documentKey._id } }))
             break
           case 'insert': {
             if (data.fullDocument.visibility !== 'public') break
@@ -45,8 +46,7 @@ module.exports = async function (fastify) {
               .populate('author', 'username avatar -_id')
               .lean()
 
-            if (!paste.author) paste.author = { username: 'Guest', avatar: '' }
-            connection.socket.send(JSON.stringify({ event: data.operationType, paste }))
+            connection.socket.send(stringify({ event: data.operationType, paste }))
             break
           }
         }
