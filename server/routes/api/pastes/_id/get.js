@@ -34,7 +34,7 @@ module.exports = async function (fastify) {
 
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
-      if (paste.expiry < new Date()) {
+      if (paste.expiry && paste.expiry < new Date()) {
         await fastify.db.Paste.deleteOne({ id: request.params.id })
         return reply.code(400).send({ message: 'Paste expired' })
       }

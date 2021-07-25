@@ -20,7 +20,7 @@ module.exports = async function (fastify) {
             content: { type: 'string' },
             code: { type: 'string' },
             visibility: { type: 'string', pattern: '^(public|private|unlisted)$' },
-            expiration: { type: 'string', pattern: '^(never|10m|1h|1d|1w|2w|1month)$' },
+            expiry: { type: 'string', pattern: '^(never|10m|1h|1d|1w|2w|1month)$' },
             password: { type: 'string' },
           },
         },
@@ -38,7 +38,7 @@ module.exports = async function (fastify) {
 
       const newData = request.body
 
-      if (newData.expiration && paste.expiration !== 'never') newData.expiry = getExpiryDate(newData.expiration)
+      if (newData.expiry) newData.expiry = getExpiryDate(newData.expiry)
       if (newData.password) newData.password = await bcrypt.hash(newData.password, 10)
       if (newData.content) newData.content = fastify.encrypt(newData.content)
 
