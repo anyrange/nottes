@@ -33,6 +33,7 @@ module.exports = async function (fastify) {
         .sort('-date')
         .skip(page * range)
         .limit(range)
+        .lean()
 
       reply.send({ pastes })
     }

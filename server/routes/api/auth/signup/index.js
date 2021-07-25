@@ -16,7 +16,7 @@ module.exports = async function (fastify) {
             email: { type: 'string', format: 'email' },
           },
         },
-        response: { X00: fastify.getSchema('message') },
+        response: { 201: fastify.getSchema('user') },
         tags: ['auth'],
       },
     },
@@ -26,22 +26,22 @@ module.exports = async function (fastify) {
       const saltRounds = 10
       const hashedPassword = await bcrypt.hash(password, saltRounds)
 
-      const user = await fastify.db.User.findOne({ $or: [{ username }, { email }] })
+      const userExist = await fastify.db.User.findOne({ $or: [{ username }, { email }] }).lean()
 
-      if (user) {
+      if (userExist) {
         return reply.code(400).send({
-          message: `${user.username === username ? `Username ${username}` : `Email ${email}`} already exist`,
+          message: `${userExist.username === username ? `Username ${username}` : `Email ${email}`} is already in use`,
         })
       }
 
-      const { _id } = await fastify.db.User.create({ username, password: hashedPassword, email })
+      const user = await fastify.db.User.create({ username, password: hashedPassword, email })
 
-      const { accessToken, refreshToken } = await fastify.generateTokens(_id)
+      const { accessToken, refreshToken } = await fastify.generateTokens(user._id)
 
       reply.setCookie('accessToken', accessToken, fastify.cookieOptions)
       reply.setCookie('refreshToken', refreshToken, fastify.cookieOptions)
 
-      reply.code(201).send({ message: 'OK' })
+      reply.code(201).send(user)
     }
   )
 }

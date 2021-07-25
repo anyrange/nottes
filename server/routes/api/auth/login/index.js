@@ -15,14 +15,16 @@ module.exports = async function (fastify) {
           },
           required: ['username', 'password'],
         },
-        response: { XXX: fastify.getSchema('message') },
+        response: {
+          200: fastify.getSchema('user'),
+        },
         tags: ['auth'],
       },
     },
     async (request, reply) => {
       const { username, password } = request.body
 
-      const user = await fastify.db.User.findOne({ $or: [{ username }, { email: username }] })
+      const user = await fastify.db.User.findOne({ $or: [{ username }, { email: username }] }).lean()
       if (!user) return reply.code(404).send({ message: 'User not found' })
 
       if (!user.password)
@@ -36,7 +38,7 @@ module.exports = async function (fastify) {
       reply.setCookie('accessToken', accessToken, fastify.cookieOptions)
       reply.setCookie('refreshToken', refreshToken, fastify.cookieOptions)
 
-      reply.send({ message: 'OK' })
+      reply.send(user)
     }
   )
 }

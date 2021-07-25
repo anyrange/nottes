@@ -13,14 +13,15 @@ module.exports = async function (fastify) {
     const user = await fastify.db.User.findOneAndUpdate(
       { email },
       { avatar: picture, platform: 'Google' },
-      { new: true, upsert: true, projection: '_id username verified', setDefaultsOnInsert: true }
-    )
+      { new: true, upsert: true, projection: 'username avatar', setDefaultsOnInsert: true }
+    ).lean()
 
     const { accessToken, refreshToken } = await fastify.generateTokens(user._id)
     reply.setCookie('accessToken', accessToken, fastify.cookieOptions)
     reply.setCookie('refreshToken', refreshToken, fastify.cookieOptions)
 
-    if (user.username.split('_')[0] === 'user') return reply.redirect(`${process.env.BASE_URL}/profile`)
-    reply.redirect(`${process.env.BASE_URL}`)
+    const userData = `?username=${user.username},avatar=${user.avatar}`
+    if (user.username.split('_')[0] === 'user') return reply.redirect(`${process.env.BASE_URL}/profile${userData}`)
+    reply.redirect(process.env.BASE_URL + userData)
   })
 }

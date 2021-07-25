@@ -5,7 +5,7 @@ const fp = require('fastify-plugin')
 module.exports = fp(async function (fastify) {
   fastify.addSchema({
     $id: 'paste',
-    title: 'message',
+    title: 'paste',
     type: 'object',
     properties: {
       id: { type: 'string' },
@@ -16,7 +16,7 @@ module.exports = fp(async function (fastify) {
         default: { username: 'Guest', avatar: '' },
         properties: {
           username: { type: 'string' },
-          avatar: { type: 'string' },
+          avatar: { type: 'string', default: '' },
         },
       },
       date: { type: 'string' },
