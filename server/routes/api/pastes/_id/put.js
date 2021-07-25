@@ -13,10 +13,6 @@ module.exports = async function (fastify) {
           type: 'object',
           properties: { id: { type: 'string' } },
         },
-        querystring: {
-          type: 'object',
-          properties: { password: { type: 'string' } },
-        },
         body: {
           type: 'object',
           properties: {
@@ -39,11 +35,6 @@ module.exports = async function (fastify) {
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
       if (request._id !== String(paste.author)) return reply.code(403).send({ message: 'Not your paste' })
-
-      const password = request.query.password
-      if (paste.password && !password) return reply.code(403).send({ message: 'Password required' })
-      if (paste.password && !(await bcrypt.compare(password, paste.password)))
-        return reply.code(403).send({ message: 'Wrong password' })
 
       const newData = request.body
 
