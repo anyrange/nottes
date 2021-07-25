@@ -11,6 +11,5 @@ const dates = {
 }
 
 module.exports = (time) => {
-  if (time === 'never') return null
   return new Date(new Date().getTime() + dates[time])
 }
