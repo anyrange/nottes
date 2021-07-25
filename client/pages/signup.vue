@@ -49,7 +49,10 @@ export default {
         await this.$store.dispatch('signup', this.user)
         this.$router.push('/login')
       } catch (error) {
-        this.error = error.response.data.message
+        this.$store.dispatch('notify/addNotification', {
+          message: error.response.data.message,
+          type: 'danger',
+        })
       }
     },
   },
