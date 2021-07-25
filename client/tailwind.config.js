@@ -25,6 +25,10 @@ module.exports = {
         'gray-500-spotify': '#ABABAB',
         'gray-400-spotify': '#bfbfbf',
         'black-100-spotify': '#414141',
+        'q-positive': '#21ba45',
+        'q-negative': '#c20318',
+        'q-warning': '#f2c037',
+        'q-info': '#31ccec',
       },
       height: {
         22: '5.5rem',
