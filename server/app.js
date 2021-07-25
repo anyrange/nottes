@@ -17,7 +17,7 @@ module.exports = async function (fastify) {
         basePath: '/api',
       },
       routePrefix: '/docs',
-      uiConfig: { deepLinking: true, displayRequestDuration: true },
+      uiConfig: { deepLinking: true, displayRequestDuration: true, docExpansion: 'none' },
       exposeRoute: true,
       hideUntagged: true,
     })

@@ -13,7 +13,7 @@ const plugin = fp(async function plugin(fastify) {
 
     if (code === 'ETIMEDOUT') return reply.code(503).send({ message: 'Try again later' })
 
-    if (typeof code === 'number' && code > 200 && code < 600) return reply.code(code).send({ message })
+    if (code && typeof code === 'number' && code > 200 && code < 600) return reply.code(code).send({ message })
 
     reply.code(500).send({ message: 'Service is currently unavailable' })
     console.log(err)

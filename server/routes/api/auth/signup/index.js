@@ -13,7 +13,7 @@ module.exports = async function (fastify) {
           properties: {
             username: { type: 'string', minLength: 3, maxLength: 30 },
             password: { type: 'string', minLength: 8, maxLength: 20 },
-            email: { type: 'string' },
+            email: { type: 'string', format: 'email' },
           },
         },
         response: { X00: fastify.getSchema('message') },
