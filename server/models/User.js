@@ -15,7 +15,7 @@ const schema = new Schema({
   password: { type: String },
   avatar: { type: String },
   platform: { type: String, default: 'Direct', required: true },
-  registered: { type: Date, default: Date.new },
+  registered: { type: Date, default: Date.now },
 })
 
 module.exports = model('User', schema)
