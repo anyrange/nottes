@@ -10,8 +10,10 @@ module.exports = async function (fastify) {
             type: 'object',
             properties: {
               email: { type: 'string' },
-              avatar: { type: 'string' },
+              avatar: { type: 'string', default: '' },
               username: { type: 'string' },
+              hasPassword: { type: 'boolean' },
+              registered: { type: 'string', format: 'datetime' },
               statusCode: { type: 'number' },
             },
           },
@@ -20,13 +22,10 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const user = await fastify.db.User.findById(request._id, 'avatar email username')
+      const user = await fastify.db.User.findById(request._id, 'avatar email username password registered').lean()
+      user.hasPassword = !!user.password
 
-      reply.send({
-        avatar: user.avatar || '',
-        email: user.email || '',
-        username: user.username || '',
-      })
+      reply.send(user)
     }
   )
 }

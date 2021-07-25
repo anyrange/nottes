@@ -9,7 +9,7 @@ module.exports = async function (fastify) {
           type: 'object',
           required: ['username'],
           properties: {
-            username: { type: 'string' },
+            username: { type: 'string', minLength: 3, maxLength: 30 },
           },
         },
         response: { 200: fastify.getSchema('message') },
@@ -17,14 +17,14 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const res = await fastify.db.User.updateOne({ _id: request._id }, { username: request.body.username }).catch(
-        (err) => {
-          if (err.code === 11000)
-            return reply.code(400).send({ message: `Username ${err.keyValue.username} is already taken` })
+      const { username } = request.body
 
-          console.log(err)
-        }
-      )
+      const res = await fastify.db.User.updateOne({ _id: request._id }, { username }).catch((err) => {
+        if (err.code === 11000)
+          return reply.code(400).send({ message: `Username ${err.keyValue.username} is already taken` })
+
+        console.log(err)
+      })
 
       if (res.nModified === 0) return reply.send({ message: 'Nothing changed' })
       reply.send({ message: 'OK' })
