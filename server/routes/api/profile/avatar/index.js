@@ -12,7 +12,7 @@ module.exports = async function (fastify) {
             avatar: { type: 'string' },
           },
         },
-        response: { 200: fastify.getSchema('message') },
+        response: { 200: { $ref: 'message#' } },
         tags: ['profile'],
       },
     },

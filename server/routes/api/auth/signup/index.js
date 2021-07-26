@@ -16,7 +16,7 @@ module.exports = async function (fastify) {
             email: { type: 'string', format: 'email' },
           },
         },
-        response: { 201: fastify.getSchema('user') },
+        response: { 201: { $ref: 'user#' } },
         tags: ['auth'],
       },
     },

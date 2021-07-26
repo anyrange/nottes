@@ -3,7 +3,7 @@
 module.exports = async function (fastify) {
   fastify.delete(
     '',
-    { schema: { response: { 200: fastify.getSchema('message') }, tags: ['auth'] } },
+    { schema: { response: { 200: { $ref: 'message#' } }, tags: ['auth'] } },
     async (request, reply) => {
       reply.clearCookie('accessToken', fastify.cookieOptions)
       reply.clearCookie('refreshToken', fastify.cookieOptions)

@@ -14,7 +14,7 @@ module.exports = async function (fastify) {
             prevPassword: { type: 'string', minLength: 8, maxLength: 20 },
           },
         },
-        response: { 200: fastify.getSchema('message') },
+        response: { 200: { $ref: 'message#' } },
         tags: ['profile'],
       },
     },

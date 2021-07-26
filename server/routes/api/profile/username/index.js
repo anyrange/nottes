@@ -12,7 +12,7 @@ module.exports = async function (fastify) {
             username: { type: 'string', minLength: 3, maxLength: 30 },
           },
         },
-        response: { 200: fastify.getSchema('message') },
+        response: { 200: { $ref: 'message#' } },
         tags: ['profile'],
       },
     },

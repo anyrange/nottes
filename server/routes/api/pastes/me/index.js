@@ -17,7 +17,7 @@ module.exports = async function (fastify) {
           200: {
             type: 'object',
             properties: {
-              pastes: { type: 'array', items: fastify.getSchema('paste') },
+              pastes: { type: 'array', items: { $ref: 'paste#' } },
               statusCode: { type: 'number' },
             },
           },

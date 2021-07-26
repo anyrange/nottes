@@ -16,7 +16,7 @@ module.exports = async function (fastify) {
           required: ['username', 'password'],
         },
         response: {
-          200: fastify.getSchema('user'),
+          200: { $ref: 'user#' },
         },
         tags: ['auth'],
       },

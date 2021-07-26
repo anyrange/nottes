@@ -19,7 +19,7 @@ module.exports = async function (fastify) {
         },
         response: {
           201: { type: 'object', properties: { id: { type: 'string' }, statusCode: { type: 'number' } } },
-          XXX: fastify.getSchema('message'),
+          XXX: { $ref: 'message#' },
         },
         tags: ['paste'],
       },
