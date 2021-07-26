@@ -23,5 +23,18 @@ module.exports = fp(async function (fastify) {
       views: { type: 'number' },
       code: { type: 'string' },
     },
+    definitions: {
+      micropaste: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          title: { type: 'string' },
+          date: { type: 'string' },
+          views: { type: 'number' },
+          code: { type: 'string' },
+          visibility: { type: 'string' },
+        },
+      },
+    },
   })
 })

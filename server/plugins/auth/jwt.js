@@ -39,8 +39,8 @@ module.exports = fp(async function (fastify) {
   })
 
   fastify.decorate('requireAuth', async function (request, reply) {
-    if (!request.isAuthenticated) return reply.code(401).send({ message: 'Unauthorized', statusCode: 401 })
-    if (request.tokenExpired) return reply.code(403).send({ message: 'Token expired', statusCode: 403 })
+    if (!request.isAuthenticated) return reply.code(401).send({ message: 'Unauthorized' })
+    if (request.tokenExpired) return reply.code(403).send({ message: 'Token expired' })
   })
 
   fastify.decorate('generateTokens', async (_id) => {

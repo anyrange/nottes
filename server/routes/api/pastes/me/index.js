@@ -9,8 +9,8 @@ module.exports = async function (fastify) {
         querystring: {
           type: 'object',
           properties: {
-            page: { type: 'number', minimum: 1 },
-            range: { type: 'number', minimum: 3 },
+            page: { type: 'number', minimum: 1, default: 1 },
+            range: { type: 'number', minimum: 3, default: 10 },
           },
         },
         response: {
@@ -27,15 +27,15 @@ module.exports = async function (fastify) {
       preValidation: [fastify.authenticate, fastify.requireAuth],
     },
     async (request, reply) => {
-      const range = request.query.range || 10
-      const page = request.query.page - 1 || 0
+      const { range, page } = request.query
 
       const pastes = await fastify.db.Paste.find({ author: request._id }, 'title date id code -_id')
         .sort('-date')
-        .skip(page * range)
+        .skip((page - 1) * range)
         .limit(range)
         .lean()
 
+      console.log(request._id)
       reply.send({ pastes })
     }
   )

@@ -20,7 +20,7 @@ module.exports = async function (fastify) {
     reply.setCookie('accessToken', accessToken, fastify.cookieOptions)
     reply.setCookie('refreshToken', refreshToken, fastify.cookieOptions)
 
-    const userData = `?username=${user.username},avatar=${user.avatar}`
+    const userData = `?refresh=true`
     if (user.username.split('_')[0] === 'user') return reply.redirect(`${process.env.BASE_URL}/profile${userData}`)
     reply.redirect(process.env.BASE_URL + userData)
   })

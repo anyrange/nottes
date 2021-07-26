@@ -9,15 +9,16 @@ module.exports = async function (fastify) {
         querystring: {
           type: 'object',
           properties: {
-            page: { type: 'number', minimum: 1 },
-            range: { type: 'number', minimum: 3 },
+            page: { type: 'number', minimum: 1, default: 1 },
+            range: { type: 'number', minimum: 3, default: 10 },
+            search: { type: 'string', default: null },
           },
         },
         response: {
           200: {
             type: 'object',
             properties: {
-              pastes: { type: 'array', items: { $ref: 'paste#' } },
+              pastes: { type: 'array', items: { $ref: 'paste#/definitions/micropaste' } },
               statusCode: { type: 'number' },
             },
           },
@@ -26,12 +27,17 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const range = request.query.range || 10
-      const page = request.query.page - 1 || 0
+      const { page, range, search } = request.query
 
-      const pastes = await fastify.db.Paste.find({ visibility: { $ne: 'private' } }, 'title date id code -_id')
+      const pastes = await fastify.db.Paste.find(
+        {
+          visibility: { $ne: 'private' },
+          title: { $regex: search, $options: 'gi' },
+        },
+        'title date id code -_id'
+      )
         .sort('-date')
-        .skip(page * range)
+        .skip((page - 1) * range)
         .limit(range)
         .lean()
 
