@@ -68,7 +68,7 @@ module.exports = async function (fastify) {
 
       if (request.isAuthenticated) {
         if (request.tokenExpired) return reply.code(403).send({ message: 'Token expired' })
-        if (request._id === user._id) delete query.visibility
+        if (request._id === String(user._id)) delete query.visibility
       }
 
       const pastes = await fastify.db.Paste.find(query, 'title date id code views visibility')
@@ -82,9 +82,7 @@ module.exports = async function (fastify) {
         public: pastes.filter((p) => p.visibility === 'public').length,
         unlisted: pastes.filter((p) => p.visibility === 'unlisted').length,
         private: pastes.filter((p) => p.visibility === 'private').length,
-        views: pastes.reduce((total, current) => {
-          return total + current.views
-        }, 0),
+        views: pastes.reduce((total, current) => total + current.views, 0),
       }
 
       reply.send({ user, pastes })
