@@ -1,5 +1,4 @@
-const ShortUniqueId = require('short-unique-id')
-const uid = new ShortUniqueId()
+import { nanoid } from 'nanoid'
 
 export const state = () => ({
   notifications: [],
@@ -28,7 +27,7 @@ export const actions = {
     { commit, dispatch },
     { message, type = 'info', delay = 3000, progress = true, closable = true, actions }
   ) {
-    const notification = { id: uid(), message, type, delay, progress, closable, actions }
+    const notification = { id: nanoid(6), message, type, delay, progress, closable, actions }
     commit('ADD_NOTIFICATION', notification)
     if (notification.progress && notification.delay > 0) {
       setTimeout(() => {

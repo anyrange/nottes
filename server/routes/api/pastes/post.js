@@ -1,6 +1,6 @@
 'use strict'
 
-const ShortUniqueId = require('short-unique-id')
+const { nanoid } = require('nanoid')
 const bcrypt = require('bcrypt')
 const getExpiryDate = require('../../../utils/expiryDate.js')
 
@@ -48,8 +48,7 @@ module.exports = async function (fastify) {
 
       paste.content = fastify.encrypt(paste.content)
 
-      const uid = new ShortUniqueId()
-      paste.id = uid()
+      paste.id = nanoid(6)
       const res = await fastify.db.Paste.create(paste)
 
       reply.send({ id: res.id })

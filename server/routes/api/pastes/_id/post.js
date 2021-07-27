@@ -1,7 +1,7 @@
 'use strict'
 
 const bcrypt = require('bcrypt')
-const ShortUniqueId = require('short-unique-id')
+const { nanoid } = require('nanoid')
 
 module.exports = async function (fastify) {
   fastify.post(
@@ -37,8 +37,7 @@ module.exports = async function (fastify) {
       if (paste.password && !(await bcrypt.compare(request.query.password, paste.password)))
         return reply.code(403).send({ message: 'Wrong password' })
 
-      const uid = new ShortUniqueId()
-      paste.id = uid()
+      paste.id = nanoid(6)
       paste.author = request._id
       await fastify.db.Paste.create(paste)
       reply.code(201).send({ id: paste.id })

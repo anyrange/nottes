@@ -1,15 +1,14 @@
 'use strict'
 
 const { Schema, model } = require('mongoose')
-const ShortUniqueId = require('short-unique-id')
-const uid = new ShortUniqueId()
+const { nanoid } = require('nanoid')
 
 const schema = new Schema({
   username: {
     type: String,
     required: true,
     unique: true,
-    default: () => `user_${uid()}`,
+    default: () => `user_${nanoid(6)}`,
   },
   email: { type: String, required: true, unique: true },
   password: { type: String },
