@@ -2,9 +2,9 @@
   <aside class="flex flex-col gap-4">
     <h1 class="h-title">Recent Pastes</h1>
     <transition-group tag="div" name="list" class="flex flex-col gap-3">
-      <div v-for="paste in pastes" :key="paste.id" class="flex flex-row gap-2 items-center justify-between">
+      <div v-for="paste in pastes" :key="paste._id" class="flex flex-row gap-2 items-center justify-between">
         <div class="flex flex-col w-9/12 truncate">
-          <nuxt-link class="link truncate" :to="'/' + paste.id">
+          <nuxt-link class="link truncate" :to="'/' + paste._id">
             {{ paste.title }}
           </nuxt-link>
           <div class="text-xs truncate">
@@ -50,6 +50,7 @@ export default {
       const wsProtocol = window.location.protocol.includes('https') ? 'wss' : 'ws'
       const socket = new WebSocket(`${wsProtocol}://${window.location.host}/api/pastes/recent`)
       socket.onopen = (event) => {
+        this.pastes = []
         console.log('WebSocket is open now.', event)
       }
       socket.onmessage = (event) => {
