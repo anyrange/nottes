@@ -87,8 +87,11 @@ export default {
     async submitPaste() {
       try {
         await createPaste(this.paste)
-      } catch (error) {
-        console.log(error)
+      } catch (err) {
+        this.$notify.show({
+          message: err.response.data.message,
+          type: 'danger',
+        })
       }
     },
   },

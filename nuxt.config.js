@@ -20,7 +20,13 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   css: ['@/assets/css/main.css', '@/assets/css/hint.min.css'],
-  plugins: ['~/plugins/axios.js', '~/plugins/dates.js', '~/plugins/directives.js', '~/plugins/vue-unique-id.js'],
+  plugins: [
+    '~/plugins/axios.js',
+    '~/plugins/dates.js',
+    '~/plugins/notify.js',
+    '~/plugins/directives.js',
+    '~/plugins/vue-unique-id.js',
+  ],
   components: true,
   telemetry: false,
   loading: {
@@ -47,5 +53,26 @@ export default {
   },
   colorMode: {
     classSuffix: '', // Required to work with Tailwind CSS
+  },
+  build: {
+    extractCSS: true,
+    babel: {
+      plugins: [
+        [
+          '@babel/plugin-proposal-private-methods',
+          {
+            loose: true,
+          },
+        ],
+      ],
+    },
+  },
+  render: {
+    asyncScripts: true,
+    csp: false,
+  },
+  workbox: {
+    cacheAssets: false, // for /*
+    offline: false, // for /_nuxt/*
   },
 }

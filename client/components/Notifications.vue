@@ -1,38 +1,56 @@
 <template>
-  <div class="notifications-bottom-left">
-    <transition-group
-      enter-to-class="opacity-100 scale-100"
-      enter-active-class="transition ease-out duration-150 transform opacity-0 scale-75"
-      leave-active-class="transition ease-in duration-150 transform opacity-0 scale-75"
-    >
-      <notification
-        v-for="notification in notifications"
-        :key="notification.id"
-        :notification="notification"
-        @close-notification="removeNotification(notification)"
-      />
-    </transition-group>
-  </div>
+  <transition-group
+    tag="div"
+    class="notifications-bottom-left"
+    enter-to-class="opacity-100 scale-100"
+    enter-active-class="transition ease-out duration-150 transform opacity-0 scale-75"
+    leave-active-class="transition ease-in duration-150 transform opacity-0 scale-75"
+  >
+    <notification
+      v-for="notification in notifications"
+      :key="notification.id"
+      :notification="notification"
+      @close-notification="removeNotification(notification.id)"
+    />
+  </transition-group>
 </template>
 
 <script>
 import Notification from '@/components/Notification'
-import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Notifications',
   components: {
     Notification,
   },
-  computed: {
-    ...mapGetters({
-      notifications: 'notify/getNotifications',
-    }),
+  data() {
+    return {
+      notifications: [],
+    }
+  },
+  created() {
+    this.$eventBus.$on('newNotification', (notification) => {
+      this.addNotification(notification)
+    })
+    this.$eventBus.$on('dismissNotification', (id) => {
+      this.removeNotification(id)
+    })
+    this.$eventBus.$on('clearNotifications', () => {
+      this.notifications = []
+    })
   },
   methods: {
-    ...mapActions({
-      removeNotification: 'notify/removeNotification',
-    }),
+    addNotification(notification) {
+      this.notifications = [...this.notifications, notification]
+      if (notification.progress && notification.delay > 0) {
+        setTimeout(() => {
+          this.removeNotification(notification.id)
+        }, notification.delay)
+      }
+    },
+    removeNotification(id) {
+      this.notifications = this.notifications.filter((item) => item.id !== id)
+    },
   },
 }
 </script>

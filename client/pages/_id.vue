@@ -58,7 +58,10 @@ export default {
         this.paste = res.paste
         this.passwordRequired = false
       } catch (err) {
-        console.log(err.response.data.message)
+        this.$notify.show({
+          message: err.response.data.message,
+          type: 'danger',
+        })
       }
     },
   },
