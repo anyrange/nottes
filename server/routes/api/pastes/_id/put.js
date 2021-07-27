@@ -30,7 +30,7 @@ module.exports = async function (fastify) {
       preValidation: [fastify.authenticate, fastify.requireAuth],
     },
     async (request, reply) => {
-      const filter = { id: request.params.id }
+      const filter = { _id: request.params.id }
       const paste = await fastify.db.Paste.findOne(filter).lean()
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 

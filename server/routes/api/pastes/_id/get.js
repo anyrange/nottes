@@ -28,7 +28,7 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const paste = await fastify.db.Paste.findOneAndUpdate({ id: request.params.id }, { $inc: { views: 1 } })
+      const paste = await fastify.db.Paste.findByIdAndUpdate(request.params.id, { $inc: { views: 1 } })
         .populate('author')
         .lean()
 

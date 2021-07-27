@@ -1,7 +1,6 @@
 'use strict'
 
 const bcrypt = require('bcrypt')
-const { nanoid } = require('nanoid')
 
 module.exports = async function (fastify) {
   fastify.post(
@@ -18,7 +17,13 @@ module.exports = async function (fastify) {
           properties: { password: { type: 'string' } },
         },
         response: {
-          201: { type: 'object', properties: { id: { type: 'string' }, statusCode: { type: 'number' } } },
+          201: {
+            type: 'object',
+            properties: {
+              paste: { $ref: 'paste#/definitions/micropaste' },
+              statusCode: { type: 'number' },
+            },
+          },
           XXX: { $ref: 'message#' },
         },
         tags: ['paste'],
@@ -26,7 +31,7 @@ module.exports = async function (fastify) {
       preValidation: [fastify.authenticate, fastify.requireAuth],
     },
     async (request, reply) => {
-      const paste = await fastify.db.Paste.findOne({ id: request.params.id }, '-_id -views -date').lean()
+      const paste = await fastify.db.Paste.findById(request.params.id, '-_id -views -date').lean()
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
       if (paste.visibility === 'private' && request._id !== String(paste.author)) {
@@ -37,10 +42,9 @@ module.exports = async function (fastify) {
       if (paste.password && !(await bcrypt.compare(request.query.password, paste.password)))
         return reply.code(403).send({ message: 'Wrong password' })
 
-      paste.id = nanoid(6)
       paste.author = request._id
-      await fastify.db.Paste.create(paste)
-      reply.code(201).send({ id: paste.id })
+      const fork = await fastify.db.Paste.create(paste)
+      reply.code(201).send({ paste: fork })
     }
   )
 }

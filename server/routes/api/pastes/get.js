@@ -34,7 +34,7 @@ module.exports = async function (fastify) {
           visibility: { $ne: 'private' },
           title: { $regex: search, $options: 'gi' },
         },
-        'title date id code -_id'
+        'title date code _id'
       )
         .sort('-date')
         .skip((page - 1) * range)

@@ -1,9 +1,10 @@
 'use strict'
 
 const { Schema, model } = require('mongoose')
+const { nanoid } = require('nanoid')
 
 const schema = new Schema({
-  id: { type: String, unique: true, required: true },
+  _id: { type: String, default: () => nanoid(6) },
   title: { type: String, required: true },
   content: { type: String, required: true },
   author: { type: Schema.Types.ObjectId, ref: 'User' },

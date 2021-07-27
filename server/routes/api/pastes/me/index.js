@@ -29,13 +29,12 @@ module.exports = async function (fastify) {
     async (request, reply) => {
       const { range, page } = request.query
 
-      const pastes = await fastify.db.Paste.find({ author: request._id }, 'title date id code -_id')
+      const pastes = await fastify.db.Paste.find({ author: request._id }, 'title date code')
         .sort('-date')
         .skip((page - 1) * range)
         .limit(range)
         .lean()
 
-      console.log(request._id)
       reply.send({ pastes })
     }
   )

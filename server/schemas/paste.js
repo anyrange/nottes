@@ -8,7 +8,7 @@ module.exports = fp(async function (fastify) {
     title: 'paste',
     type: 'object',
     properties: {
-      id: { type: 'string' },
+      _id: { type: 'string' },
       title: { type: 'string' },
       content: { type: 'string' },
       author: {
@@ -27,7 +27,7 @@ module.exports = fp(async function (fastify) {
       micropaste: {
         type: 'object',
         properties: {
-          id: { type: 'string' },
+          _id: { type: 'string' },
           title: { type: 'string' },
           date: { type: 'string' },
           views: { type: 'number' },

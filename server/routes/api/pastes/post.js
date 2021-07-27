@@ -1,6 +1,5 @@
 'use strict'
 
-const { nanoid } = require('nanoid')
 const bcrypt = require('bcrypt')
 const getExpiryDate = require('../../../utils/expiryDate.js')
 
@@ -26,7 +25,7 @@ module.exports = async function (fastify) {
           200: {
             type: 'object',
             properties: {
-              id: { type: 'string' },
+              paste: { $ref: 'paste#/definitions/micropaste' },
               statusCode: { type: 'number' },
             },
           },
@@ -48,10 +47,9 @@ module.exports = async function (fastify) {
 
       paste.content = fastify.encrypt(paste.content)
 
-      paste.id = nanoid(6)
-      const res = await fastify.db.Paste.create(paste)
+      const created = await fastify.db.Paste.create(paste)
 
-      reply.send({ id: res.id })
+      reply.send({ paste: created })
     }
   )
 }

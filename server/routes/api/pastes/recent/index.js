@@ -11,24 +11,25 @@ module.exports = async function (fastify) {
         querystring: {
           type: 'object',
           properties: {
-            range: { type: 'number', minimum: 3 },
+            range: { type: 'number', minimum: 3, default: 12 },
           },
         },
         tags: ['paste'],
       },
     },
     async (connection, request) => {
-      const range = request.query.range || 12
+      const { range } = request.query
 
       const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author id date')
         .sort('-date')
         .limit(range)
-        .populate('author', 'username avatar -_id')
+        .populate('author')
         .lean()
 
-      const schema = fastify.getSchema('paste')
-      schema.properties._id = { type: 'string' }
-      const stringify = fastJson({ type: 'object', properties: { event: { type: 'string' }, paste: schema } })
+      const stringify = fastJson({
+        type: 'object',
+        properties: { event: { type: 'string' }, paste: fastify.getSchema('paste') },
+      })
 
       pastes.reverse().forEach((paste) => connection.socket.send(stringify({ event: 'insert', paste })))
 
@@ -42,8 +43,8 @@ module.exports = async function (fastify) {
           case 'insert': {
             if (data.fullDocument.visibility !== 'public') break
 
-            const paste = await fastify.db.Paste.findById(data.fullDocument._id, 'title author id date')
-              .populate('author', 'username avatar -_id')
+            const paste = await fastify.db.Paste.findById(data.fullDocument._id, 'title author date')
+              .populate('author')
               .lean()
 
             connection.socket.send(stringify({ event: data.operationType, paste }))
