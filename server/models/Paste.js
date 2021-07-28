@@ -18,4 +18,6 @@ const schema = new Schema(
   { timestamps: { createdAt: 'date', updatedAt: 'updated_at' } }
 )
 
+schema.index({ expiry: 1 }, { expireAfterSeconds: 0 })
+
 module.exports = model('Paste', schema)
