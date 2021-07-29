@@ -29,13 +29,10 @@ module.exports = async function (fastify) {
     async (request, reply) => {
       const { page, range, search } = request.query
 
-      const pastes = await fastify.db.Paste.find(
-        {
-          visibility: { $ne: 'private' },
-          title: { $regex: search, $options: 'gi' },
-        },
-        'title date code _id'
-      )
+      const pastes = await fastify.db.Paste.find({
+        visibility: { $ne: 'private' },
+        title: { $regex: search, $options: 'gi' },
+      })
         .sort('-date')
         .skip((page - 1) * range)
         .limit(range)

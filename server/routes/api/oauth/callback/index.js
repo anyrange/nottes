@@ -4,6 +4,9 @@ const fetch = require('node-fetch')
 
 module.exports = async function (fastify) {
   fastify.get('', { schema: { tags: ['oauth'] } }, async (request, reply) => {
+    if (!request.query.state || !request.query.code || !request.query.scope)
+      return reply.redirect(`${process.env.BASE_URL}/api/oauth/google`)
+
     const token = await fastify.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(request)
 
     const { email, picture } = await fetch(
