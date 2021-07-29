@@ -20,6 +20,18 @@ export const logout = () => {
   return api.delete('/auth/logout')
 }
 
+export const getUserProfile = () => {
+  return api.get('/profile')
+}
+
+export const getRecentPastes = () => {
+  return api.get('/pastes/recent')
+}
+
+export const getUserRecentPastes = () => {
+  return api.get('/pastes/me')
+}
+
 export const createPaste = (paste) => {
   return api.post('/pastes', paste)
 }

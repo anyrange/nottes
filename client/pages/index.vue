@@ -3,7 +3,7 @@
     <h1 class="h-title">New Paste</h1>
     <div class="flex flex-col gap-3">
       <div class="flex flex-row gap-3">
-        <base-input v-model="paste.title" placeholder="Paste Title" />
+        <base-input v-model="paste.title" name="paste-title" placeholder="Paste Title" />
         <base-select
           v-model="paste.code"
           :options="[
@@ -45,7 +45,14 @@
             label="Paste Visibility"
           />
         </div>
-        <base-input v-model="paste.password" type="password" placeholder="Password (Optional)" />
+        <base-input
+          v-model="paste.password"
+          type="password"
+          autocomplete="false"
+          readonly
+          onfocus="this.removeAttribute('readonly');"
+          placeholder="Password (Optional)"
+        />
       </div>
     </div>
   </main>
