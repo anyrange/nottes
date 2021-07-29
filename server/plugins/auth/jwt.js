@@ -30,11 +30,9 @@ module.exports = fp(async function (fastify) {
     request.isAuthenticated = true
 
     request._id = await verify(request.cookies.accessToken, process.env.ACCESS_TOKEN_SECRET).catch((e) => {
-      if (e.code === 403) {
-        request.tokenExpired = true
-        return ''
-      }
-      throw e
+      if (e.code !== 403) throw e
+      request.tokenExpired = true
+      return null
     })
   })
 
@@ -50,6 +48,9 @@ module.exports = fp(async function (fastify) {
       sign({ _id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }),
       sign({ _id }, process.env.REFRESH_TOKEN_SECRET),
     ])
+
+    const sessions = await fastify.db.Token.find({ user: _id }).lean()
+    if (sessions.length >= 5) await fastify.db.Token.deleteMany({ user: _id })
 
     await fastify.db.Token.create({ user: _id, token: refreshToken })
 
