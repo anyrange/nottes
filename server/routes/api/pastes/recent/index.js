@@ -3,23 +3,49 @@
 const fastJson = require('fast-json-stringify')
 
 module.exports = async function (fastify) {
-  fastify.get(
-    '',
-    {
-      websocket: true,
-      schema: {
-        querystring: {
+  fastify.route({
+    method: 'GET',
+    url: '/',
+    schema: {
+      querystring: {
+        type: 'object',
+        properties: {
+          range: { type: 'number', minimum: 3, default: 12 },
+        },
+      },
+      response: {
+        200: {
           type: 'object',
           properties: {
-            range: { type: 'number', minimum: 3, default: 12 },
+            pastes: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  title: { type: 'string' },
+                  date: { type: 'string', format: 'datetime' },
+                  author: { $ref: 'user#' },
+                  _id: { type: 'string' },
+                },
+              },
+            },
+            statusCode: { type: 'number' },
           },
         },
-        tags: ['paste'],
       },
+      tags: ['paste'],
     },
-    async (conn, request) => {
+    handler: async (request, reply) => {
       const { range } = request.query
+      const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author date')
+        .sort('-date')
+        .limit(range)
+        .populate('author')
+        .lean()
 
+      reply.send({ pastes: pastes.reverse() })
+    },
+    wsHandler: async (conn, request) => {
       const stringify = fastJson({
         type: 'object',
         properties: {
@@ -27,14 +53,6 @@ module.exports = async function (fastify) {
           paste: fastify.getSchema('paste'),
         },
       })
-
-      const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author date')
-        .sort('-date')
-        .limit(range)
-        .populate('author')
-        .lean()
-
-      pastes.reverse().forEach((paste) => conn.socket.send(stringify({ event: 'insert', paste })))
 
       const watcher = fastify.db.Paste.watch([{ $match: { operationType: { $in: ['insert', 'delete'] } } }])
 
@@ -56,6 +74,6 @@ module.exports = async function (fastify) {
       })
 
       conn.socket.on('close', () => watcher.driverChangeStream.close())
-    }
-  )
+    },
+  })
 }
