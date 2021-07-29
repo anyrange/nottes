@@ -17,28 +17,31 @@ module.exports = async function (fastify) {
         tags: ['paste'],
       },
     },
-    async (connection, request) => {
+    async (conn, request) => {
       const { range } = request.query
 
-      const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author id date')
+      const stringify = fastJson({
+        type: 'object',
+        properties: {
+          event: { type: 'string' },
+          paste: fastify.getSchema('paste'),
+        },
+      })
+
+      const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author date')
         .sort('-date')
         .limit(range)
         .populate('author')
         .lean()
 
-      const stringify = fastJson({
-        type: 'object',
-        properties: { event: { type: 'string' }, paste: fastify.getSchema('paste') },
-      })
+      pastes.reverse().forEach((paste) => conn.socket.send(stringify({ event: 'insert', paste })))
 
-      pastes.reverse().forEach((paste) => connection.socket.send(stringify({ event: 'insert', paste })))
+      const watcher = fastify.db.Paste.watch([{ $match: { operationType: { $in: ['insert', 'delete'] } } }])
 
-      const inserts = fastify.db.Paste.watch([{ $match: { operationType: { $in: ['insert', 'delete'] } } }])
-
-      inserts.on('change', async (data) => {
+      watcher.on('change', async (data) => {
         switch (data.operationType) {
           case 'delete':
-            connection.socket.send(stringify({ event: data.operationType, paste: { _id: data.documentKey._id } }))
+            conn.socket.send(stringify({ event: data.operationType, paste: { _id: data.documentKey._id } }))
             break
           case 'insert': {
             if (data.fullDocument.visibility !== 'public') break
@@ -47,13 +50,12 @@ module.exports = async function (fastify) {
               .populate('author')
               .lean()
 
-            connection.socket.send(stringify({ event: data.operationType, paste }))
-            break
+            conn.socket.send(stringify({ event: data.operationType, paste }))
           }
         }
       })
 
-      connection.socket.on('close', () => inserts.driverChangeStream.close())
+      conn.socket.on('close', () => watcher.driverChangeStream.close())
     }
   )
 }
