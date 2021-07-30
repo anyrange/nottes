@@ -1,4 +1,4 @@
-import { checkAuth, refreshToken, login, signup, logout } from '@/api'
+import { checkAuth, login, signup, logout } from '@/api'
 
 export default {
   state: () => ({
@@ -10,26 +10,21 @@ export default {
     },
   },
   actions: {
-    async nuxtServerInit({ dispatch }) {
+    async nuxtServerInit({ dispatch, state }) {
       await dispatch('checkAuth')
+      if (state.authenticated) {
+        await dispatch('user/getProfile', {}, { root: true })
+      }
     },
     async checkAuth({ commit }) {
-      try {
-        const { authenticated, tokenExpired } = await checkAuth()
-        if (tokenExpired) {
-          const { statusCode } = await refreshToken()
-          if (statusCode === 200) commit('SET_AUTH', authenticated)
-        }
-        commit('SET_AUTH', authenticated)
-      } catch (err) {
-        commit('SET_AUTH', false)
-      }
+      const { authenticated } = await checkAuth()
+      commit('SET_AUTH', authenticated)
     },
     async login({ dispatch }, credentials) {
       try {
         await login(credentials)
-        await dispatch('user/getProfile', {}, { root: true })
         await dispatch('checkAuth')
+        await dispatch('user/getProfile', {}, { root: true })
       } catch (err) {
         return Promise.reject(err)
       }
@@ -37,8 +32,8 @@ export default {
     async signup({ dispatch }, credentials) {
       try {
         await signup(credentials)
-        await dispatch('user/getProfile', {}, { root: true })
         await dispatch('checkAuth')
+        await dispatch('user/getProfile', {}, { root: true })
       } catch (err) {
         return Promise.reject(err)
       }

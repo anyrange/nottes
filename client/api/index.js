@@ -4,10 +4,6 @@ export const checkAuth = () => {
   return api.get('/users/me')
 }
 
-export const refreshToken = () => {
-  return api.get('/auth/refreshToken')
-}
-
 export const login = (credentials) => {
   return api.post('/auth/login', credentials)
 }
