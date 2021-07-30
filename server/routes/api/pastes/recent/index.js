@@ -43,7 +43,7 @@ module.exports = async function (fastify) {
         .populate('author')
         .lean()
 
-      reply.send({ pastes: pastes.reverse() })
+      reply.send({ pastes })
     },
     wsHandler: async (conn, request) => {
       const stringify = fastJson({

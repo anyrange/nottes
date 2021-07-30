@@ -70,7 +70,7 @@ export default {
   async fetch() {
     try {
       const { pastes } = await getRecentPastes()
-      this.pastes = pastes.reverse()
+      this.pastes = pastes
       if (this.authenticated) {
         const { pastes } = await getUserRecentPastes()
         this.userPastes = pastes

@@ -42,7 +42,7 @@ module.exports = async function (fastify) {
         .limit(range)
         .lean()
 
-      reply.send({ pastes: pastes.reverse() })
+      reply.send({ pastes })
     }
   )
 }
