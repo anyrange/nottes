@@ -59,7 +59,7 @@ module.exports = async function (fastify) {
       watcher.on('change', async (data) => {
         switch (data.operationType) {
           case 'delete':
-            conn.socket.send(stringify({ event: data.operationType, paste: { _id: data.documentKey._id } }))
+            conn.socket.send(JSON.stringify({ event: data.operationType, paste: { _id: data.documentKey._id } }))
             break
           case 'insert': {
             if (data.fullDocument.visibility !== 'public') break
