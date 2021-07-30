@@ -35,9 +35,7 @@ module.exports = async function (fastify) {
     },
     async (request, reply) => {
       const paste = request.body
-      if (request.cookies.accessToken) {
-        paste.author = await fastify.verifyToken(request.cookies.accessToken, process.env.ACCESS_TOKEN_SECRET)
-      }
+      if (request.session.isAuth) paste.author = request.session._id
 
       if (!paste.author && paste.visibility === 'private')
         return reply.code(403).send({ message: 'Guests cannot create private pastes' })

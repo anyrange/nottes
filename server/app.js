@@ -24,6 +24,15 @@ module.exports = async function (fastify) {
     console.log('\x1B[36m%s\x1B[0m', `i`, `Docs: ${process.env.BASE_URL}/docs`)
   }
 
+  fastify.register(require('fastify-cookie'))
+
+  const domain = new URL(process.env.BASE_URL).hostname
+  fastify.register(require('fastify-session'), {
+    secret: process.env.COOKIE_SECRET,
+    cookie: { sameSite: 'strict', domain, path: '/', secure: false },
+    maxAge: 1800000,
+  })
+
   fastify.register(require('fastify-websocket'))
 
   fastify.register(AutoLoad, { dir: path.join(__dirname, 'plugins') })

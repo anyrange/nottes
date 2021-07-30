@@ -32,12 +32,15 @@ module.exports = async function (fastify) {
         },
         tags: ['paste'],
       },
-      preValidation: [fastify.authenticate, fastify.requireAuth],
+      preValidation: [fastify.auth],
     },
     async (req, reply) => {
       const { range } = req.query
 
-      const pastes = await fastify.db.Paste.find({ author: req._id }, 'title date').sort('-date').limit(range).lean()
+      const pastes = await fastify.db.Paste.find({ author: req.session._id }, 'title date')
+        .sort('-date')
+        .limit(range)
+        .lean()
 
       reply.send({ pastes: pastes.reverse() })
     }

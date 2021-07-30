@@ -50,7 +50,6 @@ module.exports = async function (fastify) {
         },
         tags: ['users'],
       },
-      preValidation: [fastify.authenticate],
     },
     async (request, reply) => {
       const { range, page, search } = request.query
@@ -66,10 +65,7 @@ module.exports = async function (fastify) {
         visibility: { $ne: 'private' },
       }
 
-      if (request.isAuthenticated) {
-        if (request.tokenExpired) return reply.code(403).send({ message: 'Token expired' })
-        if (request._id === String(user._id)) delete query.visibility
-      }
+      if (request.session.isAuth && request.session._id === String(user._id)) delete query.visibility
 
       const pastes = await fastify.db.Paste.find(query, 'title date id code views visibility')
         .sort('-date')

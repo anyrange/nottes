@@ -19,7 +19,7 @@ module.exports = async function (fastify) {
     async (request, reply) => {
       const { username } = request.body
 
-      const res = await fastify.db.User.updateOne({ _id: request._id }, { username }).catch((err) => {
+      const res = await fastify.db.User.updateOne({ _id: request.session._id }, { username }).catch((err) => {
         if (err.code === 11000)
           return reply.code(400).send({ message: `Username ${err.keyValue.username} is already taken` })
 

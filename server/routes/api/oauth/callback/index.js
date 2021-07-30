@@ -19,9 +19,8 @@ module.exports = async function (fastify) {
       { new: true, upsert: true, projection: 'username avatar', setDefaultsOnInsert: true }
     ).lean()
 
-    const { accessToken, refreshToken } = await fastify.generateTokens(user._id)
-    reply.setCookie('accessToken', accessToken, fastify.cookieOptions)
-    reply.setCookie('refreshToken', refreshToken, fastify.cookieOptions)
+    request.session.isAuth = true
+    request.session._id = user._id
 
     const userData = `?refresh=true`
     if (user.username.split('_')[0] === 'user') return reply.redirect(`${process.env.BASE_URL}/profile${userData}`)

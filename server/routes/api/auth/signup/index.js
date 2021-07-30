@@ -36,10 +36,8 @@ module.exports = async function (fastify) {
 
       const user = await fastify.db.User.create({ username, password: hashedPassword, email })
 
-      const { accessToken, refreshToken } = await fastify.generateTokens(user._id)
-
-      reply.setCookie('accessToken', accessToken, fastify.cookieOptions)
-      reply.setCookie('refreshToken', refreshToken, fastify.cookieOptions)
+      request.session.isAuth = true
+      request.session._id = user._id
 
       reply.code(201).send(user)
     }

@@ -19,7 +19,8 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const { password } = await fastify.db.User.findById(request._id, 'password').lean()
+      const _id = request.session._id
+      const { password } = await fastify.db.User.findById(_id, 'password').lean()
       const newData = request.body
 
       if (password) {
@@ -30,7 +31,7 @@ module.exports = async function (fastify) {
 
       const SALT_ROUNDS = 10
       const newPassword = await bcrypt.hash(newData.password, SALT_ROUNDS)
-      const res = await fastify.db.User.updateOne({ _id: request._id }, { password: newPassword })
+      const res = await fastify.db.User.updateOne({ _id }, { password: newPassword })
 
       if (res.nModified === 0) return reply.send({ message: 'Nothing changed' })
       reply.send({ message: 'OK' })

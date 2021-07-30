@@ -10,18 +10,15 @@ module.exports = async function (fastify) {
             type: 'object',
             properties: {
               authenticated: { type: 'boolean' },
-              tokenExpired: { type: 'boolean' },
               statusCode: { type: 'number' },
             },
           },
         },
         tags: ['users'],
       },
-      preValidation: [fastify.authenticate],
     },
     async (request, reply) => {
-      const { isAuthenticated, tokenExpired } = request
-      reply.send({ authenticated: isAuthenticated, tokenExpired })
+      reply.send({ authenticated: !!request.session.isAuth })
     }
   )
 }

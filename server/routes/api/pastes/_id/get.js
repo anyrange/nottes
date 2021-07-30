@@ -34,9 +34,8 @@ module.exports = async function (fastify) {
 
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
-      if (paste.visibility === 'private' && request.cookies.accessToken) {
-        const authorId = await fastify.verifyToken(request.cookies.accessToken, process.env.ACCESS_TOKEN_SECRET)
-        if (authorId !== String(paste.author._id)) return reply.code(403).send({ message: 'Private paste' })
+      if (paste.visibility === 'private' && request.session._id !== String(paste.author._id)) {
+        return reply.code(403).send({ message: 'Private paste' })
       }
 
       if (paste.password && !request.query.password) return reply.code(403).send({ message: 'Password required' })
