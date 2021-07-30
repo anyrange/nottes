@@ -62,11 +62,10 @@ module.exports = async function (fastify) {
             conn.socket.send(JSON.stringify({ event: data.operationType, paste: { _id: data.documentKey._id } }))
             break
           case 'insert': {
-            if (data.fullDocument.visibility !== 'public') break
+            const doc = data.fullDocument
 
-            const paste = await fastify.db.Paste.findById(data.fullDocument._id, 'title author date')
-              .populate('author')
-              .lean()
+            if (doc.visibility !== 'public' && request.session._id !== String(doc.author)) break
+            const paste = await fastify.db.Paste.findById(doc._id, 'title author date').populate('author').lean()
 
             conn.socket.send(stringify({ event: data.operationType, paste }))
           }
