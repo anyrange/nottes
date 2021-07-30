@@ -8,15 +8,11 @@
             <nuxt-link class="link truncate" :to="'/' + paste._id">
               {{ paste.title }}
             </nuxt-link>
+            <timer class="text-xs" :time="paste.date" />
           </div>
           <div class="flex flex-row gap-4 items-center w-auto">
-            <client-only>
-              <span class="cursor-pointer" @click="deletePaste(paste._id)">
-                <fa :icon="['far', 'trash-alt']" />
-              </span>
-            </client-only>
-            <span v-tooltip:bottom-left="$timePassedFrom(paste.date)">
-              <fa :icon="['far', 'clock']" />
+            <span class="cursor-pointer" @click="deletePaste(paste._id)">
+              <fa :icon="['far', 'trash-alt']" />
             </span>
           </div>
         </div>
@@ -38,6 +34,8 @@
               >
                 <i>{{ paste.author.username }}</i>
               </nuxt-link>
+              <span>|</span>
+              <timer class="text-xs" :time="paste.date" />
             </div>
           </div>
           <div class="flex flex-row gap-4 items-center w-auto">
@@ -50,9 +48,6 @@
                 <fa :icon="['far', 'trash-alt']" />
               </span>
             </client-only>
-            <span v-tooltip:bottom-left="$timePassedFrom(paste.date)">
-              <fa :icon="['far', 'clock']" />
-            </span>
           </div>
         </div>
       </transition-group>
