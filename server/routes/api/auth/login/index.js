@@ -34,7 +34,7 @@ module.exports = async function (fastify) {
       if (!isCorrect) return reply.code(400).send({ message: 'Wrong password' })
 
       request.session.isAuth = true
-      request.session._id = user._id
+      request.session._id = String(user._id)
 
       reply.send(user)
     }

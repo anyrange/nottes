@@ -20,7 +20,7 @@ module.exports = async function (fastify) {
     ).lean()
 
     request.session.isAuth = true
-    request.session._id = user._id
+    request.session._id = String(user._id)
 
     const userData = `?refresh=true`
     if (user.username.split('_')[0] === 'user') return reply.redirect(`${process.env.BASE_URL}/profile${userData}`)
