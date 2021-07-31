@@ -90,6 +90,9 @@ export default {
       return this.$store.state.user.profile
     },
   },
+  updated() {
+    if (this.authenticated) this.$fetch()
+  },
   mounted() {
     this.connectToWs()
   },

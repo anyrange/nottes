@@ -26,6 +26,9 @@ body {
 .default-border {
   @apply border-gray-200 dark:border-gray-700-spotify;
 }
+hr {
+  @apply default-border;
+}
 .custom-element {
   @apply border rounded;
   @apply placeholder-black dark:placeholder-white placeholder-opacity-20 dark:placeholder-opacity-20;

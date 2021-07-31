@@ -12,19 +12,18 @@ export default {
   actions: {
     async nuxtServerInit({ dispatch, state }) {
       await dispatch('checkAuth')
-      if (state.authenticated) {
-        await dispatch('user/getProfile', {}, { root: true })
-      }
     },
-    async checkAuth({ commit }) {
+    async checkAuth({ commit, dispatch }) {
       const { authenticated } = await checkAuth()
+      authenticated
+        ? await dispatch('user/getProfile', {}, { root: true })
+        : commit('user/CLEAR_USER', null, { root: true })
       commit('SET_AUTH', authenticated)
     },
     async login({ dispatch }, credentials) {
       try {
         await login(credentials)
         await dispatch('checkAuth')
-        await dispatch('user/getProfile', {}, { root: true })
       } catch (err) {
         return Promise.reject(err)
       }
@@ -33,7 +32,6 @@ export default {
       try {
         await signup(credentials)
         await dispatch('checkAuth')
-        await dispatch('user/getProfile', {}, { root: true })
       } catch (err) {
         return Promise.reject(err)
       }
@@ -42,7 +40,6 @@ export default {
       try {
         await logout()
         await dispatch('checkAuth')
-        commit('user/CLEAR_USER', null, { root: true })
       } catch (err) {
         return Promise.reject(err)
       }

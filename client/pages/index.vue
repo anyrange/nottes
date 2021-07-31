@@ -40,7 +40,7 @@
             :options="[
               { label: 'Public', value: 'public' },
               { label: 'Unlisted', value: 'unlisted' },
-              { label: 'Private', value: 'private', disabled: true },
+              { label: 'Private', value: 'private', disabled: !authenticated },
             ]"
             label="Paste Visibility"
           />
@@ -89,6 +89,11 @@ export default {
         },
       ],
     }
+  },
+  computed: {
+    authenticated() {
+      return this.$store.state.authenticated
+    },
   },
   methods: {
     async submitPaste() {

@@ -9,6 +9,14 @@
         <span class="block sm:inline">{{ error }}</span>
       </div>
     </form>
+    <hr />
+    <base-button
+      w-full
+      color="primary"
+      :href="'http://localhost:3000/api/oauth/google'"
+      target="_self"
+      label="Sign In with Google"
+    />
   </main>
 </template>
 
