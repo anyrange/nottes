@@ -24,14 +24,13 @@ module.exports = async function (fastify) {
     console.log('\x1B[36m%s\x1B[0m', `i`, `Docs: ${process.env.BASE_URL}/docs`)
   }
 
-  fastify.register(require('fastify-cookie'))
-
   const domain = new URL(process.env.BASE_URL).hostname
-  const MONTH = 1000 * 60 * 60 * 24 * 30
-  fastify.register(require('fastify-session'), {
-    secret: process.env.COOKIE_SECRET,
-    cookie: { sameSite: 'strict', domain, path: '/', secure: false },
-    maxAge: MONTH,
+  const MONTH = 60 * 60 * 24 * 30
+
+  fastify.register(require('fastify-secure-session'), {
+    cookieName: 'session',
+    key: Buffer.from(process.env.COOKIE_SECRET, 'hex'),
+    cookie: { sameSite: 'strict', domain, path: '/', secure: true, maxAge: MONTH },
   })
 
   fastify.register(require('fastify-websocket'))

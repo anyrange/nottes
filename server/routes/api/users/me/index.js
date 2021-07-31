@@ -18,7 +18,7 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      reply.send({ authenticated: !!request.session.isAuth })
+      reply.send({ authenticated: !!request.session.get('_id') })
     }
   )
 }

@@ -34,10 +34,10 @@ module.exports = async function (fastify) {
       },
       preValidation: [fastify.auth],
     },
-    async (req, reply) => {
-      const { range } = req.query
+    async (request, reply) => {
+      const { range } = request.query
 
-      const pastes = await fastify.db.Paste.find({ author: req.session._id }, 'title date')
+      const pastes = await fastify.db.Paste.find({ author: request.session.get('_id') }, 'title date')
         .sort('-date')
         .limit(range)
         .lean()

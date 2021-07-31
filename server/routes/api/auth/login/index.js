@@ -33,8 +33,7 @@ module.exports = async function (fastify) {
       const isCorrect = await bcrypt.compare(password, user.password)
       if (!isCorrect) return reply.code(400).send({ message: 'Wrong password' })
 
-      request.session.isAuth = true
-      request.session._id = String(user._id)
+      request.session.set('_id', String(user._id))
 
       reply.send(user)
     }

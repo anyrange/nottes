@@ -19,7 +19,7 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const _id = request.session._id
+      const _id = request.session.get('_id')
       const { password } = await fastify.db.User.findById(_id, 'password').lean()
       const newData = request.body
 

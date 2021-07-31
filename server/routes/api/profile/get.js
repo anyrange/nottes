@@ -23,7 +23,7 @@ module.exports = async function (fastify) {
     },
     async (request, reply) => {
       const user = await fastify.db.User.findById(
-        request.session._id,
+        request.session.get('_id'),
         'avatar email username password registered'
       ).lean()
       user.hasPassword = !!user.password

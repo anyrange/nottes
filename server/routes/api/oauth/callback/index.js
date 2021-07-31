@@ -19,8 +19,7 @@ module.exports = async function (fastify) {
       { new: true, upsert: true, projection: 'username avatar', setDefaultsOnInsert: true }
     ).lean()
 
-    request.session.isAuth = true
-    request.session._id = String(user._id)
+    request.session.set('_id', String(user._id))
 
     const userData = `?refresh=true`
     if (user.username.split('_')[0] === 'user') return reply.redirect(`${process.env.BASE_URL}/profile${userData}`)

@@ -65,7 +65,7 @@ module.exports = async function (fastify) {
         visibility: { $ne: 'private' },
       }
 
-      if (request.session.isAuth && request.session._id === String(user._id)) delete query.visibility
+      if (request.session.get('_id') === String(user._id)) delete query.visibility
 
       const pastes = await fastify.db.Paste.find(query, 'title date id code views visibility')
         .sort('-date')

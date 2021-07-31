@@ -36,8 +36,7 @@ module.exports = async function (fastify) {
 
       const user = await fastify.db.User.create({ username, password: hashedPassword, email })
 
-      request.session.isAuth = true
-      request.session._id = String(user._id)
+      request.session.set('_id', String(user._id))
 
       reply.code(201).send(user)
     }

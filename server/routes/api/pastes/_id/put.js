@@ -34,7 +34,8 @@ module.exports = async function (fastify) {
       const paste = await fastify.db.Paste.findOne(filter).lean()
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
-      if (request.session._id !== String(paste.author)) return reply.code(403).send({ message: 'Not your paste' })
+      if (request.session.get('_id') !== String(paste.author))
+        return reply.code(403).send({ message: 'Not your paste' })
 
       const newData = request.body
 

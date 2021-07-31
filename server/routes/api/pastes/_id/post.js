@@ -34,7 +34,9 @@ module.exports = async function (fastify) {
       const paste = await fastify.db.Paste.findById(request.params.id, '-_id -views -date -expiry').lean()
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
-      if (paste.visibility === 'private' && request.session._id !== String(paste.author)) {
+      const _id = request.session.get('_id')
+
+      if (paste.visibility === 'private' && _id !== String(paste.author)) {
         return reply.code(403).send({ message: 'Private paste' })
       }
 
@@ -42,7 +44,7 @@ module.exports = async function (fastify) {
       if (paste.password && !(await bcrypt.compare(request.query.password, paste.password)))
         return reply.code(403).send({ message: 'Wrong password' })
 
-      paste.author = request.session._id || null
+      paste.author = _id
       const fork = await fastify.db.Paste.create(paste)
       reply.code(201).send({ paste: fork })
     }
