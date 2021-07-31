@@ -1,7 +1,7 @@
 import api from '@/services/apiClient'
 
 export const checkAuth = () => {
-  return api.get('/users/me')
+  return api.get('/auth/check')
 }
 
 export const login = (credentials) => {

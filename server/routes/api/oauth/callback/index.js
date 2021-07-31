@@ -21,8 +21,11 @@ module.exports = async function (fastify) {
 
     request.session.set('_id', String(user._id))
 
-    const userData = `?refresh=true`
-    if (user.username.split('_')[0] === 'user') return reply.redirect(`${process.env.BASE_URL}/profile${userData}`)
-    reply.redirect(process.env.BASE_URL + userData)
+    let url = process.env.BASE_URL
+    if (user.username.split('_')[0] === 'user') url += '/profile'
+
+    reply
+      .header('Content-Type', 'text/html; charset=UTF-8')
+      .send(`<head><meta http-equiv="refresh" content="0; URL=${url}" /></head>`)
   })
 }
