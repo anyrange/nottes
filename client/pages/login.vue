@@ -13,7 +13,7 @@
     <base-button
       w-full
       color="primary"
-      :href="'http://localhost:3000/api/oauth/google'"
+      :href="redirectURL + '/api/oauth/google'"
       target="_self"
       label="Sign In with Google"
     />
@@ -47,6 +47,11 @@ export default {
         },
       ],
     }
+  },
+  computed: {
+    redirectURL() {
+      return process.env.baseUrl
+    },
   },
   methods: {
     async submit() {
