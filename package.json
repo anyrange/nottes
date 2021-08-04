@@ -14,12 +14,7 @@
     "lint-fix": "eslint --ext .js,.vue . --fix"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.35",
-    "@fortawesome/free-brands-svg-icons": "^5.15.3",
-    "@fortawesome/free-regular-svg-icons": "^5.15.3",
-    "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@nuxtjs/axios": "^5.13.6",
-    "@nuxtjs/fontawesome": "^1.1.2",
     "@nuxtjs/sitemap": "^2.4.0",
     "bcrypt": "^5.0.1",
     "core-js": "^3.15.1",
@@ -40,8 +35,7 @@
     "nanoevents": "^6.0.0",
     "nanoid": "^3.1.23",
     "node-fetch": "^2.6.1",
-    "nuxt": "^2.15.7",
-    "vuex-persistedstate": "^4.0.0"
+    "nuxt": "^2.15.7"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",

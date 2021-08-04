@@ -26,7 +26,6 @@ export default {
     '~/plugins/notify.js',
     '~/plugins/directives.js',
     '~/plugins/vue-unique-id.js',
-    '~/plugins/persistedState.client.js',
   ],
   components: true,
   telemetry: false,
@@ -36,18 +35,10 @@ export default {
   router: {
     prefetchLinks: false,
   },
-  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/color-mode', '@nuxtjs/fontawesome', '@nuxtjs/tailwindcss'],
+  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/color-mode', '@nuxtjs/tailwindcss'],
   modules: ['@nuxtjs/axios', '@nuxtjs/sitemap'],
   axios: {
     baseURL: `${process.env.BASE_URL}/api`,
-  },
-  fontawesome: {
-    component: 'fa',
-    icons: {
-      solid: true,
-      regular: true,
-      brands: true,
-    },
   },
   tailwindcss: {
     exposeConfig: true,

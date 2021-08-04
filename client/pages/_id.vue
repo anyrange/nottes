@@ -1,15 +1,51 @@
 <template>
   <main class="h-main">
-    <h1 class="h-title">{{ paste.title || 'Password required' }}</h1>
-    <template v-if="passwordRequired || false">
+    <template v-if="passwordRequired">
+      <h1 class="h-title">Password required</h1>
       <form class="flex flex-row gap-3" @submit.prevent="getPasteWithPassword()">
         <base-input v-model="password" placeholder="Password" type="password" />
-        <base-button aria-label="get paste" color="primary" type="submit" label="Submit" :disabled="!password" />
+        <base-button aria-label="get paste" color="primary" type="submit" :disabled="!password"> Submit </base-button>
       </form>
     </template>
     <template v-else>
+      <div class="flex flex-col gap-y-3 md:flex-row justify-between items-start">
+        <div class="flex flex-row gap-2">
+          <badge>
+            <template #icon>
+              <icon-code />
+            </template>
+            {{ paste.code }}
+          </badge>
+          <badge>
+            <template #icon>
+              <icon-view />
+            </template>
+            {{ paste.views }}
+          </badge>
+        </div>
+        <div class="flex flex-col md:text-center">
+          <span class="text-base font-semibold">{{ paste.title }}</span>
+          <span class="text-gray-500 dark:text-gray-500-spotify">
+            By
+            <nuxt-link
+              :class="[paste.author.username === 'Guest' ? 'pointer-events-none' : 'link hover:underline']"
+              :to="`/user/${paste.author.username}`"
+            >
+              {{ paste.author.username }}
+            </nuxt-link>
+            at
+            {{ $defaultDateTime(paste.date) }}
+          </span>
+        </div>
+        <div class="flex flex-row gap-2">
+          <icon-document class="tool-icon" />
+          <icon-download class="tool-icon" />
+          <icon-embed class="tool-icon" />
+          <icon-fullscreen class="tool-icon" />
+        </div>
+      </div>
       <div class="flex-none">
-        <code class="block whitespace-pre">{{ paste.content }}</code>
+        <code class="">{{ paste.content }}</code>
       </div>
     </template>
   </main>

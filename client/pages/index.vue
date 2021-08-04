@@ -14,10 +14,11 @@
         <base-button
           aria-label="create new paste"
           color="primary"
-          label="Paste"
           :disabled="!(paste.title && paste.content)"
           @click="submitPaste()"
-        />
+        >
+          Paste
+        </base-button>
       </div>
       <base-textarea v-model="paste.content" placeholder="hello world" name="paste" cols="30" rows="15" />
       <div class="flex flex-col gap-3 2xl:w-1/4 xl:w-1/3 lg:w-1/2 md:w-3/4 sm:w-4/5 w-full">
@@ -45,14 +46,7 @@
             label="Paste Visibility"
           />
         </div>
-        <base-input
-          v-model="paste.password"
-          type="password"
-          autocomplete="false"
-          readonly
-          onfocus="this.removeAttribute('readonly');"
-          placeholder="Password (Optional)"
-        />
+        <base-input v-model="paste.password" type="password" placeholder="Password (Optional)" />
       </div>
     </div>
   </main>
@@ -99,6 +93,7 @@ export default {
     async submitPaste() {
       try {
         await createPaste(this.paste)
+        Object.assign(this.$data, this.$options.data())
       } catch (err) {
         this.$notify.show({
           message: err.response.data.message,
