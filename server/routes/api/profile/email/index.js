@@ -31,7 +31,6 @@ module.exports = async function (fastify) {
 
       await fastify.db.User.updateOne({ _id }, { email: newData.email }).catch((err) => {
         if (err.code === 11000) {
-          console.log('a')
           return reply.code(400).send({ message: `Email ${err.keyValue.email} is already taken` })
         }
         console.log(err)
