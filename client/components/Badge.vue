@@ -1,0 +1,35 @@
+<template>
+  <div
+    class="
+      flex
+      gap-1
+      items-center
+      justify-center
+      py-1
+      px-2
+      rounded
+      bg-gray-100
+      dark:bg-gray-600-spotify
+      text-gray-600-spotify
+      dark:text-gray-200
+    "
+  >
+    <span v-if="hasIcon" class="w-5 h-5 text-sm font-semibold">
+      <slot name="icon" />
+    </span>
+    <span class="text-sm font-normal">
+      <slot />
+    </span>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Badge',
+  computed: {
+    hasIcon() {
+      return !!this.$slots.icon
+    },
+  },
+}
+</script>
