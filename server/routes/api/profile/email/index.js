@@ -8,10 +8,10 @@ module.exports = async function (fastify) {
       schema: {
         body: {
           type: 'object',
-          require: ['password'],
+          require: ['email'],
           properties: {
             password: { type: 'string', minLength: 8, maxLength: 20 },
-            prevPassword: { type: 'string', minLength: 8, maxLength: 20 },
+            email: { type: 'string', format: 'email' },
           },
         },
         response: { 200: { $ref: 'message#' } },
@@ -24,16 +24,19 @@ module.exports = async function (fastify) {
       const newData = request.body
 
       if (password) {
-        if (!newData.prevPassword) return reply.code(400).send({ message: 'Enter your current password' })
+        if (!newData.password) return reply.code(400).send({ message: 'Enter your current password' })
         const isRight = await bcrypt.compare(newData.prevPassword, password)
         if (!isRight) return reply.code(400).send({ message: 'Wrong password' })
       }
 
-      const SALT_ROUNDS = 10
-      const newPassword = await bcrypt.hash(newData.password, SALT_ROUNDS)
-      const res = await fastify.db.User.updateOne({ _id }, { password: newPassword })
+      await fastify.db.User.updateOne({ _id }, { email: newData.email }).catch((err) => {
+        if (err.code === 11000) {
+          console.log('a')
+          return reply.code(400).send({ message: `Email ${err.keyValue.email} is already taken` })
+        }
+        console.log(err)
+      })
 
-      if (res.nModified === 0) return reply.send({ message: 'Nothing changed' })
       reply.send({ message: 'OK' })
     }
   )
