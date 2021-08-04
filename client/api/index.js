@@ -20,6 +20,18 @@ export const getUserProfile = () => {
   return api.get('/profile')
 }
 
+export const changeProfilePassword = ({ password, prevPassword }) => {
+  return api.post('/profile/password', { password, prevPassword })
+}
+
+export const changeProfileUsername = (username) => {
+  return api.post('/profile/username', { username })
+}
+
+export const getUserPage = (username) => {
+  return api.get(`/users/${username}`)
+}
+
 export const getRecentPastes = () => {
   return api.get('/pastes/recent')
 }
