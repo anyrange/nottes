@@ -1,13 +1,23 @@
 <template>
-  <div class="base-input">
-    <label v-if="label.length" :for="$id(label)" class="label">{{ label }}</label>
-    <input v-bind="$attrs" :id="$id(label)" :value="value" class="input custom-element" @input="handleInput" />
+  <div class="base-input-container">
+    <label v-if="label.length" :for="$id(label)" class="base-input-label">{{ label }}</label>
+    <input
+      v-bind="$attrs"
+      :id="$id(label)"
+      ref="input"
+      :value="value"
+      class="custom-element"
+      :class="[inputClass, sizeClass]"
+      :autocomplete="autocomplete"
+      @focus="handleFocus"
+      @input="handleInput"
+    />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'CustomInput',
+  name: 'BaseInput',
   props: {
     value: {
       type: String,
@@ -18,23 +28,66 @@ export default {
       required: false,
       default: '',
     },
+    size: {
+      type: String,
+      required: false,
+      default: 'regular',
+    },
+    wFull: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    autocomplete: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+  },
+  SIZES: ['small', 'regular', 'large'],
+  computed: {
+    sizeClass() {
+      return `base-input-size-${this.$options.SIZES.find((size) => size === this.size)}`
+    },
+    inputClass() {
+      return {
+        'base-input-fullwidth': this.wFull,
+      }
+    },
+  },
+  mounted() {
+    if (this.autocomplete) {
+      this.$refs.input.setAttribute('readonly', '')
+    }
   },
   methods: {
     handleInput(event) {
       this.$emit('input', event.target.value)
+    },
+    handleFocus() {
+      this.$refs.input.removeAttribute('readonly')
     },
   },
 }
 </script>
 
 <style lang="postcss">
-.base-input {
+.base-input-container {
   @apply flex flex-col gap-2;
 }
-.base-input .label {
+.base-input-label {
   @apply dark:text-gray-300 text-gray-600 text-base font-semibold;
 }
-.base-input .input {
-  @apply w-full h-10 px-3;
+.base-input-fullwidth {
+  @apply w-full;
+}
+.base-input-size-large {
+  @apply h-12 px-4;
+}
+.base-input-size-regular {
+  @apply h-10 px-4;
+}
+.base-input-size-small {
+  @apply h-8 px-2;
 }
 </style>
