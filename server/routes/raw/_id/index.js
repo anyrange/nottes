@@ -31,10 +31,7 @@ module.exports = async function (fastify) {
       if (paste.password && !(await bcrypt.compare(request.query.password, paste.password)))
         return reply.code(403).send({ message: 'Wrong password' })
 
-      reply.headers({
-        'Content-Type': 'multipart/form-data',
-        'Content-Disposition': `filename="${request.params.id}.txt"`,
-      })
+      reply.header('Content-Disposition', `filename="${request.params.id}.txt"`)
       reply.send(fastify.decrypt(paste.content))
     }
   )
