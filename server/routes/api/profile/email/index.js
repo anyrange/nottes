@@ -25,7 +25,7 @@ module.exports = async function (fastify) {
 
       if (password) {
         if (!newData.password) return reply.code(400).send({ message: 'Enter your current password' })
-        const isRight = await bcrypt.compare(newData.prevPassword, password)
+        const isRight = await bcrypt.compare(newData.password, password)
         if (!isRight) return reply.code(400).send({ message: 'Wrong password' })
       }
 
