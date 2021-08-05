@@ -3,7 +3,7 @@
     <div class="flex flex-row gap-3 items-center">
       <img
         v-if="user.avatar"
-        class="rounded-full w-22 h-22 flex-none select-none"
+        class="avatar w-22 h-22 flex-none"
         :src="user.avatar"
         :alt="user.username"
       />
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div>
-      <h3 class="text-lg font-medium">Some of your statistics:</h3>
+      <h3 class="text-lg font-medium">Statistics:</h3>
       <ul>
         <li>Total Pastes: {{ user.stats.total }}</li>
         <li>Total views of all your pastes: {{ user.stats.views }}</li>

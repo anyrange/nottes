@@ -2,7 +2,7 @@
   <aside class="flex flex-col gap-4">
     <div v-if="authenticated" class="flex flex-col gap-4">
       <h1 class="h-title">Hello, {{ user.username }}</h1>
-      <transition-group tag="div" name="list" class="flex flex-col gap-3">
+      <transition-group v-if="userPastes.length" tag="div" name="list" class="flex flex-col gap-3">
         <div v-for="paste in userPastes" :key="paste._id" class="flex flex-row gap-2 items-center justify-between">
           <div class="flex flex-col w-9/12 truncate">
             <nuxt-link class="link truncate" :to="'/' + paste._id">
@@ -17,10 +17,13 @@
           </div>
         </div>
       </transition-group>
+      <div v-else>
+        <i>No pastes</i>
+      </div>
     </div>
     <div class="flex flex-col gap-4">
       <h1 class="h-title">Recent Pastes</h1>
-      <transition-group tag="div" name="list" class="flex flex-col gap-3">
+      <transition-group v-if="pastes.length" tag="div" name="list" class="flex flex-col gap-3">
         <div v-for="paste in pastes" :key="paste._id" class="flex flex-row gap-2 items-center justify-between">
           <div class="flex flex-col w-9/12 truncate">
             <nuxt-link class="link truncate" :to="'/' + paste._id">
@@ -51,6 +54,9 @@
           </div>
         </div>
       </transition-group>
+      <div v-else>
+        <i>No pastes</i>
+      </div>
     </div>
   </aside>
 </template>

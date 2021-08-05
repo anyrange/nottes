@@ -8,44 +8,56 @@
       </form>
     </template>
     <template v-else>
-      <div class="flex flex-col gap-y-3 md:flex-row justify-between items-start">
-        <div class="flex flex-row gap-2">
-          <badge>
-            <template #icon>
-              <icon-code />
-            </template>
-            {{ paste.code }}
-          </badge>
-          <badge>
-            <template #icon>
-              <icon-view />
-            </template>
-            {{ paste.views }}
-          </badge>
+      <div class="paste-content" :class="{ 'paste-content-fullscreen': fullscreen }">
+        <div class="flex flex-col gap-y-3 md:flex-row justify-between items-start">
+          <div class="flex flex-row gap-2">
+            <badge>
+              <template #icon>
+                <icon-code />
+              </template>
+              {{ paste.code }}
+            </badge>
+            <badge>
+              <template #icon>
+                <icon-view />
+              </template>
+              {{ paste.views }}
+            </badge>
+          </div>
+          <div class="flex flex-col md:text-center">
+            <span class="text-base font-semibold">{{ paste.title }}</span>
+            <span class="text-gray-500 dark:text-gray-500-spotify">
+              By
+              <nuxt-link
+                :class="[paste.author.username === 'Guest' ? 'pointer-events-none' : 'link hover:underline']"
+                :to="`/user/${paste.author.username}`"
+              >
+                {{ paste.author.username }}
+              </nuxt-link>
+              at
+              {{ $defaultDateTime(paste.date) }}
+            </span>
+          </div>
+          <div class="flex flex-row gap-2">
+            <a :href="`/raw/${paste._id}`">
+              <i title="Raw Paste">
+                <icon-document class="tool-icon" />
+              </i>
+            </a>
+            <i title="Download Paste">
+              <icon-download class="tool-icon" />
+            </i>
+            <i title="Embed Paste">
+              <icon-embed class="tool-icon" />
+            </i>
+            <i title="Fullscreen" @click="fullscreen = !fullscreen">
+              <icon-fullscreen class="tool-icon" />
+            </i>
+          </div>
         </div>
-        <div class="flex flex-col md:text-center">
-          <span class="text-base font-semibold">{{ paste.title }}</span>
-          <span class="text-gray-500 dark:text-gray-500-spotify">
-            By
-            <nuxt-link
-              :class="[paste.author.username === 'Guest' ? 'pointer-events-none' : 'link hover:underline']"
-              :to="`/user/${paste.author.username}`"
-            >
-              {{ paste.author.username }}
-            </nuxt-link>
-            at
-            {{ $defaultDateTime(paste.date) }}
-          </span>
+        <div class="flex-none">
+          <code class="">{{ paste.content }}</code>
         </div>
-        <div class="flex flex-row gap-2">
-          <icon-document class="tool-icon" />
-          <icon-download class="tool-icon" />
-          <icon-embed class="tool-icon" />
-          <icon-fullscreen class="tool-icon" />
-        </div>
-      </div>
-      <div class="flex-none">
-        <code class="">{{ paste.content }}</code>
       </div>
     </template>
   </main>
@@ -69,6 +81,7 @@ export default {
       password: '',
       paste: {},
       passwordRequired: false,
+      fullscreen: false,
     }
   },
   head() {
