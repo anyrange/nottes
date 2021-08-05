@@ -24,6 +24,10 @@ export const changeProfilePassword = ({ password, prevPassword }) => {
   return api.post('/profile/password', { password, prevPassword })
 }
 
+export const changeProfileEmail = ({ password, email }) => {
+  return api.post('/profile/email', { password, email })
+}
+
 export const changeProfileUsername = (username) => {
   return api.post('/profile/username', { username })
 }

@@ -61,12 +61,25 @@
       <div class="flex flex-col gap-2">
         <h3 class="text-base font-medium">Password</h3>
         <div v-if="!password.updating" class="flex flex-row gap-3 items-center">
-          <span>••••••••••••</span>
-          <base-button size="small" @click="startUpdatingPassword()">Change</base-button>
+          <span v-if="profile.hasPassword">••••••••••••</span>
+          <span v-else>
+            <i>No password</i>
+          </span>
+          <base-button size="small" @click="startUpdatingPassword()">
+            {{ profile.hasPassword ? 'Change' : 'Set' }}
+          </base-button>
         </div>
         <div v-else>
           <div class="flex flex-col gap-2">
             <div class="flex flex-row gap-2">
+              <base-input
+                v-if="profile.hasPassword"
+                v-model="password.confirmation"
+                size="small"
+                type="password"
+                name="password-confiration"
+                placeholder="Current Password"
+              />
               <base-input
                 v-model="password.new"
                 size="small"
@@ -74,23 +87,11 @@
                 name="new-password"
                 placeholder="New Password"
               />
-              <base-input
-                v-model="password.confirmation"
-                size="small"
-                type="password"
-                name="password-confiration"
-                placeholder="Current Password"
-              />
             </div>
             <div class="flex flex-row gap-2 justify-start">
               <base-button size="small" @click="cancelUpdatingPassword()">Cancel</base-button>
-              <base-button
-                size="small"
-                color="primary"
-                :disabled="!(password.new && password.confirmation)"
-                @click="updatePassword()"
-              >
-                Update
+              <base-button size="small" color="primary" :disabled="passwordChangeBtnDisabled" @click="updatePassword()">
+                {{ profile.hasPassword ? 'Change' : 'Set' }}
               </base-button>
             </div>
           </div>
@@ -101,7 +102,7 @@
 </template>
 
 <script>
-import { changeProfilePassword, changeProfileUsername } from '@/api'
+import { changeProfilePassword, changeProfileUsername, changeProfileEmail } from '@/api'
 
 export default {
   middleware: ['auth-required'],
@@ -126,6 +127,10 @@ export default {
   computed: {
     profile() {
       return this.$store.state.user.profile
+    },
+    passwordChangeBtnDisabled() {
+      if (!this.profile.hasPassword && this.password.new) return false
+      return !(this.password.new && this.password.confirmation)
     },
   },
   methods: {
@@ -163,8 +168,24 @@ export default {
       this.email.new = ''
       this.email.confirmation = ''
     },
-    updateEmail() {
-      this.email.updating = false
+    async updateEmail() {
+      try {
+        await changeProfileEmail({ password: this.email.confirmation, email: this.email.new })
+        await this.$store.dispatch('user/getProfile')
+        this.email.updating = false
+        this.$notify.show({
+          message: 'Email successfully updated',
+          type: 'success',
+        })
+      } catch (error) {
+        this.$notify.show({
+          message: error.response.data.message,
+          type: 'danger',
+        })
+      } finally {
+        this.email.new = ''
+        this.email.confirmation = ''
+      }
     },
     /**/
     startUpdatingPassword() {
@@ -177,7 +198,10 @@ export default {
     },
     async updatePassword() {
       try {
-        await changeProfilePassword({ password: this.password.new, prevPassword: this.password.confirmation })
+        let body = { password: this.password.new }
+        if (this.profile.hasPassword) body = { ...body, prevPassword: this.password.confirmation }
+        await changeProfilePassword(body)
+        await this.$store.dispatch('user/getProfile')
         this.password.updating = false
         this.$notify.show({
           message: 'Password successfully updated',
