@@ -15,7 +15,7 @@ module.exports = async function (fastify) {
           type: 'object',
           properties: { password: { type: 'string' } },
         },
-        tags: ['layout (Base URL: /)'],
+        tags: ['layout'],
       },
     },
     async (request, reply) => {

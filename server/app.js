@@ -12,10 +12,7 @@ module.exports = async function (fastify) {
   // docs
   if (process.env.NODE_ENV !== 'production') {
     fastify.register(require('fastify-swagger'), {
-      swagger: {
-        info: { title: 'nottes' },
-        basePath: '/api',
-      },
+      swagger: { info: { title: 'nottes' } },
       routePrefix: '/docs',
       uiConfig: { deepLinking: true, displayRequestDuration: true, docExpansion: 'none' },
       exposeRoute: true,
