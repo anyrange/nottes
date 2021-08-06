@@ -14,7 +14,6 @@ const schema = new Schema(
     expiry: { type: Date },
     password: { type: String },
     views: { type: Number, default: 0 },
-    ip: { type: String, required: true },
   },
   { timestamps: { createdAt: 'date', updatedAt: 'updated_at' } }
 )

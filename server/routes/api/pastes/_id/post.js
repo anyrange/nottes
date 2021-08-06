@@ -45,8 +45,6 @@ module.exports = async function (fastify) {
         return reply.code(403).send({ message: 'Wrong password' })
 
       paste.author = _id
-      paste.ip = request.ip
-
       const fork = await fastify.db.Paste.create(paste)
       reply.code(201).send({ paste: fork })
     }

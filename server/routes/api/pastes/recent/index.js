@@ -26,7 +26,6 @@ module.exports = async function (fastify) {
                   date: { type: 'string', format: 'datetime' },
                   author: { $ref: 'user#' },
                   _id: { type: 'string' },
-                  ip: { type: 'string' },
                 },
               },
             },
@@ -38,7 +37,7 @@ module.exports = async function (fastify) {
     },
     handler: async (request, reply) => {
       const { range } = request.query
-      const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author date ip')
+      const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author date')
         .sort('-date')
         .limit(range)
         .populate('author')
@@ -66,7 +65,7 @@ module.exports = async function (fastify) {
             const doc = data.fullDocument
 
             if (doc.visibility !== 'public' && request.session.get('_id') !== String(doc.author)) break
-            const paste = await fastify.db.Paste.findById(doc._id, 'title author date ip').populate('author').lean()
+            const paste = await fastify.db.Paste.findById(doc._id, 'title author date').populate('author').lean()
 
             conn.socket.send(stringify({ event: data.operationType, paste }))
           }

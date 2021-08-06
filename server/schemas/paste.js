@@ -22,7 +22,6 @@ module.exports = fp(async function (fastify) {
       date: { type: 'string' },
       views: { type: 'number' },
       code: { type: 'string' },
-      ip: { type: 'string' },
     },
     definitions: {
       micropaste: {
@@ -34,7 +33,6 @@ module.exports = fp(async function (fastify) {
           views: { type: 'number' },
           code: { type: 'string' },
           visibility: { type: 'string' },
-          ip: { type: 'string' },
         },
       },
     },

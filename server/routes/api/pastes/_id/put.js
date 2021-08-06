@@ -27,15 +27,15 @@ module.exports = async function (fastify) {
         response: { XXX: { $ref: 'message#' } },
         tags: ['paste'],
       },
+      preValidation: [fastify.auth],
     },
     async (request, reply) => {
       const filter = { _id: request.params.id }
       const paste = await fastify.db.Paste.findOne(filter).lean()
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
-      const sameAuthor = request.session.get('_id') === String(paste.author)
-      const sameIp = request.ip === paste.ip
-      if (!sameAuthor && !sameIp) return reply.code(403).send({ message: 'Not your paste' })
+      if (request.session.get('_id') !== String(paste.author))
+        return reply.code(403).send({ message: 'Not your paste' })
 
       const newData = request.body
 
