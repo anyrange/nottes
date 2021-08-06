@@ -19,7 +19,7 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const paste = await fastify.db.Paste.findById(request.params.id, 'content visibility author').lean()
+      const paste = await fastify.db.Paste.findById(request.params.id, 'content visibility author code').lean()
 
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
@@ -31,7 +31,7 @@ module.exports = async function (fastify) {
       if (paste.password && !(await bcrypt.compare(request.query.password, paste.password)))
         return reply.code(403).send({ message: 'Wrong password' })
 
-      reply.header('Content-Disposition', `filename="${request.params.id}.txt"`)
+      reply.header('Content-Disposition', `filename="${request.params.id}.${paste.code}"`)
       reply.send(fastify.decrypt(paste.content))
     }
   )

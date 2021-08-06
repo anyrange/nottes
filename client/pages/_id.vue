@@ -44,9 +44,11 @@
                 <icon-document class="tool-icon" />
               </i>
             </a>
-            <i title="Download Paste">
-              <icon-download class="tool-icon" />
-            </i>
+            <a :href="`/raw/${paste._id}`" download>
+              <i title="Download Paste">
+                <icon-download class="tool-icon" />
+              </i>
+            </a>
             <i title="Embed Paste">
               <icon-embed class="tool-icon" />
             </i>
