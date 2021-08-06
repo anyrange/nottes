@@ -42,8 +42,10 @@ module.exports = async function (fastify) {
 
       paste.content = fastify.decrypt(paste.content)
 
-      if (!paste.views.length || !paste.views.find((ip) => ip === request.ip)) {
-        await fastify.db.Paste.updateOne({ _id: request.params.id }, { $push: { views: request.ip } })
+      const requestIp = request.ips[request.ips.length - 1]
+
+      if (!paste.views.length || !paste.views.find((ip) => ip === requestIp)) {
+        await fastify.db.Paste.updateOne({ _id: request.params.id }, { $push: { views: requestIp } })
       }
 
       paste.views = paste.views.length

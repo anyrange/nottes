@@ -3,7 +3,7 @@
 require('dotenv').config()
 
 const Fastify = require('fastify')
-const app = Fastify()
+const app = Fastify({ trustProxy: true })
 
 const appService = require('./app.js')
 app.register(appService)
