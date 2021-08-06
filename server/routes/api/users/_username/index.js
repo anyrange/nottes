@@ -78,7 +78,7 @@ module.exports = async function (fastify) {
         public: pastes.filter((p) => p.visibility === 'public').length,
         unlisted: pastes.filter((p) => p.visibility === 'unlisted').length,
         private: pastes.filter((p) => p.visibility === 'private').length,
-        views: pastes.reduce((total, current) => total + current.views, 0),
+        views: pastes.reduce((total, current) => total + current.views.length, 0),
       }
 
       reply.send({ user, pastes })

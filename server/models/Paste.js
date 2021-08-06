@@ -13,7 +13,7 @@ const schema = new Schema(
     visibility: { type: String, default: 'public' },
     expiry: { type: Date },
     password: { type: String },
-    views: { type: Number, default: 0 },
+    views: [String],
   },
   { timestamps: { createdAt: 'date', updatedAt: 'updated_at' } }
 )
