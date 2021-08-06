@@ -10,7 +10,13 @@
         </div>
         <div v-else>
           <div class="flex flex-col gap-2">
-            <base-input v-model="username.new" size="small" name="new-username" placeholder="New Username" />
+            <base-input
+              v-model="username.new"
+              size="small"
+              name="new-username"
+              autocomplete="off"
+              placeholder="New Username"
+            />
             <div class="flex flex-row gap-2 justify-start">
               <base-button size="small" @click="cancelUpdatingUsername()">Cancel</base-button>
               <base-button size="small" color="primary" :disabled="!username.new" @click="updateUsername()">
@@ -34,6 +40,7 @@
                 size="small"
                 type="email"
                 name="new-email"
+                autocomplete="off"
                 placeholder="email@gmail.com"
               />
               <base-input
@@ -41,6 +48,7 @@
                 size="small"
                 type="password"
                 name="password-confiration"
+                autocomplete="off"
                 placeholder="Current Password"
               />
             </div>
@@ -78,6 +86,7 @@
                 size="small"
                 type="password"
                 name="password-confiration"
+                autocomplete="off"
                 placeholder="Current Password"
               />
               <base-input
@@ -85,6 +94,7 @@
                 size="small"
                 type="password"
                 name="new-password"
+                autocomplete="off"
                 placeholder="New Password"
               />
             </div>

@@ -26,6 +26,7 @@ export default {
     '~/plugins/notify.js',
     '~/plugins/directives.js',
     '~/plugins/vue-unique-id.js',
+    '~/plugins/vue-disable-autocomplete.js',
   ],
   components: true,
   telemetry: false,

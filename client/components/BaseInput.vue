@@ -8,8 +8,6 @@
       :value="value"
       class="custom-element"
       :class="[inputClass, sizeClass]"
-      :autocomplete="autocomplete"
-      @focus="handleFocus"
       @input="handleInput"
     />
   </div>
@@ -38,11 +36,6 @@ export default {
       required: false,
       default: true,
     },
-    autocomplete: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
   },
   SIZES: ['small', 'regular', 'large'],
   computed: {
@@ -55,17 +48,9 @@ export default {
       }
     },
   },
-  mounted() {
-    if (this.autocomplete) {
-      this.$refs.input.setAttribute('readonly', '')
-    }
-  },
   methods: {
     handleInput(event) {
       this.$emit('input', event.target.value)
-    },
-    handleFocus() {
-      this.$refs.input.removeAttribute('readonly')
     },
   },
 }

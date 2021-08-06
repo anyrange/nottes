@@ -2,9 +2,9 @@
   <main class="h-main h-page">
     <h1 class="h-title">Sign up</h1>
     <form class="flex flex-col gap-3" @submit.prevent="submit()">
-      <base-input v-model="user.username" label="Username" placeholder="Username" />
-      <base-input v-model="user.password" label="Password" type="password" placeholder="Password" />
-      <base-input v-model="user.email" label="Email" placeholder="Email" />
+      <base-input v-model="user.username" label="Username" autocomplete="off" placeholder="Username" />
+      <base-input v-model="user.password" label="Password" autocomplete="off" type="password" placeholder="Password" />
+      <base-input v-model="user.email" label="Email" autocomplete="off" placeholder="Email" />
       <base-button type="submit" w-full color="primary">Sign Up</base-button>
       <div v-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
         <span class="block sm:inline">{{ error }}</span>
