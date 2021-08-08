@@ -9,7 +9,7 @@ module.exports = async function (fastify) {
           type: 'object',
           properties: { id: { type: 'string' } },
         },
-        response: { XXX: { $ref: 'message#' } },
+        response: { X0X: { $ref: 'message#' } },
         tags: ['paste'],
       },
       preValidation: [fastify.auth],

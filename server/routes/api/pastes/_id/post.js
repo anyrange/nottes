@@ -18,7 +18,7 @@ module.exports = async function (fastify) {
               statusCode: { type: 'number' },
             },
           },
-          XXX: { $ref: 'message#' },
+          X0X: { $ref: 'message#' },
         },
         tags: ['paste'],
       },

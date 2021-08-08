@@ -24,7 +24,7 @@ module.exports = async function (fastify) {
             password: { type: 'string' },
           },
         },
-        response: { XXX: { $ref: 'message#' } },
+        response: { X0X: { $ref: 'message#' } },
         tags: ['paste'],
       },
       preValidation: [fastify.auth],
