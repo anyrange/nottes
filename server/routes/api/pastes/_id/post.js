@@ -1,7 +1,5 @@
 'use strict'
 
-const bcrypt = require('bcrypt')
-
 module.exports = async function (fastify) {
   fastify.post(
     '',
@@ -11,10 +9,6 @@ module.exports = async function (fastify) {
         params: {
           type: 'object',
           properties: { id: { type: 'string' } },
-        },
-        querystring: {
-          type: 'object',
-          properties: { password: { type: 'string' } },
         },
         response: {
           201: {
@@ -40,10 +34,9 @@ module.exports = async function (fastify) {
         return reply.code(403).send({ message: 'Private paste' })
       }
 
-      if (paste.password && !request.query.password) return reply.code(403).send({ message: 'Password required' })
-      if (paste.password && !(await bcrypt.compare(request.query.password, paste.password)))
-        return reply.code(403).send({ message: 'Wrong password' })
+      if (paste.password) return reply.code(403).send({ message: 'Paste cannot be forked due to password' })
 
+      paste.title = paste.title + ' [fork]'
       paste.author = _id
       const fork = await fastify.db.Paste.create(paste)
       reply.code(201).send({ paste: fork })
