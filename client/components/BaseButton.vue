@@ -94,7 +94,7 @@ export default {
 
 <style lang="postcss">
 .base-button {
-  @apply flex rounded items-center justify-center text-center select-none text-base font-normal;
+  @apply flex rounded items-center justify-center text-center select-none font-normal;
   @apply focus:outline-none focus:ring-2;
 }
 .base-button-disabled {
@@ -104,13 +104,13 @@ export default {
   @apply w-full;
 }
 .base-button-size-large {
-  @apply h-12 px-4;
+  @apply h-12 px-4 text-base;
 }
 .base-button-size-regular {
-  @apply h-10 px-4;
+  @apply h-10 px-4 text-base;
 }
 .base-button-size-small {
-  @apply h-8 px-2;
+  @apply h-8 px-2 text-sm;
 }
 .base-button-color-flat {
   @apply hover:border-black dark:hover:border-white hover:border-opacity-30 dark:hover:border-opacity-10;
