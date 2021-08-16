@@ -1,5 +1,13 @@
 <template>
-  <textarea id="paste" v-bind="$attrs" :value="value" class="base-textarea custom-element" @input="handleInput" />
+  <textarea
+    id="paste"
+    v-bind="$attrs"
+    ref="textarea"
+    :value="value"
+    rows="1"
+    class="base-textarea custom-element"
+    @input="handleInput"
+  />
 </template>
 
 <script>
@@ -11,9 +19,17 @@ export default {
       required: true,
     },
   },
+  mounted() {
+    this.resize()
+  },
   methods: {
     handleInput(event) {
+      this.resize()
       this.$emit('input', event.target.value)
+    },
+    resize() {
+      const { textarea } = this.$refs
+      textarea.style.height = textarea.scrollHeight + 'px'
     },
   },
 }
