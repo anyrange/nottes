@@ -12,7 +12,7 @@
           </div>
           <div class="flex flex-row gap-4 items-center w-auto">
             <span class="cursor-pointer" @click="deletePaste(paste._id)">
-              <icon-trash class="icon" />
+              <icon-trash class="icon w-6 h-6" />
             </span>
           </div>
         </div>
@@ -48,7 +48,7 @@
                 class="cursor-pointer"
                 @click="deletePaste(paste._id)"
               >
-                <icon-trash class="icon" />
+                <icon-trash class="icon w-6 h-6" />
               </span>
             </client-only>
           </div>
