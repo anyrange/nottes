@@ -48,6 +48,14 @@ export const createPaste = (paste) => {
   return api.post('/pastes', paste)
 }
 
+export const forkPaste = (id) => {
+  return api.post(`/pastes/${id}`)
+}
+
+export const editPaste = ({ id, paste }) => {
+  return api.put(`/pastes/${id}`, paste)
+}
+
 export const deletePaste = (id) => {
   return api.delete(`/pastes/${id}`)
 }
