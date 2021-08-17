@@ -17,7 +17,7 @@ module.exports = async function (fastify) {
             content: { type: 'string' },
             code: { type: 'string' },
             visibility: { type: 'string', pattern: '^(public|private|unlisted)$' },
-            expiry: { type: 'string', pattern: '^(never|10m|1h|1d|1w|2w|1month)$' },
+            expiry: { type: 'string', pattern: '^(|10m|1h|1d|1w|2w|1month)$' },
             password: { type: 'string' },
           },
         },

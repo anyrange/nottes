@@ -10,7 +10,4 @@ const dates = {
   '1month': MINUTE * 60 * 24 * 30,
 }
 
-module.exports = (time) => {
-  if (time === 'never') return null
-  return new Date(new Date().getTime() + dates[time])
-}
+module.exports = (time) => new Date(new Date().getTime() + dates[time])
