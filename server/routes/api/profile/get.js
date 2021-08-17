@@ -26,6 +26,9 @@ module.exports = async function (fastify) {
         request.session.get('_id'),
         'avatar email username password registered'
       ).lean()
+
+      if (!user) return reply.code(404).send({ message: 'User not found' })
+
       user.hasPassword = !!user.password
 
       reply.send(user)
