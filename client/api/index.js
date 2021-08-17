@@ -36,12 +36,12 @@ export const getUserPage = (username) => {
   return api.get(`/users/${username}`)
 }
 
-export const getRecentPastes = () => {
-  return api.get('/pastes/recent')
+export const getRecentPastes = ({ range }) => {
+  return api.get(`/pastes/recent?range=${range}`)
 }
 
-export const getUserRecentPastes = () => {
-  return api.get('/pastes/me')
+export const getUserRecentPastes = ({ range }) => {
+  return api.get(`/pastes/me?range=${range}`)
 }
 
 export const createPaste = (paste) => {

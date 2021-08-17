@@ -7,11 +7,11 @@
         <base-select
           v-model="paste.code"
           :options="[
-            { label: 'HTML', value: 'markup' },
             { label: 'Markdown', value: 'md' },
+            { label: 'JavaScript', value: 'js' },
             { label: 'Java', value: 'java' },
             { label: 'C++', value: 'cpp' },
-            { label: 'JavaScript', value: 'js' },
+            { label: 'HTML', value: 'markup' },
           ]"
         />
       </div>

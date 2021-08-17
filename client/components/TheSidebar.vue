@@ -2,19 +2,14 @@
   <aside class="flex flex-col gap-4">
     <div v-if="authenticated" class="flex flex-col gap-4">
       <h1 class="h-title">Hello, {{ user.username }}</h1>
-      <transition-group v-if="userPastes.length" tag="div" name="list" class="flex flex-col gap-3">
+      <transition-group v-if="!!userPastes.length" tag="div" name="list" class="flex flex-col gap-2">
         <div v-for="paste in userPastes" :key="paste._id" class="flex flex-row gap-2 items-center justify-between">
-          <div class="flex flex-col w-9/12 truncate">
-            <nuxt-link class="link truncate" :to="'/' + paste._id">
-              {{ paste.title }}
-            </nuxt-link>
-            <timer class="text-xs" :time="paste.date" />
-          </div>
-          <div class="flex flex-row gap-4 items-center w-auto">
-            <span class="cursor-pointer" @click="deletePaste(paste._id)">
-              <icon-trash class="icon w-6 h-6" />
-            </span>
-          </div>
+          <nuxt-link class="w-9/12 link truncate" :to="'/' + paste._id">
+            {{ paste.title }}
+          </nuxt-link>
+          <span class="w-auto cursor-pointer" @click="deletePaste(paste._id)">
+            <icon-trash class="icon w-5 h-5" />
+          </span>
         </div>
       </transition-group>
       <div v-else>
@@ -24,7 +19,11 @@
     <div class="flex flex-col gap-4">
       <h1 class="h-title">Recent Pastes</h1>
       <transition-group v-if="pastes.length" tag="div" name="list" class="flex flex-col gap-3">
-        <div v-for="paste in pastes" :key="paste._id" class="flex flex-row gap-2 items-center justify-between">
+        <div
+          v-for="paste in pastes"
+          :key="paste._id"
+          class="transition-all duration-1000 flex flex-row gap-2 items-center justify-between"
+        >
           <div class="flex flex-col w-9/12 truncate">
             <nuxt-link class="link truncate" :to="'/' + paste._id">
               {{ paste.title }}
@@ -48,7 +47,7 @@
                 class="cursor-pointer"
                 @click="deletePaste(paste._id)"
               >
-                <icon-trash class="icon w-6 h-6" />
+                <icon-trash class="icon w-5 h-5" />
               </span>
             </client-only>
           </div>
@@ -73,12 +72,15 @@ export default {
       socketState: '',
     }
   },
+  USER_PASTES_AMOUNT: 6,
+  AUTHORIZED_PASTES_AMOUNT: 12,
+  UNAUTHORIZED_PASTES_AMOUNT: 15,
   async fetch() {
     try {
-      const { pastes } = await getRecentPastes()
+      const { pastes } = await getRecentPastes({ range: this.recentPastesAmount })
       this.pastes = pastes
       if (this.authenticated) {
-        const { pastes } = await getUserRecentPastes()
+        const { pastes } = await getUserRecentPastes({ range: this.$options.USER_PASTES_AMOUNT })
         this.userPastes = pastes
       }
     } catch (err) {
@@ -94,6 +96,9 @@ export default {
     },
     user() {
       return this.$store.state.user.profile
+    },
+    recentPastesAmount() {
+      return this.authenticated ? this.$options.AUTHORIZED_PASTES_AMOUNT : this.$options.UNAUTHORIZED_PASTES_AMOUNT
     },
   },
   updated() {
@@ -118,8 +123,8 @@ export default {
             if (message.paste.author.username === this.user.username) {
               this.userPastes.unshift(message.paste)
             }
-            if (this.userPastes.length > 7) this.userPastes.pop()
-            if (this.pastes.length > 12) this.pastes.pop()
+            if (this.userPastes.length > this.$options.USER_PASTES_AMOUNT) this.userPastes.pop()
+            if (this.pastes.length > this.$options.UNAUTHORIZED_PASTES_AMOUNT) this.pastes.pop()
             break
           case 'delete':
             this.pastes = this.pastes.filter((el) => el._id !== message.paste._id)
