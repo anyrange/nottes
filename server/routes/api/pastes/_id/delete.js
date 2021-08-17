@@ -22,7 +22,7 @@ module.exports = async function (fastify) {
         return reply.code(403).send({ message: 'Not your paste' })
 
       await fastify.db.Paste.deleteOne({ _id: request.params.id })
-      reply.send({ message: 'OK' })
+      reply.code(204).send()
     }
   )
 }

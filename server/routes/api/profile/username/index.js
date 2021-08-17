@@ -12,7 +12,6 @@ module.exports = async function (fastify) {
             username: { type: 'string', minLength: 3, maxLength: 30 },
           },
         },
-        response: { 200: { $ref: 'message#' } },
         tags: ['profile'],
       },
     },
@@ -27,7 +26,7 @@ module.exports = async function (fastify) {
       })
 
       if (res.nModified === 0) return reply.send({ message: 'Nothing changed' })
-      reply.send({ message: 'OK' })
+      reply.code(204).send()
     }
   )
 }

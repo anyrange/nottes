@@ -46,7 +46,7 @@ module.exports = async function (fastify) {
       const res = await fastify.db.Paste.updateOne(filter, newData)
       if (res.nModified === 0) return reply.send({ message: 'Nothing changed' })
 
-      reply.send({ message: 'OK' })
+      reply.code(204).send()
     }
   )
 }

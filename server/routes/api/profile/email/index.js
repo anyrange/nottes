@@ -14,7 +14,6 @@ module.exports = async function (fastify) {
             email: { type: 'string', format: 'email' },
           },
         },
-        response: { 200: { $ref: 'message#' } },
         tags: ['profile'],
       },
     },
@@ -36,7 +35,7 @@ module.exports = async function (fastify) {
         console.log(err)
       })
 
-      reply.send({ message: 'OK' })
+      reply.code(204).send()
     }
   )
 }

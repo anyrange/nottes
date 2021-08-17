@@ -14,7 +14,6 @@ module.exports = async function (fastify) {
             prevPassword: { type: 'string', minLength: 8, maxLength: 20 },
           },
         },
-        response: { 200: { $ref: 'message#' } },
         tags: ['profile'],
       },
     },
@@ -34,7 +33,7 @@ module.exports = async function (fastify) {
       const res = await fastify.db.User.updateOne({ _id }, { password: newPassword })
 
       if (res.nModified === 0) return reply.send({ message: 'Nothing changed' })
-      reply.send({ message: 'OK' })
+      reply.code(204).send()
     }
   )
 }
