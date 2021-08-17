@@ -21,7 +21,7 @@ module.exports = fp(async function (fastify) {
       },
       date: { type: 'string' },
       visibility: { type: 'string' },
-      expiry: { type: 'string' },
+      expiry: { type: 'string', default: 'never' },
       views: { type: 'number' },
       code: { type: 'string' },
     },
