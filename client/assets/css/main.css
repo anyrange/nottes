@@ -87,5 +87,12 @@ textarea {
 .list-enter,
 .list-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateX(-5px);
+}
+
+.paste-control-head {
+  @apply flex flex-row gap-3;
+}
+.paste-control-footer {
+  @apply flex md:flex-row flex-col gap-3 md:items-end 2xl:w-4/6 xl:w-3/4 lg:w-1/2 w-full;
 }

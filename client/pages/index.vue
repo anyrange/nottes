@@ -2,33 +2,16 @@
   <main class="h-main">
     <h1 class="h-title">New Paste</h1>
     <div class="flex flex-col gap-3">
-      <div class="flex flex-row gap-3">
+      <div class="paste-control-head">
         <base-input v-model="paste.title" name="paste-title" autocomplete="off" placeholder="Paste Title" />
-        <base-select
-          v-model="paste.code"
-          :options="[
-            { label: 'Markdown', value: 'md' },
-            { label: 'JavaScript', value: 'js' },
-            { label: 'Java', value: 'java' },
-            { label: 'C++', value: 'cpp' },
-            { label: 'HTML', value: 'markup' },
-          ]"
-        />
+        <base-select v-model="paste.code" :options="$options.languages" />
       </div>
       <textarea-autosize v-model="paste.content" placeholder="hello world" name="paste" cols="30" rows="15" />
-      <div class="flex md:flex-row flex-col gap-3 md:items-end 2xl:w-4/6 xl:w-3/4 lg:w-1/2 w-full">
+      <div class="paste-control-footer">
         <base-select
-          v-model="paste.expiration"
+          v-model="paste.expiry"
           class="md:w-1/3 w-full"
-          :options="[
-            { label: 'Never', value: 'never' },
-            { label: '10 Minutes', value: '10m' },
-            { label: '1 Hour', value: '1h' },
-            { label: '1 Day', value: '1d' },
-            { label: '1 Week', value: '1w' },
-            { label: '2 Weeks', value: '2w' },
-            { label: '1 Month', value: '1month' },
-          ]"
+          :options="$options.expirationOptions"
           label="Paste Expiration"
         />
         <base-select
@@ -57,6 +40,8 @@
 
 <script>
 import { createPaste } from '@/api'
+import languages from '@/languages.json'
+import expirationOptions from '@/expirationOptions.json'
 
 export default {
   data() {
@@ -66,7 +51,7 @@ export default {
         code: 'md',
         content: '',
         visibility: 'public',
-        expiration: 'never',
+        expiry: '',
         password: '',
       },
     }
@@ -87,6 +72,8 @@ export default {
       ],
     }
   },
+  languages,
+  expirationOptions,
   computed: {
     authenticated() {
       return this.$store.state.authenticated

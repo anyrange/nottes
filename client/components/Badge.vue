@@ -17,7 +17,7 @@
     <span v-if="hasIcon" class="w-5 h-5 text-sm font-semibold">
       <slot name="icon" />
     </span>
-    <span class="text-sm font-normal">
+    <span class="text-sm font-normal select-none">
       <slot />
     </span>
   </div>

@@ -101,8 +101,16 @@ export default {
       return this.authenticated ? this.$options.AUTHORIZED_PASTES_AMOUNT : this.$options.UNAUTHORIZED_PASTES_AMOUNT
     },
   },
-  updated() {
-    if (this.authenticated) this.$fetch()
+  watch: {
+    authenticated() {
+      this.$fetch()
+    },
+    pastes(val) {
+      if (val.length > this.$options.UNAUTHORIZED_PASTES_AMOUNT) this.pastes.pop()
+    },
+    userPastes(val) {
+      if (val.length > this.$options.USER_PASTES_AMOUNT) this.userPastes.pop()
+    },
   },
   mounted() {
     this.connectToWs()
@@ -123,8 +131,6 @@ export default {
             if (message.paste.author.username === this.user.username) {
               this.userPastes.unshift(message.paste)
             }
-            if (this.userPastes.length > this.$options.USER_PASTES_AMOUNT) this.userPastes.pop()
-            if (this.pastes.length > this.$options.UNAUTHORIZED_PASTES_AMOUNT) this.pastes.pop()
             break
           case 'delete':
             this.pastes = this.pastes.filter((el) => el._id !== message.paste._id)

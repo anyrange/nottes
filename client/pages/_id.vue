@@ -8,31 +8,28 @@
       </form>
     </template>
     <template v-else>
-      <div class="default-background flex flex-col gap-2" :class="{ 'paste-content-fullscreen': fullscreen }">
-        <div class="flex flex-col gap-y-3 md:flex-row justify-between items-start">
-          <div class="flex flex-row gap-2 md:order-1 order-3">
+      <div class="default-background flex flex-col gap-3" :class="{ 'paste-content-fullscreen': fullscreen }">
+        <p>
+          <span class="text-base font-semibold">
+            {{ paste.title }}
+          </span>
+          <span class="text-gray-500 dark:text-gray-500-spotify">by</span>
+          <nuxt-link
+            :class="[paste.author.username === 'Guest' ? 'pointer-events-none' : 'link hover:underline']"
+            :to="`/user/${paste.author.username}`"
+          >
+            {{ paste.author.username }}
+          </nuxt-link>
+          <span class="text-gray-500 dark:text-gray-500-spotify">at {{ $defaultDateTime(paste.date) }}</span>
+        </p>
+        <div class="flex flex-col sm:flex-row gap-2 justify-between">
+          <div class="flex flex-row gap-2">
             <badge>
               <template #icon>
                 <icon-view />
               </template>
               {{ paste.views }}
             </badge>
-          </div>
-          <div class="flex flex-col md:text-center md:order-2 order-1">
-            <span class="text-base font-semibold">{{ paste.title }}</span>
-            <span class="text-gray-500 dark:text-gray-500-spotify">
-              By
-              <nuxt-link
-                :class="[paste.author.username === 'Guest' ? 'pointer-events-none' : 'link hover:underline']"
-                :to="`/user/${paste.author.username}`"
-              >
-                {{ paste.author.username }}
-              </nuxt-link>
-              at
-              {{ $defaultDateTime(paste.date) }}
-            </span>
-          </div>
-          <div class="flex flex-row gap-2 md:order-3 order-2">
             <badge>
               <template #icon>
                 <icon-code />
@@ -40,9 +37,7 @@
               {{ paste.code }}
             </badge>
           </div>
-        </div>
-        <div class="flex flex-col gap-2 sm:flex-row justify-between">
-          <div class="flex flex-row gap-2 md:order-2 order-1 ml-auto">
+          <div class="flex flex-row gap-2">
             <i v-if="canEditPaste" title="Edit Paste" @click="editing = !editing">
               <icon-edit class="tool-icon" />
             </i>
@@ -66,20 +61,34 @@
               <icon-fullscreen class="tool-icon" />
             </i>
           </div>
-          <base-button
-            v-if="canEditPaste"
-            class="md:order-1 order-2"
-            aria-label="edit paste"
-            color="primary"
-            size="small"
-            @click="updatePaste()"
-          >
-            Update Paste
+        </div>
+        <div v-if="editing" class="paste-control-head">
+          <base-input v-model="paste.title" name="paste-title" autocomplete="off" placeholder="Paste Title" />
+          <base-select v-model="paste.code" :options="$options.languages" />
+        </div>
+        <component :is="editing ? 'textarea-autosize' : 'code-highlight'" v-model="paste.content" :lang="paste.code" />
+        <div v-if="editing" class="paste-control-footer">
+          <base-select
+            v-model="paste.expiry"
+            class="md:w-1/3 w-full"
+            :options="$options.expirationOptions"
+            label="Paste Expiration"
+          />
+          <base-select
+            v-model="paste.visibility"
+            class="md:w-1/3 w-full"
+            :options="[
+              { label: 'Public', value: 'public' },
+              { label: 'Unlisted', value: 'unlisted' },
+              { label: 'Private', value: 'private', disabled: !authenticated },
+            ]"
+            label="Paste Visibility"
+          />
+          <base-input v-model="newPassword" type="password" autocomplete="off" placeholder="Password" />
+          <base-button color="primary" class="md:order-1 order-2" aria-label="edit paste" @click="updatePaste()">
+            Update
           </base-button>
         </div>
-        <component :is="editing ? 'textarea-autosize' : 'code-highlight'" v-model="paste.content" :lang="paste.code">
-          {{ paste.content }}
-        </component>
       </div>
     </template>
   </main>
@@ -87,6 +96,8 @@
 
 <script>
 import { getPaste, forkPaste, editPaste } from '@/api'
+import languages from '@/languages.json'
+import expirationOptions from '@/expirationOptions.json'
 
 export default {
   async asyncData({ route, params, error }) {
@@ -101,13 +112,15 @@ export default {
   data() {
     return {
       password: '',
+      newPassword: '',
       paste: {},
-      initialPaste: {},
       passwordRequired: false,
       fullscreen: false,
       editing: false,
     }
   },
+  languages,
+  expirationOptions,
   head() {
     const title = this.paste.title || 'nottes'
     const description = 'nottes-description'
@@ -138,9 +151,8 @@ export default {
   methods: {
     async getPasteWithPassword() {
       try {
-        const res = await getPaste({ id: this.$route.params.id, password: this.password })
-        this.paste = res.paste
-        this.initialPaste = res.paste
+        const { paste } = await getPaste({ id: this.$route.params.id, password: this.password })
+        this.paste = paste
         this.passwordRequired = false
       } catch (err) {
         this.$notify.show({
@@ -159,7 +171,7 @@ export default {
             code: this.paste.code,
             visibility: this.paste.visibility,
             expiry: this.paste.expiry,
-            password: this.paste.password,
+            password: this.newPassword,
           },
         })
         this.$notify.show({
