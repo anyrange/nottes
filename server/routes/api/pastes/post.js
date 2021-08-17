@@ -17,7 +17,7 @@ module.exports = async function (fastify) {
             content: { type: 'string' },
             code: { type: 'string' },
             visibility: { type: 'string', pattern: '^(public|private|unlisted)$' },
-            expiration: { type: 'string', pattern: '^(never|10m|1h|1d|1w|2w|1month)$' },
+            expiry: { type: 'string', pattern: '^(never|10m|1h|1d|1w|2w|1month)$' },
             password: { type: 'string' },
           },
         },
@@ -40,7 +40,7 @@ module.exports = async function (fastify) {
       if (!paste.author && paste.visibility === 'private')
         return reply.code(403).send({ message: 'Guests cannot create private pastes' })
 
-      if (paste.expiration) paste.expiry = getExpiryDate(paste.expiration)
+      if (paste.expiry) paste.expiry = getExpiryDate(paste.expiry)
       if (paste.password) paste.password = await bcrypt.hash(paste.password, 10)
 
       paste.content = fastify.encrypt(paste.content)
