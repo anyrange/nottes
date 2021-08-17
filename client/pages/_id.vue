@@ -72,7 +72,7 @@
             v-model="paste.expiry"
             class="md:w-1/3 w-full"
             :options="$options.expirationOptions"
-            label="Paste Expiration"
+            label="Expiration"
           />
           <base-select
             v-model="paste.visibility"
@@ -82,7 +82,7 @@
               { label: 'Unlisted', value: 'unlisted' },
               { label: 'Private', value: 'private', disabled: !authenticated },
             ]"
-            label="Paste Visibility"
+            label="Visibility"
           />
           <base-input v-model="newPassword" type="password" autocomplete="off" placeholder="Password" />
           <base-button color="primary" class="md:order-1 order-2" aria-label="edit paste" @click="updatePaste()">

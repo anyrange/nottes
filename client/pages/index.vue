@@ -6,13 +6,20 @@
         <base-input v-model="paste.title" name="paste-title" autocomplete="off" placeholder="Paste Title" />
         <base-select v-model="paste.code" :options="$options.languages" />
       </div>
-      <textarea-autosize v-model="paste.content" placeholder="hello world" name="paste" cols="30" rows="15" />
+      <textarea-autosize
+        id="new-paste"
+        v-model="paste.content"
+        placeholder="hello world"
+        name="paste"
+        cols="30"
+        rows="15"
+      />
       <div class="paste-control-footer">
         <base-select
           v-model="paste.expiry"
           class="md:w-1/3 w-full"
           :options="$options.expirationOptions"
-          label="Paste Expiration"
+          label="Expiration"
         />
         <base-select
           v-model="paste.visibility"
@@ -22,7 +29,7 @@
             { label: 'Unlisted', value: 'unlisted' },
             { label: 'Private', value: 'private', disabled: !authenticated },
           ]"
-          label="Paste Visibility"
+          label="Visibility"
         />
         <base-input v-model="paste.password" type="password" autocomplete="off" placeholder="Password" />
         <base-button
