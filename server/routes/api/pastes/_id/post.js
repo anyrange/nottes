@@ -25,7 +25,7 @@ module.exports = async function (fastify) {
       preValidation: [fastify.auth],
     },
     async (request, reply) => {
-      const paste = await fastify.db.Paste.findById(request.params.id, '-_id -views -date -expiry').lean()
+      const paste = await fastify.db.Paste.findById(request.params.id, '-_id -views -date ').lean()
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
       const _id = request.session.get('_id')
@@ -34,7 +34,8 @@ module.exports = async function (fastify) {
         return reply.code(403).send({ message: 'Private paste' })
       }
 
-      if (paste.password) return reply.code(403).send({ message: 'Paste cannot be forked due to password' })
+      if (paste.expiry) return reply.code(403).send({ message: 'Expiration pastes cannot be forked' })
+      if (paste.password) return reply.code(403).send({ message: 'Password pastes cannot be forked' })
 
       paste.title = paste.title + ' [fork]'
       paste.author = _id

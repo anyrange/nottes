@@ -19,8 +19,10 @@ module.exports = async function (fastify) {
     },
     async (request, reply) => {
       const _id = request.session.get('_id')
-      const { password } = await fastify.db.User.findById(_id, 'password').lean()
+      const { password, platform } = await fastify.db.User.findById(_id, 'password platform').lean()
       const newData = request.body
+
+      if (platform !== 'Direct') return reply.code(400).send({ message: 'Oauth users cannot change email' })
 
       if (password) {
         if (!newData.password) return reply.code(400).send({ message: 'Enter your current password' })
