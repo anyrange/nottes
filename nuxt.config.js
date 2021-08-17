@@ -27,6 +27,7 @@ export default {
     '~/plugins/directives.js',
     '~/plugins/vue-unique-id.js',
     '~/plugins/vue-disable-autocomplete.js',
+    '~/plugins/vue-textarea-autosize.js',
   ],
   components: true,
   telemetry: false,

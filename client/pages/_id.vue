@@ -77,7 +77,7 @@
             Update Paste
           </base-button>
         </div>
-        <component :is="editing ? 'base-textarea' : 'code-highlight'" v-model="paste.content" :lang="paste.code">
+        <component :is="editing ? 'textarea-autosize' : 'code-highlight'" v-model="paste.content" :lang="paste.code">
           {{ paste.content }}
         </component>
       </div>

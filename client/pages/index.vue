@@ -7,14 +7,15 @@
         <base-select
           v-model="paste.code"
           :options="[
-            { label: 'Markdown', value: 'markup' },
+            { label: 'HTML', value: 'markup' },
+            { label: 'Markdown', value: 'md' },
             { label: 'Java', value: 'java' },
             { label: 'C++', value: 'cpp' },
             { label: 'JavaScript', value: 'js' },
           ]"
         />
       </div>
-      <base-textarea v-model="paste.content" placeholder="hello world" name="paste" cols="30" rows="15" />
+      <textarea-autosize v-model="paste.content" placeholder="hello world" name="paste" cols="30" rows="15" />
       <div class="flex md:flex-row flex-col gap-3 md:items-end 2xl:w-4/6 xl:w-3/4 lg:w-1/2 w-full">
         <base-select
           v-model="paste.expiration"
@@ -62,7 +63,7 @@ export default {
     return {
       paste: {
         title: '',
-        code: 'cpp',
+        code: 'md',
         content: '',
         visibility: 'public',
         expiration: 'never',
