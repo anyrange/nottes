@@ -1,23 +1,38 @@
 <template>
   <div class="prism">
-    <pre class="line-numbers"><code :class="`language-${lang}`"><slot></slot></code></pre>
+    <article v-if="lang === 'md'" class="markdown-body" v-html="renderendMarkdown" />
+    <pre v-else><code :class="`language-${lang}`">{{value}}</code></pre>
   </div>
 </template>
 
 <script>
+import MarkdownIt from 'markdown-it'
+import MarkdownItPrism from 'markdown-it-prism'
 import Prism from '~/plugins/prism'
+
+const md = new MarkdownIt()
+md.use(MarkdownItPrism)
 
 export default {
   name: 'CodeHighlight',
   props: {
+    value: {
+      type: String,
+      required: true,
+    },
     lang: {
       type: String,
       required: true,
     },
   },
+  data() {
+    return {
+      renderendMarkdown: '',
+    }
+  },
   mounted() {
     this.$nextTick(() => {
-      Prism.highlightAll()
+      this.lang === 'md' ? (this.renderendMarkdown = md.render(this.value)) : Prism.highlightAll()
     })
   },
 }

@@ -19,7 +19,7 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  css: ['@/assets/css/main.css', '@/assets/css/hint.min.css'],
+  css: ['@/assets/css/main.css', '@/assets/css/hint.min.css', '@/assets/css/github-markdown.css'],
   plugins: [
     '~/plugins/axios.js',
     '~/plugins/dates.js',
