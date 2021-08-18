@@ -9,19 +9,27 @@
     </template>
     <template v-else>
       <div class="default-background flex flex-col gap-3" :class="{ 'paste-content-fullscreen': fullscreen }">
-        <p>
-          <span class="text-base font-semibold">
-            {{ paste.title }}
-          </span>
-          <span class="secondary-text">by</span>
-          <nuxt-link
-            :class="[paste.author.username === 'Guest' ? 'pointer-events-none' : 'link hover:underline']"
-            :to="`/user/${paste.author.username}`"
-          >
-            {{ paste.author.username }}
-          </nuxt-link>
-          <span class="secondary-text">at {{ $defaultDateTime(paste.date) }}</span>
-        </p>
+        <div>
+          <p>
+            <span class="text-base font-semibold">
+              {{ paste.title }}
+            </span>
+            <span class="secondary-text">by</span>
+            <nuxt-link
+              :class="[paste.author.username === 'Guest' ? 'pointer-events-none' : 'link']"
+              :to="`/user/${paste.author.username}`"
+              >{{ paste.author.username }}</nuxt-link
+            >
+            <span class="secondary-text">at {{ $defaultDateTime(paste.date) }}</span>
+          </p>
+          <p v-if="'contributors' in paste">
+            <span class="secondary-text">contributors</span>
+            <span v-for="(contributor, index) in paste.contributors" :key="contributor.username" class="truncate">
+              <nuxt-link :to="`/user/${contributor.username}`" class="link">{{ contributor.username }}</nuxt-link>
+              <span v-if="index !== paste.contributors.length - 1">,&nbsp;</span>
+            </span>
+          </p>
+        </div>
         <div class="flex flex-col sm:flex-row gap-2 justify-between">
           <div class="flex flex-row gap-2">
             <badge>
@@ -60,24 +68,45 @@
           </div>
         </div>
         <div v-if="editing" class="paste-control-head">
-          <base-input v-model="paste.title" name="paste-title" autocomplete="off" placeholder="Paste Title" />
-          <base-select v-model="paste.code" :options="$options.languages" />
+          <base-input
+            v-model="paste.title"
+            :disabled="isContributor"
+            name="paste-title"
+            autocomplete="off"
+            placeholder="Paste Title"
+          />
+          <base-select v-model="paste.code" :disabled="isContributor" :options="$options.languages" />
         </div>
         <component :is="editing ? 'textarea-autosize' : 'code-highlight'" v-model="paste.content" :lang="paste.code" />
         <div v-if="editing" class="paste-control-footer">
           <base-select
             v-model="paste.expiry"
             class="md:w-1/3 w-full"
+            :disabled="isContributor"
             :options="$options.expirationOptions"
             label="Expiration"
           />
           <base-select
             v-model="paste.visibility"
             class="md:w-1/3 w-full"
-            :options="$options.visibilityOptions({ authenticated, visibility: paste.visibility })"
+            :disabled="isContributor"
+            :options="
+              $options.visibilityOptions({
+                authenticated,
+                visibility: paste.visibility,
+                author: paste.author.username,
+                user: user.username,
+              })
+            "
             label="Visibility"
           />
-          <base-input v-model="newPassword" type="password" autocomplete="off" placeholder="Password" />
+          <base-input
+            v-model="newPassword"
+            :disabled="isContributor"
+            type="password"
+            autocomplete="off"
+            placeholder="Password"
+          />
           <base-button color="primary" class="md:order-1 order-2" aria-label="edit paste" @click="updatePaste()">
             Update
           </base-button>
@@ -138,6 +167,15 @@ export default {
     },
     user() {
       return this.$store.state.user.profile
+    },
+    isShared() {
+      return this.paste.visibility === 'shared'
+    },
+    isAuthor() {
+      return this.paste.author.username === this.user.username
+    },
+    isContributor() {
+      return !this.isAuthor && this.isShared
     },
     canEditPaste() {
       return (

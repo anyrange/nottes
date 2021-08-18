@@ -4,7 +4,7 @@
       {{ label }}
     </span>
     <div class="base-select">
-      <select class="select custom-element" :value="value" @change="setValue($event.target.value)">
+      <select class="select custom-element" :value="value" v-bind="$attrs" @change="setValue($event.target.value)">
         <option v-for="option in options" :key="option.value" :disabled="option.disabled" :value="option.value">
           {{ option.label }}
         </option>

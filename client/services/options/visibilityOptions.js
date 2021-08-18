@@ -1,9 +1,8 @@
-export default ({ authenticated, visibility }) => {
-  const isShared = visibility === 'shared'
+export default ({ authenticated }) => {
   return [
-    { label: 'Public', value: 'public', disabled: isShared },
-    { label: 'Unlisted', value: 'unlisted', disabled: isShared },
-    { label: 'Private', value: 'private', disabled: !authenticated || isShared },
+    { label: 'Public', value: 'public' },
+    { label: 'Unlisted', value: 'unlisted' },
+    { label: 'Private', value: 'private', disabled: !authenticated },
     { label: 'Shared', value: 'shared', disabled: !authenticated },
   ]
 }
