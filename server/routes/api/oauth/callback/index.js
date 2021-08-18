@@ -22,7 +22,7 @@ module.exports = async function (fastify) {
     request.session.set('_id', String(user._id))
 
     let url = process.env.BASE_URL
-    if (user.username.split('_')[0] === 'user') url += '/profile'
+    if (user.username.split('_')[0] === 'user') url += '/account'
 
     reply
       .header('Content-Type', 'text/html; charset=UTF-8')
