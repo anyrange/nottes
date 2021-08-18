@@ -55,7 +55,7 @@ body {
   @apply icon p-1 h-8 w-8 rounded hover:bg-gray-100 dark:hover:bg-gray-600-spotify cursor-pointer;
 }
 .h-container {
-  @apply container xl:px-22 lg:px-0 px-2;
+  @apply container lg:px-22 px-2;
 }
 .default-border {
   @apply border-gray-200 dark:border-gray-700-spotify;

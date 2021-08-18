@@ -1,6 +1,7 @@
 <template>
   <div class="prism">
-    <article v-if="lang === 'md'" class="markdown-body" v-html="renderendMarkdown" />
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <article v-if="lang === 'md'" class="markdown-body" v-html="renderedMarkdown" />
     <pre v-else><code :class="`language-${lang}`">{{value}}</code></pre>
   </div>
 </template>
@@ -27,12 +28,12 @@ export default {
   },
   data() {
     return {
-      renderendMarkdown: '',
+      renderedMarkdown: '',
     }
   },
   mounted() {
     this.$nextTick(() => {
-      this.lang === 'md' ? (this.renderendMarkdown = md.render(this.value)) : Prism.highlightAll()
+      this.lang === 'md' ? (this.renderedMarkdown = md.render(this.value)) : Prism.highlightAll()
     })
   },
 }
