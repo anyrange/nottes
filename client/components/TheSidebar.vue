@@ -125,17 +125,30 @@ export default {
       }
       socket.onmessage = (event) => {
         const message = JSON.parse(event.data)
+
         switch (message.event) {
-          case 'insert':
-            this.pastes.unshift(message.paste)
-            if (message.paste.author.username === this.user.username) {
-              this.userPastes.unshift(message.paste)
-            }
+          case 'insert': {
+            const paste = message.paste
+
+            this.pastes.unshift(paste)
+            paste.author.username === this.user.username && this.userPastes.unshift(paste)
             break
-          case 'delete':
-            this.pastes = this.pastes.filter((el) => el._id !== message.paste._id)
-            this.userPastes = this.userPastes.filter((el) => el._id !== message.paste._id)
+          }
+          case 'update': {
+            const paste = message.paste
+            const updatedPasteIndex = this.pastes.findIndex((item) => item._id === paste._id)
+
+            Object.assign(this.pastes[updatedPasteIndex], paste)
             break
+          }
+          case 'delete': {
+            const paste = message.paste
+            const pasteToDelete = (element) => element._id !== paste._id
+
+            this.pastes = this.pastes.filter(pasteToDelete)
+            this.userPastes = this.userPastes.filter(pasteToDelete)
+            break
+          }
           default:
             break
         }
