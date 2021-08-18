@@ -22,7 +22,7 @@
             >
             <span class="secondary-text">at {{ $defaultDateTime(paste.date) }}</span>
           </p>
-          <p v-if="'contributors' in paste">
+          <p v-if="paste.contributors.length">
             <span class="secondary-text">contributors</span>
             <span v-for="(contributor, index) in paste.contributors" :key="contributor.username" class="truncate">
               <nuxt-link :to="`/user/${contributor.username}`" class="link">{{ contributor.username }}</nuxt-link
@@ -69,45 +69,48 @@
         </div>
         <div v-if="editing" class="paste-control-head">
           <base-input
-            v-model="paste.title"
-            :disabled="isContributor"
+            v-if="isAuthor"
+            v-model="pasteClone.title"
             name="paste-title"
             autocomplete="off"
             placeholder="Paste Title"
           />
-          <base-select v-model="paste.code" :disabled="isContributor" :options="$options.languages" />
+          <base-select v-if="isAuthor" v-model="pasteClone.code" :options="$options.languages" />
         </div>
-        <component :is="editing ? 'textarea-autosize' : 'code-highlight'" v-model="paste.content" :lang="paste.code" />
+
+        <textarea-autosize v-if="editing" v-model="pasteClone.content" />
+        <code-highlight v-else v-model="paste.content" :lang="pasteClone.code" />
+
         <div v-if="editing" class="paste-control-footer">
           <base-select
-            v-model="paste.expiry"
+            v-if="isAuthor"
+            v-model="pasteClone.expiry"
             class="md:w-1/3 w-full"
-            :disabled="isContributor"
             :options="$options.expirationOptions"
             label="Expiration"
           />
           <base-select
-            v-model="paste.visibility"
+            v-if="isAuthor"
+            v-model="pasteClone.visibility"
             class="md:w-1/3 w-full"
-            :disabled="isContributor"
-            :options="
-              $options.visibilityOptions({
-                authenticated,
-                visibility: paste.visibility,
-                author: paste.author.username,
-                user: user.username,
-              })
-            "
+            :options="$options.visibilityOptions({ authenticated })"
             label="Visibility"
           />
           <base-input
+            v-if="isAuthor"
             v-model="newPassword"
             :disabled="isContributor"
             type="password"
             autocomplete="off"
-            placeholder="Password"
+            placeholder="New password"
           />
-          <base-button color="primary" class="md:order-1 order-2" aria-label="edit paste" @click="updatePaste()">
+          <base-button
+            :disabled="outdated"
+            color="primary"
+            class="md:order-1 order-2"
+            aria-label="edit paste"
+            @click="updatePaste()"
+          >
             Update
           </base-button>
         </div>
@@ -126,7 +129,8 @@ export default {
   async asyncData({ route, params, error }) {
     try {
       const { paste } = await getPaste({ id: params.id })
-      return { paste }
+      const pasteClone = { ...paste }
+      return { paste, pasteClone }
     } catch (err) {
       if (err.response.data.statusCode === 403) return { passwordRequired: true }
       error(err.response.data)
@@ -135,11 +139,14 @@ export default {
   data() {
     return {
       password: '',
-      newPassword: '',
-      paste: {},
       passwordRequired: false,
+      paste: {},
+      pasteClone: {},
+      newPassword: '',
       fullscreen: false,
       editing: false,
+      outdated: false,
+      socketState: '',
     }
   },
   languages,
@@ -183,12 +190,71 @@ export default {
       )
     },
   },
+  mounted() {
+    if (!this.passwordRequired) this.connectToWs()
+  },
   methods: {
+    connectToWs() {
+      const url = window.location
+      const wsProtocol = url.protocol.includes('https') ? 'wss' : 'ws'
+      const socket = new WebSocket(`${wsProtocol}://${url.host}/api/pastes/${this.paste._id}?password=${this.password}`)
+      socket.onopen = ({ type }) => {
+        this.socketState = type
+      }
+      socket.onmessage = (event) => {
+        const message = JSON.parse(event.data)
+        switch (message.event) {
+          case 'update': {
+            const paste = message.paste
+            this.triggerPirsm()
+            Object.assign(this.paste, paste)
+            if (!(this.paste.content.length === this.pasteClone.content.length)) {
+              this.outdated = true
+              this.$notify.show({
+                message: 'Paste content has been updated',
+                type: 'info',
+                progress: false,
+                closable: false,
+                unique: true,
+                actions: [
+                  {
+                    title: 'Accept changes',
+                    handler: () => {
+                      Object.assign(this.pasteClone, paste)
+                      this.triggerPirsm()
+                      this.outdated = false
+                    },
+                  },
+                ],
+              })
+            }
+            break
+          }
+          case 'delete': {
+            this.$router.push('/')
+            break
+          }
+          default:
+            break
+        }
+      }
+      socket.onerror = ({ type }) => {
+        this.socketState = type
+        socket.close()
+      }
+      socket.onclose = () => {
+        setTimeout(() => {
+          this.connectToWs()
+        }, 1000)
+      }
+    },
     async getPasteWithPassword() {
       try {
-        const { paste } = await getPaste({ id: this.$route.params.id, password: this.password })
-        this.paste = paste
+        const { paste: initialPaste } = await getPaste({ id: this.$route.params.id, password: this.password })
+        this.paste = initialPaste
+        this.pasteClone = initialPaste
         this.passwordRequired = false
+        this.connectToWs()
       } catch (err) {
         this.$notify.show({
           message: err.response.data.message,
@@ -196,23 +262,24 @@ export default {
         })
       }
     },
+    triggerPirsm() {
+      this.editing = true
+      this.$nextTick(() => {
+        this.editing = false
+      })
+    },
     async updatePaste() {
       try {
-        await editPaste({
-          id: this.paste._id,
-          paste: {
-            title: this.paste.title,
-            content: this.paste.content,
-            code: this.paste.code,
-            visibility: this.paste.visibility,
-            expiry: this.paste.expiry,
-            password: this.newPassword,
-          },
-        })
-        this.$notify.show({
-          message: 'Successfully updated',
-          type: 'success',
-        })
+        const paste = {
+          title: this.pasteClone.title,
+          content: this.pasteClone.content,
+          code: this.pasteClone.code,
+          visibility: this.pasteClone.visibility,
+          expiry: this.pasteClone.expiry,
+        }
+        this.newPassword.length && (paste.password = this.newPassword)
+        await editPaste({ id: this.paste._id, paste })
+        this.newPassword = ''
       } catch (err) {
         this.$notify.show({
           message: err.response.data.message,
@@ -227,10 +294,6 @@ export default {
         const {
           paste: { _id: pasteId },
         } = await forkPaste(this.paste._id)
-        this.$notify.show({
-          message: 'Successfully forked',
-          type: 'success',
-        })
         this.$router.push(`/${pasteId}`)
       } catch (err) {
         this.$notify.show({
