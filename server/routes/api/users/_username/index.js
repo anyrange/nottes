@@ -28,16 +28,18 @@ module.exports = async function (fastify) {
                   avatar: { type: 'string', default: '' },
                   registered: { type: 'string' },
                   platform: { type: 'string' },
-                  stats: {
-                    type: 'object',
-                    properties: {
-                      total: { type: 'number' },
-                      public: { type: 'number' },
-                      unlisted: { type: 'number' },
-                      private: { type: 'number' },
-                      views: { type: 'number' },
-                    },
-                  },
+                },
+              },
+              stats: {
+                type: 'object',
+                properties: {
+                  total: { type: 'number' },
+                  public: { type: 'number' },
+                  shared: { type: 'number' },
+                  unlisted: { type: 'number' },
+                  private: { type: 'number' },
+                  views: { type: 'number' },
+                  contributions: { type: 'number' },
                 },
               },
               pastes: {
@@ -65,23 +67,29 @@ module.exports = async function (fastify) {
         visibility: { $ne: 'private' },
       }
 
-      if (request.session.get('_id') === String(user._id)) delete query.visibility
+      const isAuthor = request.session.get('_id') === String(user._id)
+      if (isAuthor) delete query.visibility
 
-      const pastes = await fastify.db.Paste.find(query, 'title date id code views visibility')
-        .sort('-date')
-        .skip((page - 1) * range)
-        .limit(range)
-        .lean()
+      const [pastes, groupedVisibility, contributions] = await Promise.all([
+        fastify.db.Paste.find(query, 'title date id code views visibility')
+          .sort('-date')
+          .skip((page - 1) * range)
+          .limit(range)
+          .lean(),
+        fastify.db.Paste.aggregate()
+          .match({ author: user._id })
+          .group({
+            _id: { visibility: '$visibility' },
+            sum: { $sum: 1 },
+          }),
+        fastify.db.Paste.find({ contributors: user._id }).countDocuments(),
+      ])
 
-      user.stats = {
-        total: pastes.length,
-        public: pastes.filter((p) => p.visibility === 'public').length,
-        unlisted: pastes.filter((p) => p.visibility === 'unlisted').length,
-        private: pastes.filter((p) => p.visibility === 'private').length,
-        views: pastes.reduce((total, current) => total + current.views.length, 0),
-      }
+      const stats = Object.fromEntries(groupedVisibility.map((item) => [item._id.visibility, item.sum]))
+      stats.total = groupedVisibility.reduce((sum, item) => sum + item.sum, 0)
+      stats.contributions = contributions
 
-      reply.send({ user, pastes })
+      reply.send({ user, pastes, stats })
     }
   )
 }

@@ -8,11 +8,11 @@
       </div>
     </div>
     <div class="w-full flex flex-wrap gap-4">
-      <card :content="user.stats.total">pastes</card>
-      <card :content="user.stats.views">views</card>
-      <card :content="user.stats.public">public pastes</card>
-      <card :content="user.stats.unlisted">unlisted pastes</card>
-      <card :content="user.stats.private">private pastes</card>
+      <card :content="stats.total">pastes</card>
+      <card :content="stats.views">views</card>
+      <card :content="stats.public">public pastes</card>
+      <card :content="stats.unlisted">unlisted pastes</card>
+      <card :content="stats.private">private pastes</card>
     </div>
   </main>
 </template>
@@ -23,8 +23,8 @@ import { getUserPage } from '@/api'
 export default {
   async asyncData({ route, params, error }) {
     try {
-      const { user, pastes } = await getUserPage(params.username)
-      return { user, pastes }
+      const { user, pastes, stats } = await getUserPage(params.username)
+      return { user, pastes, stats }
     } catch (err) {
       error(err.response.data)
     }
@@ -33,6 +33,7 @@ export default {
     return {
       user: {},
       pastes: [],
+      stats: {},
     }
   },
   head() {
