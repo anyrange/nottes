@@ -8,7 +8,16 @@ const eventBus = new Vue()
  */
 
 const notify = {
-  show: ({ id = nanoid(), message, type = 'info', delay = 3000, progress = true, closable = true, actions = {} }) => {
+  show: ({
+    id = nanoid(),
+    message,
+    type = 'info',
+    delay = 3000,
+    progress = true,
+    closable = true,
+    unique = false,
+    actions = {},
+  }) => {
     eventBus.$emit('newNotification', {
       id,
       message,
@@ -16,6 +25,7 @@ const notify = {
       delay,
       progress,
       closable,
+      unique,
       actions,
     })
   },

@@ -41,6 +41,9 @@ export default {
   },
   methods: {
     addNotification(notification) {
+      if (notification.unique) {
+        this.notifications = []
+      }
       this.notifications = [...this.notifications, notification]
       if (notification.progress && notification.delay > 0) {
         setTimeout(() => {
