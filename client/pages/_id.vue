@@ -54,9 +54,6 @@
                 <icon-download class="tool-icon" />
               </i>
             </a>
-            <i title="Embed Paste">
-              <icon-embed class="tool-icon" />
-            </i>
             <i title="Fullscreen" @click="fullscreen = !fullscreen">
               <icon-fullscreen class="tool-icon" />
             </i>
