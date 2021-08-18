@@ -10,9 +10,11 @@
     <div class="w-full flex flex-wrap gap-4">
       <card :content="stats.total">pastes</card>
       <card :content="stats.views">views</card>
+      <card :content="stats.contributions">contributions</card>
       <card :content="stats.public">public pastes</card>
       <card :content="stats.unlisted">unlisted pastes</card>
       <card :content="stats.private">private pastes</card>
+      <card :content="stats.shared">shared pastes</card>
     </div>
   </main>
 </template>
