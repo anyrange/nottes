@@ -25,8 +25,8 @@
           <p v-if="'contributors' in paste">
             <span class="secondary-text">contributors</span>
             <span v-for="(contributor, index) in paste.contributors" :key="contributor.username" class="truncate">
-              <nuxt-link :to="`/user/${contributor.username}`" class="link">{{ contributor.username }}</nuxt-link>
-              <span v-if="index !== paste.contributors.length - 1">,&nbsp;</span>
+              <nuxt-link :to="`/user/${contributor.username}`" class="link">{{ contributor.username }}</nuxt-link
+              ><span v-if="index !== paste.contributors.length - 1">,&nbsp;</span>
             </span>
           </p>
         </div>
