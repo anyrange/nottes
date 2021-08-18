@@ -98,5 +98,5 @@ textarea {
   @apply flex flex-row gap-3;
 }
 .paste-control-footer {
-  @apply flex md:flex-row flex-col gap-3 md:items-end xl:w-4/6 lg:w-3/4 w-full;
+  @apply flex md:flex-row flex-col gap-3 md:items-end w-full;
 }
