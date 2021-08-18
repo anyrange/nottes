@@ -33,6 +33,10 @@ body {
 .h-title {
   @apply text-2xl font-normal text-gray-550-spotify dark:text-gray-200;
 }
+.secondary-text {
+  @apply text-gray-500 dark:text-gray-500-spotify;
+}
+
 .h-main {
   @apply flex flex-col gap-6;
 }
@@ -73,7 +77,7 @@ hr {
 }
 
 textarea {
-  @apply w-full px-3 py-2 resize-none custom-element;
+  @apply w-full p-2 resize-none custom-element;
 }
 
 .list-item {

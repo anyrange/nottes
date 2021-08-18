@@ -4,7 +4,7 @@
       <h1 class="h-title">Hello, {{ user.username }}</h1>
       <transition-group v-if="!!userPastes.length" tag="div" name="list" class="flex flex-col gap-2">
         <div v-for="paste in userPastes" :key="paste._id" class="flex flex-row gap-2 items-center justify-between">
-          <nuxt-link class="w-9/12 link truncate" :to="'/' + paste._id">
+          <nuxt-link class="w-auto link truncate" :to="'/' + paste._id">
             {{ paste.title }}
           </nuxt-link>
           <span class="w-auto cursor-pointer" @click="deletePaste(paste._id)">
@@ -24,7 +24,7 @@
           :key="paste._id"
           class="transition-all duration-1000 flex flex-row gap-2 items-center justify-between"
         >
-          <div class="flex flex-col w-9/12 truncate">
+          <div class="w-auto flex flex-col truncate">
             <nuxt-link class="link truncate" :to="'/' + paste._id">
               {{ paste.title }}
             </nuxt-link>
@@ -40,7 +40,7 @@
               <timer class="text-xs" :time="paste.date" />
             </div>
           </div>
-          <div class="flex flex-row gap-4 items-center w-auto">
+          <div class="w-auto flex flex-row gap-4 items-center">
             <client-only>
               <span
                 v-if="paste.author.username === user.username"

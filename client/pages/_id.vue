@@ -13,14 +13,14 @@
           <span class="text-base font-semibold">
             {{ paste.title }}
           </span>
-          <span class="text-gray-500 dark:text-gray-500-spotify">by</span>
+          <span class="secondary-text">by</span>
           <nuxt-link
             :class="[paste.author.username === 'Guest' ? 'pointer-events-none' : 'link hover:underline']"
             :to="`/user/${paste.author.username}`"
           >
             {{ paste.author.username }}
           </nuxt-link>
-          <span class="text-gray-500 dark:text-gray-500-spotify">at {{ $defaultDateTime(paste.date) }}</span>
+          <span class="secondary-text">at {{ $defaultDateTime(paste.date) }}</span>
         </p>
         <div class="flex flex-col sm:flex-row gap-2 justify-between">
           <div class="flex flex-row gap-2">
@@ -74,11 +74,7 @@
           <base-select
             v-model="paste.visibility"
             class="md:w-1/3 w-full"
-            :options="[
-              { label: 'Public', value: 'public' },
-              { label: 'Unlisted', value: 'unlisted' },
-              { label: 'Private', value: 'private', disabled: !authenticated },
-            ]"
+            :options="$options.visibilityOptions({ authenticated, visibility: paste.visibility })"
             label="Visibility"
           />
           <base-input v-model="newPassword" type="password" autocomplete="off" placeholder="Password" />
@@ -93,8 +89,9 @@
 
 <script>
 import { getPaste, forkPaste, editPaste } from '@/api'
-import languages from '@/languages.json'
-import expirationOptions from '@/expirationOptions.json'
+import languages from '@/services/options/languages.json'
+import expirationOptions from '@/services/options/expirationOptions.json'
+import visibilityOptions from '@/services/options/visibilityOptions.js'
 
 export default {
   async asyncData({ route, params, error }) {
@@ -118,6 +115,7 @@ export default {
   },
   languages,
   expirationOptions,
+  visibilityOptions,
   head() {
     const title = this.paste.title || 'nottes'
     const description = 'nottes-description'
@@ -142,7 +140,9 @@ export default {
       return this.$store.state.user.profile
     },
     canEditPaste() {
-      return this.paste.author.username === this.user.username
+      return (
+        this.paste.author.username === this.user.username || (this.paste.visibility === 'shared' && this.authenticated)
+      )
     },
   },
   methods: {

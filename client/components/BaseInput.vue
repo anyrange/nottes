@@ -61,18 +61,18 @@ export default {
   @apply flex flex-col gap-2;
 }
 .base-input-label {
-  @apply dark:text-gray-300 text-gray-600 text-base font-semibold;
+  @apply dark:text-gray-300 text-gray-600 font-semibold;
 }
 .base-input-fullwidth {
   @apply w-full;
 }
 .base-input-size-large {
-  @apply h-12 px-4;
+  @apply h-12 px-4 text-base;
 }
 .base-input-size-regular {
-  @apply h-10 px-4;
+  @apply h-10 px-4 text-base;
 }
 .base-input-size-small {
-  @apply h-8 px-2;
+  @apply h-8 px-2 text-sm;
 }
 </style>

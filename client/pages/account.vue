@@ -30,7 +30,9 @@
         <h3 class="text-base font-medium">Email</h3>
         <div v-if="!email.updating" class="flex flex-row gap-3 items-center">
           <span>{{ profile.email }}</span>
-          <base-button size="small" @click="startUpdatingEmail()">Change</base-button>
+          <base-button size="small" :disabled="profile.platform !== 'Direct'" @click="startUpdatingEmail()">
+            Change
+          </base-button>
         </div>
         <div v-else>
           <div class="flex flex-col gap-2">

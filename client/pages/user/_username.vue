@@ -1,26 +1,18 @@
 <template>
   <main class="h-main">
     <div class="flex flex-row gap-3 items-center">
-      <img
-        v-if="user.avatar"
-        class="avatar w-22 h-22 flex-none"
-        :src="user.avatar"
-        :alt="user.username"
-      />
+      <img v-if="user.avatar" class="avatar w-22 h-22 flex-none" :src="user.avatar" :alt="user.username" />
       <div class="flex flex-col">
-        <h1 class="h-title">{{ user.username }}</h1>
-        <h2>Joined: {{ $formattedDate(user.registered) }}</h2>
+        <h1 class="text-2xl font-normal">{{ user.username }}</h1>
+        <h2 class="secondary-text">Joined: {{ $formattedDate(user.registered) }}</h2>
       </div>
     </div>
-    <div>
-      <h3 class="text-lg font-medium">Statistics:</h3>
-      <ul>
-        <li>Total Pastes: {{ user.stats.total }}</li>
-        <li>Total views of all your pastes: {{ user.stats.views }}</li>
-        <li>Public pastes: {{ user.stats.public }}</li>
-        <li>Unlisted pastes: {{ user.stats.unlisted }}</li>
-        <li>Private pastes: {{ user.stats.private }}</li>
-      </ul>
+    <div class="w-full flex flex-wrap gap-4">
+      <card :content="user.stats.total">pastes</card>
+      <card :content="user.stats.views">views</card>
+      <card :content="user.stats.public">public pastes</card>
+      <card :content="user.stats.unlisted">unlisted pastes</card>
+      <card :content="user.stats.private">private pastes</card>
     </div>
   </main>
 </template>

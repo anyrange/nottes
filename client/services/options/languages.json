@@ -9,5 +9,8 @@
   { "label": "CSS", "value": "css" },
   { "label": "HTML", "value": "markup" },
   { "label": "SQL", "value": "sql" },
-  { "label": "PHP", "value": "php" }
+  { "label": "PHP", "value": "php" },
+  { "label": "Bash", "value": "bash" },
+  { "label": "JSON", "value": "json" },
+  { "label": "Go", "value": "go" }
 ]

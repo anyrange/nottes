@@ -8,6 +8,7 @@ const defaultState = () => {
       email: '',
       hasPassword: false,
       registered: '',
+      platform: '',
     },
   }
 }
@@ -25,8 +26,7 @@ export default {
   actions: {
     async getProfile({ commit }) {
       try {
-        const user = await getUserProfile()
-        commit('SET_USER', user)
+        commit('SET_USER', await getUserProfile())
       } catch (err) {
         return Promise.reject(err)
       }

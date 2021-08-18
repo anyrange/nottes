@@ -24,11 +24,7 @@
         <base-select
           v-model="paste.visibility"
           class="md:w-1/3 w-full"
-          :options="[
-            { label: 'Public', value: 'public' },
-            { label: 'Unlisted', value: 'unlisted' },
-            { label: 'Private', value: 'private', disabled: !authenticated },
-          ]"
+          :options="$options.visibilityOptions({ authenticated })"
           label="Visibility"
         />
         <base-input v-model="paste.password" type="password" autocomplete="off" placeholder="Password" />
@@ -47,8 +43,9 @@
 
 <script>
 import { createPaste } from '@/api'
-import languages from '@/languages.json'
-import expirationOptions from '@/expirationOptions.json'
+import languages from '@/services/options/languages.json'
+import expirationOptions from '@/services/options/expirationOptions.json'
+import visibilityOptions from '@/services/options/visibilityOptions.js'
 
 export default {
   data() {
@@ -81,6 +78,7 @@ export default {
   },
   languages,
   expirationOptions,
+  visibilityOptions,
   computed: {
     authenticated() {
       return this.$store.state.authenticated

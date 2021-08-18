@@ -12,7 +12,7 @@ import MarkdownItPrism from 'markdown-it-prism'
 import Prism from '~/plugins/prism'
 
 const md = new MarkdownIt()
-md.use(MarkdownItPrism)
+md.use(MarkdownItPrism, { defaultLanguage: 'clike' })
 
 export default {
   name: 'CodeHighlight',
@@ -44,6 +44,10 @@ html:not(.dark) {
   --prism-foreground: #393a34;
   --prism-background: #f8f8f8;
 
+  --prism-font-size: 1rem;
+  --prism-block-padding-x: 0.5rem;
+  --prism-block-padding-y: 0.5rem;
+
   --prism-comment: #758575;
   --prism-namespace: #444444;
   --prism-string: #bc8671;
@@ -61,6 +65,10 @@ html:not(.dark) {
 html.dark {
   --prism-foreground: #d4d4d4;
   --prism-background: #1e1e1e;
+
+  --prism-font-size: 1rem;
+  --prism-block-padding-x: 0.5rem;
+  --prism-block-padding-y: 0.5rem;
 
   --prism-namespace: #aaaaaa;
   --prism-comment: #758575;
