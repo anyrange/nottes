@@ -1,6 +1,7 @@
 'use strict'
 
 const fp = require('fastify-plugin')
+const { user } = require('./user.js')
 
 module.exports = fp(async function (fastify) {
   fastify.addSchema({
@@ -11,14 +12,8 @@ module.exports = fp(async function (fastify) {
       _id: { type: 'string' },
       title: { type: 'string' },
       content: { type: 'string' },
-      author: {
-        type: 'object',
-        default: { username: 'Guest', avatar: '' },
-        properties: {
-          username: { type: 'string' },
-          avatar: { type: 'string', default: '' },
-        },
-      },
+      author: user,
+      contributors: { type: 'array', items: user },
       date: { type: 'string' },
       visibility: { type: 'string' },
       expiry: { type: 'string' },

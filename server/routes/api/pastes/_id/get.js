@@ -28,7 +28,10 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const paste = await fastify.db.Paste.findById(request.params.id).populate('author').lean()
+      const paste = await fastify.db.Paste.findById(request.params.id)
+        .populate('author')
+        .populate({ path: 'contributors', populate: { path: 'contributors' } })
+        .lean()
 
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 

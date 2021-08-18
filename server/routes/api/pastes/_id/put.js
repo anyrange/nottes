@@ -47,6 +47,10 @@ module.exports = async function (fastify) {
         if (newData.password) return reply.code(400).send({ message: 'Only author can change password' })
         if (newData.expiry && newData.expiry !== paste.expiry)
           return reply.code(400).send({ message: 'Only author can change expiry' })
+
+        const contributors = new Set(paste.contributors.map((id) => String(id)))
+        contributors.add(request.session.get('_id'))
+        newData.contributors = [...contributors]
       }
 
       if (newData.expiry) newData.expire_date = getExpiryDate(newData.expiry)

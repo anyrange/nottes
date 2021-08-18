@@ -9,6 +9,7 @@ const schema = new Schema(
     title: { type: String, required: true },
     content: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, ref: 'User' },
+    contributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     code: { type: String, default: 'text' },
     visibility: { type: String, default: 'public' },
     expiry: { type: String },
