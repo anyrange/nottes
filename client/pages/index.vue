@@ -87,8 +87,10 @@ export default {
   methods: {
     async submitPaste() {
       try {
-        await createPaste(this.paste)
-        Object.assign(this.$data, this.$options.data())
+        const {
+          paste: { _id: id },
+        } = await createPaste(this.paste)
+        this.$router.push(`/${id}`)
       } catch (err) {
         this.$notify.show({
           message: err.response.data.message,
