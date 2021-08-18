@@ -33,13 +33,13 @@ module.exports = async function (fastify) {
               stats: {
                 type: 'object',
                 properties: {
-                  total: { type: 'number' },
-                  public: { type: 'number' },
-                  shared: { type: 'number' },
-                  unlisted: { type: 'number' },
-                  private: { type: 'number' },
-                  views: { type: 'number' },
-                  contributions: { type: 'number' },
+                  total: { type: 'number', default: 0 },
+                  public: { type: 'number', default: 0 },
+                  shared: { type: 'number', default: 0 },
+                  unlisted: { type: 'number', default: 0 },
+                  private: { type: 'number', default: 0 },
+                  views: { type: 'number', default: 0 },
+                  contributions: { type: 'number', default: 0 },
                 },
               },
               pastes: {
@@ -81,12 +81,14 @@ module.exports = async function (fastify) {
           .group({
             _id: { visibility: '$visibility' },
             sum: { $sum: 1 },
+            views: { $sum: { $size: '$views' } },
           }),
         fastify.db.Paste.find({ contributors: user._id }).countDocuments(),
       ])
 
       const stats = Object.fromEntries(groupedVisibility.map((item) => [item._id.visibility, item.sum]))
       stats.total = groupedVisibility.reduce((sum, item) => sum + item.sum, 0)
+      stats.views = groupedVisibility.reduce((sum, item) => sum + item.views, 0)
       stats.contributions = contributions
 
       reply.send({ user, pastes, stats })
