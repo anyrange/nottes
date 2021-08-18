@@ -54,23 +54,30 @@ module.exports = async function (fastify) {
         },
       })
 
-      const watcher = fastify.db.Paste.watch([{ $match: { operationType: { $in: ['insert', 'delete'] } } }])
+      const watcher = fastify.db.Paste.watch([
+        {
+          $match: {
+            $or: [
+              { 'fullDocument.author': request.session.get('_id') },
+              {
+                'fullDocument.visibility': { $in: ['public', 'shared'] },
+              },
+              { operationType: { $in: ['delete', 'update'] } },
+            ],
+          },
+        },
+      ])
 
       watcher.on('change', async (data) => {
         switch (data.operationType) {
           case 'delete':
-            conn.socket.send(JSON.stringify({ event: data.operationType, paste: { _id: data.documentKey._id } }))
+            conn.socket.send(JSON.stringify({ event: data.operationType, paste: data.documentKey }))
             break
-          case 'insert': {
-            const doc = data.fullDocument
-
-            if (
-              doc.visibility !== 'public' &&
-              doc.visibility !== 'shared' &&
-              request.session.get('_id') !== String(doc.author)
-            )
-              break
-            const paste = await fastify.db.Paste.findById(doc._id, 'title author date').populate('author').lean()
+          case 'insert':
+          case 'update': {
+            const paste = await fastify.db.Paste.findById(data.documentKey._id, 'title author date')
+              .populate('author')
+              .lean()
 
             conn.socket.send(stringify({ event: data.operationType, paste }))
           }
