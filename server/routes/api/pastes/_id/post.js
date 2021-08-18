@@ -30,6 +30,7 @@ module.exports = async function (fastify) {
 
       const _id = request.session.get('_id')
 
+      if (!_id) return reply.code(403).send({ message: 'Guests cannot fork' })
       if (paste.visibility === 'private' && _id !== String(paste.author)) {
         return reply.code(403).send({ message: 'Private paste' })
       }
@@ -39,6 +40,7 @@ module.exports = async function (fastify) {
 
       paste.title = paste.title + ' [fork]'
       paste.author = _id
+      paste.visibility = 'private'
       const fork = await fastify.db.Paste.create(paste)
       reply.code(201).send({ paste: fork })
     }
