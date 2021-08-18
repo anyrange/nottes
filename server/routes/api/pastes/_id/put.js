@@ -42,15 +42,14 @@ module.exports = async function (fastify) {
       if (!isAuthor) {
         if (newData.title && newData.title !== paste.title)
           return reply.code(400).send({ message: 'Only author can change title' })
-
         if (newData.visibility && newData.visibility !== 'shared')
           return reply.code(400).send({ message: 'Only author can change visibility' })
-
         if (newData.password) return reply.code(400).send({ message: 'Only author can change password' })
-        if (newData.expiry) return reply.code(400).send({ message: 'Only author can change expiry' })
+        if (newData.expiry && newData.expiry !== paste.expiry)
+          return reply.code(400).send({ message: 'Only author can change expiry' })
       }
 
-      if (newData.expiry) newData.expiry = getExpiryDate(newData.expiry)
+      if (newData.expiry) newData.expire_date = getExpiryDate(newData.expiry)
       if (newData.password) newData.password = await bcrypt.hash(newData.password, 10)
       if (newData.content) newData.content = fastify.encrypt(newData.content)
 

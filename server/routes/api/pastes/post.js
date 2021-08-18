@@ -40,7 +40,7 @@ module.exports = async function (fastify) {
       if (!paste.author && paste.visibility === 'private')
         return reply.code(403).send({ message: 'Guests cannot create private pastes' })
 
-      if (paste.expiry) paste.expiry = getExpiryDate(paste.expiry)
+      if (paste.expiry) paste.expire_date = getExpiryDate(paste.expiry)
       if (paste.password) paste.password = await bcrypt.hash(paste.password, 10)
 
       paste.content = fastify.encrypt(paste.content)

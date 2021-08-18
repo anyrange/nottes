@@ -11,13 +11,14 @@ const schema = new Schema(
     author: { type: Schema.Types.ObjectId, ref: 'User' },
     code: { type: String, default: 'text' },
     visibility: { type: String, default: 'public' },
-    expiry: { type: Date },
+    expiry: { type: String },
+    expire_date: { type: Date },
     password: { type: String },
     views: [String],
   },
   { timestamps: { createdAt: 'date', updatedAt: 'updated_at' } }
 )
 
-schema.index({ expiry: 1 }, { expireAfterSeconds: 0 })
+schema.index({ expire_date: 1 }, { expireAfterSeconds: 0 })
 
 module.exports = model('Paste', schema)

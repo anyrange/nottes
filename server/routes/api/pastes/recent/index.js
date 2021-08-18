@@ -37,7 +37,7 @@ module.exports = async function (fastify) {
     },
     handler: async (request, reply) => {
       const { range } = request.query
-      const pastes = await fastify.db.Paste.find({ visibility: 'public' }, 'title author date')
+      const pastes = await fastify.db.Paste.find({ visibility: { $in: ['public', 'shared'] } }, 'title author date')
         .sort('-date')
         .limit(range)
         .populate('author')
@@ -64,7 +64,12 @@ module.exports = async function (fastify) {
           case 'insert': {
             const doc = data.fullDocument
 
-            if (doc.visibility !== 'public' && request.session.get('_id') !== String(doc.author)) break
+            if (
+              doc.visibility !== 'public' &&
+              doc.visibility !== 'shared' &&
+              request.session.get('_id') !== String(doc.author)
+            )
+              break
             const paste = await fastify.db.Paste.findById(doc._id, 'title author date').populate('author').lean()
 
             conn.socket.send(stringify({ event: data.operationType, paste }))
