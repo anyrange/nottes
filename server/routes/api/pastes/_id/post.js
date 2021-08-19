@@ -25,7 +25,7 @@ module.exports = async function (fastify) {
       preValidation: [fastify.auth],
     },
     async (request, reply) => {
-      const paste = await fastify.db.Paste.findById(request.params.id, '-_id -views -date ').lean()
+      const paste = await fastify.db.Paste.findById(request.params.id, '-_id -views -date -contributors').lean()
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
       const _id = request.session.get('_id')
