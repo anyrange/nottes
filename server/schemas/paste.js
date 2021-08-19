@@ -15,6 +15,7 @@ module.exports = fp(async function (fastify) {
       author: user,
       contributors: { type: 'array', items: user },
       date: { type: 'string' },
+      updated_at: { type: 'string' },
       visibility: { type: 'string' },
       expiry: { type: 'string' },
       expire_date: { type: 'string', format: 'datetime' },
