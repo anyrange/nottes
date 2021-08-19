@@ -22,7 +22,7 @@
         <div
           v-for="paste in pastes"
           :key="paste._id"
-          class="transition-all duration-1000 flex flex-row gap-2 items-center justify-between"
+          class="transition-transform duration-1000 flex flex-row gap-2 items-center justify-between"
         >
           <div class="w-auto flex flex-col truncate">
             <nuxt-link class="link truncate" :to="'/' + paste._id">

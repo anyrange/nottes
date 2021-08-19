@@ -31,30 +31,50 @@
           </p>
         </div>
         <div class="flex flex-col sm:flex-row gap-2 justify-between">
-          <div class="flex flex-row gap-2">
-            <badge>
+          <div class="flex flex-row flex-wrap gap-2">
+            <badge title="Visibility">
               <template #icon>
-                <icon-view />
+                <icon-lock />
               </template>
-              {{ paste.views }}
+              <span>{{ paste.visibility }}</span>
             </badge>
-            <badge>
+            <badge title="Views">
+              <template #icon>
+                <icon-eye />
+              </template>
+              <span>{{ paste.views }}</span>
+            </badge>
+            <badge title="Language">
               <template #icon>
                 <icon-code />
               </template>
-              {{ paste.code }}
+              <span>{{ paste.code }}</span>
+            </badge>
+            <badge v-if="paste.date" :title="`Created at ${$defaultDateTime(paste.date)}`">
+              <template #icon>
+                <icon-date />
+              </template>
+              <timer :time="paste.date" />
+            </badge>
+            <badge v-if="paste.expire_date" :title="`Expires at ${$defaultDateTime(paste.expire_date)}`">
+              <template #icon>
+                <icon-updated />
+              </template>
+              <timer :time="paste.expire_date" />
             </badge>
           </div>
-          <div class="flex flex-row gap-2">
-            <i v-if="canEditPaste" title="View Diff" @click="showDiff = !showDiff">
-              <icon-gradient class="tool-icon" />
-            </i>
-            <i v-if="canEditPaste" title="Edit Paste" @click="editing = !editing">
-              <icon-edit class="tool-icon" />
-            </i>
-            <i v-if="authenticated" title="Fork Paste" @click="forkPaste()">
+          <div class="flex flex-row flex-wrap gap-2">
+            <template v-if="canEditPaste">
+              <button title="View Diff" @click="showDiff = !showDiff">
+                <icon-gradient class="tool-icon" />
+              </button>
+              <button title="Edit Paste" @click="editing = !editing">
+                <icon-edit class="tool-icon" />
+              </button>
+            </template>
+            <button v-if="authenticated" title="Fork Paste" @click="forkPaste()">
               <icon-fork class="tool-icon" />
-            </i>
+            </button>
             <a :href="`/raw/${paste._id}`">
               <i title="Raw Paste">
                 <icon-document class="tool-icon" />
@@ -65,37 +85,34 @@
                 <icon-download class="tool-icon" />
               </i>
             </a>
-            <i title="Fullscreen" @click="fullscreen = !fullscreen">
+            <button title="Fullscreen" @click="fullscreen = !fullscreen">
               <icon-fullscreen class="tool-icon" />
-            </i>
+            </button>
           </div>
         </div>
-        <div v-if="editing" class="paste-control-head">
-          <base-input
-            v-if="isAuthor"
-            v-model="pasteClone.title"
-            name="paste-title"
-            autocomplete="off"
-            placeholder="Paste Title"
-          />
-          <base-select v-if="isAuthor" v-model="pasteClone.code" :options="$options.languages" />
-        </div>
-
-        <textarea-autosize v-if="editing" v-model="pasteClone.content" />
-        <code-highlight v-else :code="pasteClone.content" :language="paste.code" />
-
+        <base-textarea v-if="editing" v-model="pasteClone.content" />
+        <code-highlight v-else :code="pasteClone.content" :language="pasteClone.code" />
         <code-highlight
           v-if="showDiff"
           :code="
             getCodeDiff({
               title: paste.title,
-              to: paste.content,
-              from: pasteClone.content,
+              to: outdated ? paste.content : pasteClone.content,
+              from: outdated ? pasteClone.content : paste.content,
             })
           "
           language="diff"
         />
-
+        <div v-if="editing && isAuthor" class="paste-control-head">
+          <base-input
+            v-model="pasteClone.title"
+            label="Title"
+            name="paste-title"
+            autocomplete="off"
+            placeholder="Paste Title"
+          />
+          <base-select v-model="pasteClone.code" label="Language" :options="$options.languages" />
+        </div>
         <div v-if="editing" class="paste-control-footer">
           <base-select
             v-if="isAuthor"
@@ -160,9 +177,9 @@ export default {
       pasteClone: {},
       newPassword: '',
       fullscreen: false,
+      outdated: false,
       editing: false,
       showDiff: false,
-      outdated: false,
       socketState: '',
     }
   },
@@ -207,11 +224,6 @@ export default {
       )
     },
   },
-  watch: {
-    outdated() {
-      return !(this.paste.content === this.pasteClone.content)
-    },
-  },
   mounted() {
     if (!this.passwordRequired) this.connectToWs()
   },
@@ -233,6 +245,7 @@ export default {
             Object.assign(this.paste, paste)
 
             if (!(this.paste.content === this.pasteClone.content)) {
+              this.outdated = true
               this.$notify.show({
                 message: 'Paste content has been updated',
                 type: 'info',
@@ -244,6 +257,7 @@ export default {
                     title: 'Accept changes',
                     handler: () => {
                       Object.assign(this.pasteClone, paste)
+                      this.outdated = false
                     },
                   },
                 ],

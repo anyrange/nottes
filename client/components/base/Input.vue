@@ -1,13 +1,12 @@
 <template>
-  <div class="base-input-container">
-    <label v-if="label.length" :for="$id(label)" class="base-input-label">{{ label }}</label>
+  <div class="custom-element-container">
+    <label v-if="label.length" :for="$id(label)" class="custom-element-label">{{ label }}</label>
     <input
-      v-bind="$attrs"
       :id="$id(label)"
-      ref="input"
+      v-bind="$attrs"
+      class="custom-element base-input"
+      :class="[sizeClass]"
       :value="value"
-      class="custom-element"
-      :class="[inputClass, sizeClass]"
       @input="handleInput"
     />
   </div>
@@ -31,21 +30,11 @@ export default {
       required: false,
       default: 'regular',
     },
-    wFull: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
   },
   SIZES: ['small', 'regular', 'large'],
   computed: {
     sizeClass() {
       return `base-input-size-${this.$options.SIZES.find((size) => size === this.size)}`
-    },
-    inputClass() {
-      return {
-        'base-input-fullwidth': this.wFull,
-      }
     },
   },
   methods: {
@@ -57,14 +46,11 @@ export default {
 </script>
 
 <style lang="postcss">
-.base-input-container {
-  @apply flex flex-col gap-2;
+html:not(.dark) {
+  --autofill-text-color: #000000;
 }
-.base-input-label {
-  @apply dark:text-gray-300 text-gray-600 font-semibold;
-}
-.base-input-fullwidth {
-  @apply w-full;
+html.dark {
+  --autofill-text-color: #ffffff;
 }
 .base-input-size-large {
   @apply h-12 px-4 text-base;
@@ -74,5 +60,9 @@ export default {
 }
 .base-input-size-small {
   @apply h-8 px-2 text-sm;
+}
+input:-webkit-autofill {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: var(--autofill-text-color);
 }
 </style>

@@ -1,8 +1,7 @@
 <template>
-  <div class="fullwidth">
+  <div class="fullwidth border rounded default-border">
     <div class="w-full overflow-x-auto">
-      <!-- eslint-disable-next-line vue/no-v-html  -->
-      <article v-if="language === 'md'" class="markdown-body" v-html="renderedMarkdown" />
+      <article v-if="language === 'md'" ref="markdown" class="markdown-body p-3 default-text"></article>
       <pre v-else class="prism"><code ref="code" :class="`language-${language} diff-highlight`"></code></pre>
     </div>
   </div>
@@ -58,12 +57,6 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      renderedMarkdown: '',
-      diffCode: {},
-    }
-  },
   watch: {
     language() {
       this.update()
@@ -79,12 +72,13 @@ export default {
     update() {
       this.$nextTick(() => {
         if (this.language === 'md') {
-          this.renderedMarkdown = md.render(this.code)
+          const { markdown } = this.$refs
+          markdown.innerHTML = md.render(this.code)
         } else {
-          const code = this.$refs.code
+          const { code } = this.$refs
           code.textContent = this.code
-          Prism.highlightElement(this.$refs.code)
         }
+        Prism.highlightAll()
       })
     },
   },
@@ -98,8 +92,8 @@ html:not(.dark) {
 
   --prism-font-size: 1rem;
 
-  --prism-block-padding-x: 0.5rem;
-  --prism-block-padding-y: 0.5rem;
+  --prism-block-padding-x: 0.75rem;
+  --prism-block-padding-y: 0.75rem;
   --prism-block-margin-x: 0rem;
   --prism-block-margin-y: 0rem;
 
@@ -123,8 +117,8 @@ html.dark {
 
   --prism-font-size: 1rem;
 
-  --prism-block-padding-x: 0.5rem;
-  --prism-block-padding-y: 0.5rem;
+  --prism-block-padding-x: 0.75rem;
+  --prism-block-padding-y: 0.75rem;
   --prism-block-margin-x: 0rem;
   --prism-block-margin-y: 0rem;
 

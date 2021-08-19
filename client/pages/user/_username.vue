@@ -4,36 +4,36 @@
       <img v-if="user.avatar" class="avatar w-22 h-22 flex-none" :src="user.avatar" :alt="user.username" />
       <div class="flex flex-col">
         <h1 class="text-2xl font-normal">{{ user.username }}</h1>
-        <h2 class="secondary-text">Joined: {{ $formattedDate(user.registered) }}</h2>
+        <h2 class="secondary-text">Joined: {{ $defaultDate(user.registered) }}</h2>
       </div>
     </div>
     <div class="w-full flex flex-wrap gap-2">
       <badge>
-        pastes:
+        <span>pastes</span>
         <strong>{{ stats.total }}</strong>
       </badge>
       <badge>
-        views:
+        <span>views</span>
         <strong>{{ stats.views }}</strong>
       </badge>
       <badge>
-        contributions:
+        <span>contributions</span>
         <strong>{{ stats.contributions }}</strong>
       </badge>
       <badge>
-        shared pastes:
+        <span>shared pastes</span>
         <strong>{{ stats.shared }}</strong>
       </badge>
       <badge>
-        public pastes:
+        <span>public pastes</span>
         <strong>{{ stats.public }}</strong>
       </badge>
       <badge>
-        unlisted pastes:
+        <span>unlisted pastes</span>
         <strong>{{ stats.unlisted }}</strong>
       </badge>
       <badge>
-        private pastes:
+        <span>private pastes</span>
         <strong>{{ stats.private }}</strong>
       </badge>
     </div>

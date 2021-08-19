@@ -23,8 +23,8 @@ export default {
   plugins: [
     '~/plugins/axios.js',
     '~/plugins/dates.js',
-    '~/plugins/notify.js',
-    '~/plugins/directives.js',
+    '~/plugins/vue-notify.js',
+    '~/plugins/vue-directives.js',
     '~/plugins/vue-unique-id.js',
     '~/plugins/vue-disable-autocomplete.js',
     '~/plugins/vue-textarea-autosize.js',

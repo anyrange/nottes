@@ -6,14 +6,7 @@
         <base-input v-model="paste.title" name="paste-title" autocomplete="off" placeholder="Paste Title" />
         <base-select v-model="paste.code" :options="$options.languages" />
       </div>
-      <textarea-autosize
-        id="new-paste"
-        v-model="paste.content"
-        placeholder="hello world"
-        name="paste"
-        cols="30"
-        rows="15"
-      />
+      <base-textarea v-model="paste.content" placeholder="hello world" name="paste" cols="30" rows="15" />
       <div class="paste-control-footer">
         <base-select
           v-model="paste.expiry"

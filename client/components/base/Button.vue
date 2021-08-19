@@ -94,8 +94,7 @@ export default {
 
 <style lang="postcss">
 .base-button {
-  @apply flex rounded items-center justify-center text-center select-none font-normal;
-  @apply focus:outline-none focus:ring-2;
+  @apply flex rounded items-center justify-center text-center select-none font-normal focus:outline-none focus:ring-2;
 }
 .base-button-disabled {
   @apply opacity-20;

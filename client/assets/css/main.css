@@ -11,85 +11,6 @@ body {
   }
 }
 
-.default-background {
-  @apply bg-white dark:bg-gray-800-spotify;
-}
-.default-text {
-  @apply text-black dark:text-white;
-}
-
-.navbar-link-desktop {
-  @apply block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600-spotify;
-}
-
-.navbar-link-mobile {
-  @apply block px-3 py-2 rounded text-base font-semibold;
-  @apply hover:bg-gray-600-spotify dark:hover:bg-opacity-20 hover:bg-opacity-5;
-}
-.navbar-link-mobile + .nuxt-link-active {
-  @apply dark:bg-gray-600-spotify;
-}
-
-.fullwidth {
-  width: 100%;
-  display: table;
-  table-layout: fixed;
-}
-
-.secondary-text {
-  @apply text-gray-500 dark:text-gray-500-spotify;
-}
-
-.h-title {
-  @apply text-2xl font-normal text-gray-550-spotify dark:text-gray-200;
-}
-.h-main {
-  @apply flex flex-col gap-6;
-}
-.h-page {
-  @apply w-full md:w-1/2 lg:w-1/3;
-}
-.paste-content-fullscreen {
-  @apply fixed w-full h-full overflow-auto top-0 left-0 z-50 p-5;
-}
-.link {
-  @apply text-base text-blue-500 hover:underline;
-}
-.icon {
-  @apply text-gray-500 dark:text-gray-400;
-}
-.avatar {
-  @apply rounded-full object-cover select-none;
-}
-.tool-icon {
-  @apply icon p-1 h-8 w-8 rounded hover:bg-gray-100 dark:hover:bg-gray-600-spotify cursor-pointer;
-}
-.h-container {
-  @apply container lg:px-22 px-2;
-}
-.default-border {
-  @apply border-gray-200 dark:border-gray-700-spotify;
-}
-hr {
-  @apply default-border;
-}
-.custom-element {
-  @apply border rounded;
-  @apply placeholder-black dark:placeholder-white placeholder-opacity-20 dark:placeholder-opacity-20;
-  @apply border-gray-300 dark:border-gray-600-spotify;
-  @apply bg-white dark:bg-gray-700-spotify;
-  @apply hover:border-black dark:hover:border-white hover:border-opacity-30 dark:hover:border-opacity-10;
-  @apply focus:ring-2 focus:outline-none focus:border-transparent;
-}
-
-textarea {
-  @apply w-full p-2 resize-none custom-element;
-}
-
-.list-item {
-  display: inline-block;
-  margin-right: 10px;
-}
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s;
@@ -100,9 +21,88 @@ textarea {
   transform: translateX(-5px);
 }
 
+.default-background {
+  @apply bg-white dark:bg-gray-800-spotify;
+}
+.default-border {
+  @apply border-gray-200 dark:border-gray-700-spotify;
+}
+.default-text {
+  @apply text-black dark:text-white;
+}
+
+.navbar-link-desktop {
+  @apply block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600-spotify;
+}
+.navbar-link-mobile {
+  @apply block px-3 py-2 rounded text-base font-semibold;
+  @apply hover:bg-gray-600-spotify dark:hover:bg-opacity-20 hover:bg-opacity-5;
+}
+.navbar-link-mobile + .nuxt-link-active {
+  @apply dark:bg-gray-600-spotify;
+}
+
+hr {
+  @apply default-border;
+}
+
+.fullwidth {
+  @apply w-full table table-fixed;
+}
+
+.secondary-text {
+  @apply text-gray-500 dark:text-gray-500-spotify;
+}
+.primary-text {
+  @apply text-gray-550-spotify dark:text-gray-200;
+}
+
+.h-container {
+  @apply container xl:px-22 px-2;
+}
+.h-title {
+  @apply text-2xl font-normal primary-text;
+}
+.h-main {
+  @apply flex flex-col gap-6;
+}
+.h-page {
+  @apply w-full md:w-1/2 lg:w-1/3;
+}
+
+.paste-content-fullscreen {
+  @apply fixed w-full h-full overflow-auto top-0 left-0 z-50 p-3;
+}
 .paste-control-head {
   @apply flex flex-row gap-3;
 }
 .paste-control-footer {
   @apply flex md:flex-row flex-col gap-3 md:items-end w-full;
+}
+
+.avatar {
+  @apply rounded-full object-cover select-none;
+}
+.link {
+  @apply text-base text-blue-500 hover:underline;
+}
+.icon {
+  @apply text-gray-500 dark:text-gray-400-spotify;
+}
+.tool-icon {
+  @apply icon p-1 h-8 w-8 rounded hover:bg-gray-100 dark:hover:bg-gray-600-spotify cursor-pointer;
+}
+
+.custom-element-container {
+  @apply flex flex-col gap-2;
+}
+.custom-element {
+  @apply border rounded default-border;
+  @apply bg-white dark:bg-gray-700-spotify;
+  @apply placeholder-black dark:placeholder-white placeholder-opacity-20 dark:placeholder-opacity-20;
+  @apply hover:border-black dark:hover:border-white hover:border-opacity-30 dark:hover:border-opacity-10;
+  @apply focus:ring-2 focus:outline-none focus:border-transparent;
+}
+.custom-element-label {
+  @apply dark:text-gray-400-spotify text-gray-600-spotify text-base font-semibold;
 }

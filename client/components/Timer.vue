@@ -3,9 +3,8 @@
 </template>
 
 <script>
-import { formatDistanceToNowStrict } from 'date-fns'
-
 export default {
+  name: 'Timer',
   props: {
     time: {
       type: [Date, String],
@@ -26,9 +25,7 @@ export default {
   },
   methods: {
     getTimeFromNow() {
-      this.timeFromNow = formatDistanceToNowStrict(Date.parse(this.time), {
-        addSuffix: true,
-      })
+      this.timeFromNow = this.$formatDistanceToNow(this.time)
     },
   },
 }

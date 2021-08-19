@@ -1,15 +1,14 @@
 <template>
   <button class="theme-toggler default-border" aria-label="theme toggle" @click="setCurrentTheme">
-    <span class="relative overflow-hidden w-5 h-5 flex items-center justify-center">
-      <icon-desktop class="theme-toggler-icon" :class="$colorMode.preference === 'system' ? 'show' : 'hide'" />
-      <icon-moon class="theme-toggler-icon" :class="$colorMode.preference === 'dark' ? 'show' : 'hide'" />
-      <icon-sun class="theme-toggler-icon" :class="$colorMode.preference === 'light' ? 'show' : 'hide'" />
-    </span>
+    <icon-desktop class="iсon theme-toggler-icon" :class="$colorMode.preference === 'system' ? 'show' : 'hide'" />
+    <icon-moon class="iсon theme-toggler-icon" :class="$colorMode.preference === 'dark' ? 'show' : 'hide'" />
+    <icon-sun class="iсon theme-toggler-icon" :class="$colorMode.preference === 'light' ? 'show' : 'hide'" />
   </button>
 </template>
 
 <script>
 export default {
+  name: 'ThemeToggler',
   methods: {
     setCurrentTheme() {
       this.$colorMode.preference =
@@ -19,9 +18,8 @@ export default {
 }
 </script>
 
-<style lang='postcss' scoped>
+<style lang='postcss'>
 .theme-toggler {
-  @apply text-black text-opacity-70 dark:text-white dark:text-opacity-50;
   @apply overflow-hidden outline-none h-10 w-10 flex items-center justify-center border rounded-full;
 }
 .theme-toggler-icon {
