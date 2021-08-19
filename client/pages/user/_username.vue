@@ -7,14 +7,35 @@
         <h2 class="secondary-text">Joined: {{ $formattedDate(user.registered) }}</h2>
       </div>
     </div>
-    <div class="w-full flex flex-wrap gap-4">
-      <card :content="stats.total">pastes</card>
-      <card :content="stats.views">views</card>
-      <card :content="stats.contributions">contributions</card>
-      <card :content="stats.public">public pastes</card>
-      <card :content="stats.unlisted">unlisted pastes</card>
-      <card :content="stats.private">private pastes</card>
-      <card :content="stats.shared">shared pastes</card>
+    <div class="w-full flex flex-wrap gap-2">
+      <badge>
+        pastes:
+        <strong>{{ stats.total }}</strong>
+      </badge>
+      <badge>
+        views:
+        <strong>{{ stats.views }}</strong>
+      </badge>
+      <badge>
+        contributions:
+        <strong>{{ stats.contributions }}</strong>
+      </badge>
+      <badge>
+        shared pastes:
+        <strong>{{ stats.shared }}</strong>
+      </badge>
+      <badge>
+        public pastes:
+        <strong>{{ stats.public }}</strong>
+      </badge>
+      <badge>
+        unlisted pastes:
+        <strong>{{ stats.unlisted }}</strong>
+      </badge>
+      <badge>
+        private pastes:
+        <strong>{{ stats.private }}</strong>
+      </badge>
     </div>
   </main>
 </template>
