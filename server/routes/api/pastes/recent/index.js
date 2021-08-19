@@ -1,6 +1,7 @@
 'use strict'
 
 const fastJson = require('fast-json-stringify')
+const { ObjectId } = require('mongodb')
 
 module.exports = async function (fastify) {
   fastify.route({
@@ -58,7 +59,7 @@ module.exports = async function (fastify) {
         {
           $match: {
             $or: [
-              { 'fullDocument.author': request.session.get('_id') },
+              { 'fullDocument.author': ObjectId(request.session.get('_id')) },
               {
                 'fullDocument.visibility': { $in: ['public', 'shared'] },
               },
@@ -75,7 +76,7 @@ module.exports = async function (fastify) {
             break
           case 'insert':
           case 'update': {
-            const paste = await fastify.db.Paste.findById(data.documentKey._id, 'title author date')
+            const paste = await fastify.db.Paste.findById(data.documentKey._id, 'title author date visibility')
               .populate('author')
               .lean()
 

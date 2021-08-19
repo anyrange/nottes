@@ -130,7 +130,7 @@ export default {
           case 'insert': {
             const paste = message.paste
 
-            this.pastes.unshift(paste)
+            if (paste.visibility !== 'unlisted' && paste.visibility !== 'private') this.pastes.unshift(paste)
             paste.author.username === this.user.username && this.userPastes.unshift(paste)
             break
           }
