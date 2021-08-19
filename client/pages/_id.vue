@@ -208,7 +208,7 @@ export default {
             const paste = message.paste
             this.triggerPirsm()
             Object.assign(this.paste, paste)
-            if (!(this.paste.content.length === this.pasteClone.content.length)) {
+            if (!(this.paste.content === this.pasteClone.content)) {
               this.outdated = true
               this.$notify.show({
                 message: 'Paste content has been updated',
