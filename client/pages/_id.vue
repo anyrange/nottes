@@ -46,6 +46,9 @@
             </badge>
           </div>
           <div class="flex flex-row gap-2">
+            <i v-if="canEditPaste" title="View Diff" @click="showDiff = !showDiff">
+              <icon-gradient class="tool-icon" />
+            </i>
             <i v-if="canEditPaste" title="Edit Paste" @click="editing = !editing">
               <icon-edit class="tool-icon" />
             </i>
@@ -79,7 +82,19 @@
         </div>
 
         <textarea-autosize v-if="editing" v-model="pasteClone.content" />
-        <code-highlight v-else v-model="paste.content" :lang="pasteClone.code" />
+        <code-highlight v-else :code="pasteClone.content" :language="paste.code" />
+
+        <code-highlight
+          v-if="showDiff"
+          :code="
+            getCodeDiff({
+              title: paste.title,
+              to: paste.content,
+              from: pasteClone.content,
+            })
+          "
+          language="diff"
+        />
 
         <div v-if="editing" class="paste-control-footer">
           <base-select
@@ -124,6 +139,7 @@ import { getPaste, forkPaste, editPaste } from '@/api'
 import languages from '@/services/options/languages.json'
 import expirationOptions from '@/services/options/expirationOptions.json'
 import visibilityOptions from '@/services/options/visibilityOptions.js'
+import { getCodeDiff } from '@/utils/diff.js'
 
 export default {
   async asyncData({ route, params, error }) {
@@ -145,6 +161,7 @@ export default {
       newPassword: '',
       fullscreen: false,
       editing: false,
+      showDiff: false,
       outdated: false,
       socketState: '',
     }
@@ -190,10 +207,16 @@ export default {
       )
     },
   },
+  watch: {
+    outdated() {
+      return !(this.paste.content === this.pasteClone.content)
+    },
+  },
   mounted() {
     if (!this.passwordRequired) this.connectToWs()
   },
   methods: {
+    getCodeDiff,
     connectToWs() {
       const url = window.location
       const wsProtocol = url.protocol.includes('https') ? 'wss' : 'ws'
@@ -206,10 +229,10 @@ export default {
         switch (message.event) {
           case 'update': {
             const paste = message.paste
-            this.triggerPirsm()
+
             Object.assign(this.paste, paste)
+
             if (!(this.paste.content === this.pasteClone.content)) {
-              this.outdated = true
               this.$notify.show({
                 message: 'Paste content has been updated',
                 type: 'info',
@@ -221,8 +244,6 @@ export default {
                     title: 'Accept changes',
                     handler: () => {
                       Object.assign(this.pasteClone, paste)
-                      this.triggerPirsm()
-                      this.outdated = false
                     },
                   },
                 ],
@@ -261,12 +282,6 @@ export default {
           type: 'danger',
         })
       }
-    },
-    triggerPirsm() {
-      this.editing = true
-      this.$nextTick(() => {
-        this.editing = false
-      })
     },
     async updatePaste() {
       try {

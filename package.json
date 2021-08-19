@@ -21,6 +21,7 @@
     "core-js": "^3.15.1",
     "cryptr": "^6.0.2",
     "date-fns": "^2.22.1",
+    "diff": "^5.0.0",
     "dotenv": "^9.0.2",
     "fastify": "^3.19.1",
     "fastify-autoload": "^3.8.0",

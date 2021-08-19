@@ -30,13 +30,19 @@ body {
   @apply dark:bg-gray-600-spotify;
 }
 
-.h-title {
-  @apply text-2xl font-normal text-gray-550-spotify dark:text-gray-200;
+.fullwidth {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
 }
+
 .secondary-text {
   @apply text-gray-500 dark:text-gray-500-spotify;
 }
 
+.h-title {
+  @apply text-2xl font-normal text-gray-550-spotify dark:text-gray-200;
+}
 .h-main {
   @apply flex flex-col gap-6;
 }
