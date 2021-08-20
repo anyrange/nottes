@@ -7,11 +7,9 @@
   </div>
 </template>
 <script>
-import MarkdownIt from 'markdown-it'
-import MarkdownItPrism from 'markdown-it-prism'
+import marked from 'marked'
+import DOMPurify from 'dompurify'
 import Prism from '@/plugins/prism.js'
-const md = new MarkdownIt()
-md.use(MarkdownItPrism, { defaultLanguage: 'clike' })
 
 export default {
   name: 'CodeHighlight',
@@ -41,7 +39,8 @@ export default {
       this.$nextTick(() => {
         if (this.language === 'md') {
           const { markdown } = this.$refs
-          markdown.innerHTML = md.render(this.code)
+          const cleanHTML = DOMPurify.sanitize(this.code)
+          markdown.innerHTML = marked.parse(cleanHTML)
         } else {
           const { code } = this.$refs
           code.textContent = this.code
