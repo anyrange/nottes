@@ -60,17 +60,19 @@ export default {
     }
   },
   head() {
-    const title = this.user.username || 'nottes'
-    const description = 'nottes-description'
+    const title = `${this.user.username}'s pastes`
     return {
       title,
       meta: [
-        { hid: 'description', name: 'description', content: description },
-        { hid: 'og:title', property: 'og:title', content: title },
         {
-          hid: 'og:description',
-          property: 'og:description',
-          content: description,
+          hid: 'og:title',
+          property: 'og:title',
+          content: title,
+        },
+        {
+          hid: 'og:type',
+          property: 'og:type',
+          content: 'profile',
         },
       ],
     }

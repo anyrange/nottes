@@ -64,7 +64,7 @@ hr {
   @apply text-2xl font-normal primary-text;
 }
 .h-main {
-  @apply flex flex-col gap-6;
+  @apply flex flex-col lg:gap-4 gap-3;
 }
 .h-page {
   @apply w-full md:w-1/2 lg:w-1/3;

@@ -29,17 +29,14 @@ export default {
     }
   },
   head() {
-    const title = 'Login - nottes'
-    const description = 'Login page'
+    const title = 'Login'
     return {
       title,
       meta: [
-        { hid: 'description', name: 'description', content: description },
-        { hid: 'og:title', property: 'og:title', content: title },
         {
-          hid: 'og:description',
-          property: 'og:description',
-          content: description,
+          hid: 'og:title',
+          property: 'og:title',
+          content: title,
         },
       ],
     }

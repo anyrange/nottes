@@ -32,17 +32,14 @@ export default {
     }
   },
   head() {
-    const title = 'Sign up - nottes'
-    const description = 'Sign up page'
+    const title = 'Sign up'
     return {
       title,
       meta: [
-        { hid: 'description', name: 'description', content: description },
-        { hid: 'og:title', property: 'og:title', content: title },
         {
-          hid: 'og:description',
-          property: 'og:description',
-          content: description,
+          hid: 'og:title',
+          property: 'og:title',
+          content: title,
         },
       ],
     }

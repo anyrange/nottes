@@ -1,10 +1,13 @@
 <template>
   <aside class="flex flex-col gap-4">
     <div v-if="authenticated" class="flex flex-col gap-4">
-      <h1 class="h-title">Hello, {{ user.username }}</h1>
+      <div>
+        <h1 class="h-title">Hello, {{ user.username }}</h1>
+        <nuxt-link class="link truncate" :to="`/user/${user.username}`">My Pastes</nuxt-link>
+      </div>
       <transition-group v-if="!!userPastes.length" tag="div" name="list" class="flex flex-col gap-2">
         <div v-for="paste in userPastes" :key="paste._id" class="flex flex-row gap-2 items-center justify-between">
-          <nuxt-link class="w-auto link truncate" :to="'/' + paste._id">
+          <nuxt-link class="w-auto link truncate" :to="`/${paste._id}`">
             {{ paste.title }}
           </nuxt-link>
           <span class="w-auto cursor-pointer" @click="deletePaste(paste._id)">
@@ -17,7 +20,10 @@
       </div>
     </div>
     <div class="flex flex-col gap-4">
-      <h1 class="h-title">Recent Pastes</h1>
+      <div>
+        <h1 class="h-title">Recent Pastes</h1>
+        <nuxt-link class="link truncate" to="/archive">Archive</nuxt-link>
+      </div>
       <transition-group v-if="pastes.length" tag="div" name="list" class="flex flex-col gap-3">
         <div
           v-for="paste in pastes"

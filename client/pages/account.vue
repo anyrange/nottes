@@ -136,6 +136,19 @@ export default {
       },
     }
   },
+  head() {
+    const title = 'Account'
+    return {
+      title,
+      meta: [
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: title,
+        },
+      ],
+    }
+  },
   computed: {
     profile() {
       return this.$store.state.user.profile

@@ -17,5 +17,10 @@ export default {
       required: true,
     },
   },
+  head() {
+    return {
+      title: '404',
+    }
+  },
 }
 </script>

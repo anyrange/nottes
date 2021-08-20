@@ -18,13 +18,35 @@
 <script>
 export default {
   head() {
+    const description =
+      'nottes - is a yet another paste tool, a website where you can store text or code snippets online for a set period of time'
     return {
-      link: [{ rel: 'canonical', href: `${process.env.baseUrl}${this.$route.path}` }],
+      link: [
+        {
+          rel: 'canonical',
+          href: `${process.env.baseUrl}${this.$route.path}`,
+        },
+      ],
       meta: [
         {
           hid: 'og:url',
           property: 'og:url',
           content: `${process.env.baseUrl}${this.$route.path}`,
+        },
+        {
+          hid: 'og:site_name',
+          property: 'og:site_name',
+          content: 'nottes',
+        },
+        {
+          hid: 'description',
+          name: 'description',
+          content: description,
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: description,
         },
       ],
     }
