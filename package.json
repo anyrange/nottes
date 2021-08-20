@@ -42,6 +42,7 @@
     "nuxt": "^2.15.7",
     "prism-theme-vars": "^0.2.2",
     "prismjs": "^1.24.1",
+    "vue-prism-editor": "^1.2.2",
     "vue-textarea-autosize": "^1.1.1"
   },
   "devDependencies": {
