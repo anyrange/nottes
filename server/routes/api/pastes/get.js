@@ -19,6 +19,7 @@ module.exports = async function (fastify) {
             type: 'object',
             properties: {
               pastes: { type: 'array', items: { $ref: 'paste#/definitions/micropaste' } },
+              pages: { type: 'number' },
               statusCode: { type: 'number' },
             },
           },
@@ -29,16 +30,24 @@ module.exports = async function (fastify) {
     async (request, reply) => {
       const { page, range, search } = request.query
 
-      const pastes = await fastify.db.Paste.find({
-        visibility: { $ne: 'private' },
-        title: { $regex: search, $options: 'gi' },
-      })
-        .sort('-date')
-        .skip((page - 1) * range)
-        .limit(range)
-        .lean()
+      const [pastes, pages] = await Promise.all([
+        fastify.db.Paste.find({
+          visibility: { $ne: 'private' },
+          title: { $regex: search, $options: 'gi' },
+        })
+          .sort('-date')
+          .skip((page - 1) * range)
+          .limit(range)
+          .lean(),
+        fastify.db.Paste.find({
+          visibility: { $ne: 'private' },
+          title: { $regex: search, $options: 'gi' },
+        })
+          .countDocuments()
+          .then((pastes) => Math.ceil(pastes / range)),
+      ])
 
-      reply.send({ pastes })
+      reply.send({ pastes, pages })
     }
   )
 }
