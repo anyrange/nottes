@@ -6,14 +6,7 @@ module.exports = async function (fastify) {
     {
       schema: {
         description: 'Archive',
-        querystring: {
-          type: 'object',
-          properties: {
-            page: { type: 'number', minimum: 1, default: 1 },
-            range: { type: 'number', minimum: 3, default: 10 },
-            search: { type: 'string', default: null },
-          },
-        },
+        querystring: { $ref: 'pagination#' },
         response: {
           200: {
             type: 'object',
@@ -28,7 +21,7 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const { page, range, search } = request.query
+      const { page, range, search, sort } = request.query
 
       const q = {
         visibility: { $ne: 'private' },
@@ -37,7 +30,7 @@ module.exports = async function (fastify) {
 
       const [pastes, pages] = await Promise.all([
         fastify.db.Paste.find(q)
-          .sort('-date')
+          .sort(sort)
           .skip((page - 1) * range)
           .limit(range)
           .lean(),

@@ -9,14 +9,7 @@ module.exports = async function (fastify) {
           type: 'object',
           properties: { username: { type: 'string' } },
         },
-        query: {
-          type: 'object',
-          properties: {
-            search: { type: 'string', default: null },
-            page: { type: 'number', minimum: 1, default: 1 },
-            range: { type: 'number', minimum: 3, default: 10 },
-          },
-        },
+        query: { $ref: 'pagination#' },
         response: {
           200: {
             type: 'object',
@@ -34,7 +27,7 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const { range, page, search } = request.query
+      const { range, page, search, sort } = request.query
       const user = await fastify.db.User.findOne({ username: request.params.username }).lean()
       if (!user) return reply.code(404).send({ message: 'User not found' })
 
@@ -49,7 +42,7 @@ module.exports = async function (fastify) {
 
       const [pastes, pages] = await Promise.all([
         fastify.db.Paste.find(query)
-          .sort('-date')
+          .sort(sort)
           .skip((page - 1) * range)
           .limit(range)
           .lean(),
