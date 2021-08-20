@@ -39,8 +39,20 @@ export default {
       this.$nextTick(() => {
         if (this.language === 'md') {
           const { markdown } = this.$refs
-          const cleanHTML = DOMPurify.sanitize(this.code)
-          markdown.innerHTML = marked.parse(cleanHTML)
+          DOMPurify.addHook('uponSanitizeElement', (node, data) => {
+            if (data.tagName === 'iframe') {
+              const src = node.getAttribute('src') || ''
+              if (!src.startsWith('https://www.youtube.com/embed/')) {
+                if (!node.parentNode) return
+                return node.parentNode.removeChild(node)
+              }
+            }
+          })
+          const sanitizedHTML = DOMPurify.sanitize(this.code, {
+            ADD_TAGS: ['iframe'],
+            ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+          })
+          markdown.innerHTML = marked.parse(sanitizedHTML)
         } else {
           const { code } = this.$refs
           code.textContent = this.code
