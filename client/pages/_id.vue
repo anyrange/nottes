@@ -30,7 +30,7 @@
             </span>
           </p>
         </div>
-        <div class="flex flex-col sm:flex-row gap-2 justify-between">
+        <div class="flex flex-col sm:flex-row gap-2 justify-between sticky top-0 z-50">
           <div class="flex flex-row flex-wrap gap-2">
             <badge title="Visibility">
               <template #icon>
@@ -63,8 +63,11 @@
               <timer :time="paste.expire_date" />
             </badge>
           </div>
-          <div class="flex flex-row flex-wrap gap-2">
+          <div class="flex flex-row flex-wrap gap-2 rounded default-background">
             <template v-if="canEditPaste">
+              <button v-show="showDiff" title="Split" @click="split = !split">
+                <component :is="split ? 'icon-split-horizontal' : 'icon-split-vertical'" class="tool-icon" />
+              </button>
               <button title="View Diff" @click="showDiff = !showDiff">
                 <icon-gradient class="tool-icon" />
               </button>
@@ -90,21 +93,25 @@
             </button>
           </div>
         </div>
-        <client-only v-if="editing">
-          <code-editor v-model="pasteClone.content" :language="paste.code" />
-        </client-only>
-        <code-highlight v-else :code="pasteClone.content" :language="pasteClone.code" />
-        <code-highlight
-          v-if="showDiff"
-          :code="
-            getCodeDiff({
-              title: paste.title,
-              to: outdated ? paste.content : pasteClone.content,
-              from: outdated ? pasteClone.content : paste.content,
-            })
-          "
-          language="diff"
-        />
+        <div class="flex" :class="[split ? 'flex-row' : 'flex-col']">
+          <component
+            :is="editing ? 'code-editor' : 'code-highlight'"
+            v-model="pasteClone.content"
+            :code="pasteClone.content"
+            :language="pasteClone.code"
+          />
+          <code-highlight
+            v-if="showDiff"
+            :code="
+              getCodeDiff({
+                title: paste.title,
+                to: outdated ? paste.content : pasteClone.content,
+                from: outdated ? pasteClone.content : paste.content,
+              })
+            "
+            language="diff"
+          />
+        </div>
         <div v-if="editing && isAuthor" class="paste-control-head">
           <base-input
             v-model="pasteClone.title"
@@ -141,7 +148,7 @@
           <base-button
             :disabled="outdated"
             color="primary"
-            class="md:order-1 order-2"
+            class="md:order-1 order-2 ml-auto"
             aria-label="edit paste"
             @click="updatePaste()"
           >
@@ -181,6 +188,7 @@ export default {
       fullscreen: false,
       outdated: false,
       editing: false,
+      split: true,
       showDiff: false,
       socketState: '',
     }
