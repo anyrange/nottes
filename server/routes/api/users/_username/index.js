@@ -9,14 +9,6 @@ module.exports = async function (fastify) {
           type: 'object',
           properties: { username: { type: 'string' } },
         },
-        query: {
-          type: 'object',
-          properties: {
-            search: { type: 'string', default: null },
-            page: { type: 'number', minimum: 1, default: 1 },
-            range: { type: 'number', minimum: 3, default: 10 },
-          },
-        },
         response: {
           200: {
             type: 'object',
@@ -42,10 +34,7 @@ module.exports = async function (fastify) {
                   contributions: { type: 'number', default: 0 },
                 },
               },
-              pastes: {
-                type: 'array',
-                items: { $ref: 'paste#/definitions/micropaste' },
-              },
+
               statusCode: { type: 'number' },
             },
           },
@@ -54,28 +43,10 @@ module.exports = async function (fastify) {
       },
     },
     async (request, reply) => {
-      const { range, page, search } = request.query
       const user = await fastify.db.User.findOne({ username: request.params.username }).lean()
       if (!user) return reply.code(404).send({ message: 'User not found' })
 
-      const query = {
-        author: user._id,
-        title: {
-          $regex: search,
-          $options: 'gi',
-        },
-        visibility: { $ne: 'private' },
-      }
-
-      const isAuthor = request.session.get('_id') === String(user._id)
-      if (isAuthor) delete query.visibility
-
-      const [pastes, groupedVisibility, contributions] = await Promise.all([
-        fastify.db.Paste.find(query, 'title date id code views visibility')
-          .sort('-date')
-          .skip((page - 1) * range)
-          .limit(range)
-          .lean(),
+      const [groupedVisibility, contributions] = await Promise.all([
         fastify.db.Paste.aggregate()
           .match({ author: user._id })
           .group({
@@ -91,7 +62,7 @@ module.exports = async function (fastify) {
       stats.views = groupedVisibility.reduce((sum, item) => sum + item.views, 0)
       stats.contributions = contributions
 
-      reply.send({ user, pastes, stats })
+      reply.send({ user, stats })
     }
   )
 }
