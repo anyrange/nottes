@@ -34,7 +34,6 @@ module.exports = async function (fastify) {
                   contributions: { type: 'number', default: 0 },
                 },
               },
-
               statusCode: { type: 'number' },
             },
           },

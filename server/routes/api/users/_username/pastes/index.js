@@ -14,11 +14,9 @@ module.exports = async function (fastify) {
           200: {
             type: 'object',
             properties: {
-              pastes: {
-                type: 'array',
-                items: { $ref: 'paste#/definitions/micropaste' },
-              },
+              pastes: { type: 'array', items: { $ref: 'paste#/definitions/micropaste' } },
               pages: { type: 'number' },
+              entries: { type: 'number' },
               statusCode: { type: 'number' },
             },
           },
@@ -40,7 +38,7 @@ module.exports = async function (fastify) {
       const isAuthor = request.session.get('_id') === String(user._id)
       if (isAuthor) delete query.visibility
 
-      const [pastes, pages] = await Promise.all([
+      const [pastes, { pages, entries }] = await Promise.all([
         fastify.db.Paste.find(query)
           .sort(sort)
           .skip((page - 1) * range)
@@ -48,10 +46,10 @@ module.exports = async function (fastify) {
           .lean(),
         fastify.db.Paste.find(query)
           .countDocuments()
-          .then((pastes) => Math.ceil(pastes / range)),
+          .then((pastes) => ({ pages: Math.ceil(pastes / range), entries: pastes })),
       ])
 
-      reply.send({ pastes, pages })
+      reply.send({ pastes, pages, entries })
     }
   )
 }
