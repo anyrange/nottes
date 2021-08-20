@@ -7,7 +7,7 @@
         <base-select v-model="paste.code" :options="$options.languageOptions" />
       </div>
       <client-only>
-        <code-editor v-model="paste.content" :language="paste.code" style="height: 330px" />
+        <code-editor v-model="paste.content" :language="paste.code" style="min-height: 330px" />
       </client-only>
       <div class="paste-control-footer">
         <base-select
