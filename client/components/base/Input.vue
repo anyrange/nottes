@@ -4,7 +4,7 @@
     <input
       :id="$id(label)"
       v-bind="$attrs"
-      class="custom-element base-input"
+      class="custom-element"
       :class="[sizeClass]"
       :value="value"
       @input="handleInput"

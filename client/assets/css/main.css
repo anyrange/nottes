@@ -74,7 +74,7 @@ hr {
   @apply fixed w-full h-full overflow-auto top-0 left-0 z-50 p-3;
 }
 .paste-control-head {
-  @apply flex flex-row gap-3;
+  @apply flex flex-row gap-3 w-full;
 }
 .paste-control-footer {
   @apply flex md:flex-row flex-col gap-3 md:items-end w-full;
@@ -94,10 +94,10 @@ hr {
 }
 
 .custom-element-container {
-  @apply flex flex-col gap-2;
+  @apply flex flex-col gap-2 sm:w-auto w-full;
 }
 .custom-element {
-  @apply border rounded default-border shadow-sm;
+  @apply border rounded default-border;
   @apply bg-white dark:bg-gray-700-spotify;
   @apply placeholder-black dark:placeholder-white placeholder-opacity-20 dark:placeholder-opacity-20;
   @apply hover:border-black dark:hover:border-white hover:border-opacity-30 dark:hover:border-opacity-10;

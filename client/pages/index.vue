@@ -6,12 +6,9 @@
         <base-input v-model="paste.title" name="paste-title" autocomplete="off" placeholder="Paste Title" />
         <base-select v-model="paste.code" :options="$options.languageOptions" />
       </div>
-      <!-- <base-textarea v-model="paste.content" placeholder="hello world" name="paste" cols="30" rows="15" /> -->
-      <!-- <prism-editor v-model="paste.content" :language="paste.code" /> -->
       <client-only>
         <code-editor v-model="paste.content" :language="paste.code" style="height: 330px" />
       </client-only>
-
       <div class="paste-control-footer">
         <base-select
           v-model="paste.expiry"
