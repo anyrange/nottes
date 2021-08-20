@@ -90,7 +90,9 @@
             </button>
           </div>
         </div>
-        <base-textarea v-if="editing" v-model="pasteClone.content" />
+        <client-only v-if="editing">
+          <code-editor v-model="pasteClone.content" :language="paste.code" />
+        </client-only>
         <code-highlight v-else :code="pasteClone.content" :language="pasteClone.code" />
         <code-highlight
           v-if="showDiff"
@@ -111,7 +113,7 @@
             autocomplete="off"
             placeholder="Paste Title"
           />
-          <base-select v-model="pasteClone.code" label="Language" :options="$options.languages" />
+          <base-select v-model="pasteClone.code" label="Language" :options="$options.languageOptions" />
         </div>
         <div v-if="editing" class="paste-control-footer">
           <base-select
@@ -153,7 +155,7 @@
 
 <script>
 import { getPaste, forkPaste, editPaste } from '@/api'
-import languages from '@/services/options/languages.json'
+import languageOptions from '@/services/options/languageOptions.json'
 import expirationOptions from '@/services/options/expirationOptions.json'
 import visibilityOptions from '@/services/options/visibilityOptions.js'
 import { getCodeDiff } from '@/utils/diff.js'
@@ -183,7 +185,7 @@ export default {
       socketState: '',
     }
   },
-  languages,
+  languageOptions,
   expirationOptions,
   visibilityOptions,
   head() {

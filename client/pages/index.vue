@@ -4,9 +4,14 @@
     <div class="flex flex-col gap-3">
       <div class="paste-control-head">
         <base-input v-model="paste.title" name="paste-title" autocomplete="off" placeholder="Paste Title" />
-        <base-select v-model="paste.code" :options="$options.languages" />
+        <base-select v-model="paste.code" :options="$options.languageOptions" />
       </div>
-      <base-textarea v-model="paste.content" placeholder="hello world" name="paste" cols="30" rows="15" />
+      <!-- <base-textarea v-model="paste.content" placeholder="hello world" name="paste" cols="30" rows="15" /> -->
+      <!-- <prism-editor v-model="paste.content" :language="paste.code" /> -->
+      <client-only>
+        <code-editor v-model="paste.content" :language="paste.code" style="height: 330px" />
+      </client-only>
+
       <div class="paste-control-footer">
         <base-select
           v-model="paste.expiry"
@@ -36,7 +41,7 @@
 
 <script>
 import { createPaste } from '@/api'
-import languages from '@/services/options/languages.json'
+import languageOptions from '@/services/options/languageOptions.json'
 import expirationOptions from '@/services/options/expirationOptions.json'
 import visibilityOptions from '@/services/options/visibilityOptions.js'
 
@@ -51,6 +56,7 @@ export default {
         expiry: '',
         password: '',
       },
+      code: 'console.log("Hello World")',
     }
   },
   head() {
@@ -69,7 +75,7 @@ export default {
       ],
     }
   },
-  languages,
+  languageOptions,
   expirationOptions,
   visibilityOptions,
   computed: {
