@@ -30,7 +30,7 @@
             </span>
           </p>
         </div>
-        <div class="flex flex-col sm:flex-row gap-2 justify-between sticky top-0 z-50">
+        <div class="flex flex-col sm:flex-row gap-2 justify-between sticky top-0 z-50 rounded default-background">
           <div class="flex flex-row flex-wrap gap-2">
             <badge title="Visibility">
               <template #icon>
@@ -63,7 +63,7 @@
               <timer :time="paste.expire_date" />
             </badge>
           </div>
-          <div class="flex flex-row flex-wrap gap-2 rounded default-background">
+          <div class="flex flex-row flex-wrap gap-2">
             <template v-if="canEditPaste">
               <button v-show="showDiff" title="Split" @click="split = !split">
                 <component :is="split ? 'icon-split-horizontal' : 'icon-split-vertical'" class="tool-icon" />

@@ -22,7 +22,7 @@
     <div class="flex flex-col gap-4">
       <div>
         <h1 class="h-title">Recent Pastes</h1>
-        <nuxt-link class="link truncate" to="/archive">Archive</nuxt-link>
+        <nuxt-link class="link truncate" to="/archive">Pastes Archive</nuxt-link>
       </div>
       <transition-group v-if="pastes.length" tag="div" name="list" class="flex flex-col gap-3">
         <div

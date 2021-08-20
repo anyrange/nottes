@@ -32,7 +32,7 @@ export default {
   name: 'BaseSelect',
   props: {
     value: {
-      type: String,
+      type: [String, Number],
       required: true,
     },
     label: {

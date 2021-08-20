@@ -27,6 +27,9 @@ body {
 .default-border {
   @apply border-gray-200 dark:border-gray-700-spotify;
 }
+.default-divide {
+  @apply divide-gray-200 dark:divide-gray-700-spotify;
+}
 .default-text {
   @apply text-black dark:text-white;
 }
@@ -90,7 +93,7 @@ hr {
   @apply text-gray-500 dark:text-gray-400-spotify;
 }
 .tool-icon {
-  @apply icon p-1 h-8 w-8 rounded hover:bg-gray-100 dark:hover:bg-gray-600-spotify cursor-pointer;
+  @apply icon p-1 h-8 w-8 text-center rounded hover:bg-gray-100 dark:hover:bg-gray-600-spotify cursor-pointer;
 }
 
 .custom-element-container {

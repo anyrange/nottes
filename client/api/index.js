@@ -63,3 +63,7 @@ export const deletePaste = (id) => {
 export const getPaste = ({ id, password }) => {
   return api.get(`/pastes/${id}?password=${password || ''}`)
 }
+
+export const getArchive = ({ page, range, search, sort }) => {
+  return api.get(`/pastes?page=${page}&range=${range}${search && '&search=' + search}${sort && '&sort=' + sort}`)
+}
