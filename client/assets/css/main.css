@@ -97,14 +97,14 @@ hr {
   @apply flex flex-col gap-2;
 }
 .custom-element {
-  @apply border rounded default-border;
+  @apply border rounded default-border shadow-sm;
   @apply bg-white dark:bg-gray-700-spotify;
   @apply placeholder-black dark:placeholder-white placeholder-opacity-20 dark:placeholder-opacity-20;
   @apply hover:border-black dark:hover:border-white hover:border-opacity-30 dark:hover:border-opacity-10;
   @apply focus:ring-2 focus:outline-none focus:border-transparent;
 }
 .custom-element-label {
-  @apply dark:text-gray-400-spotify text-gray-600-spotify text-base font-semibold;
+  @apply dark:text-gray-400-spotify text-gray-600-spotify text-base font-medium;
 }
 
 html:not(.dark) {
@@ -159,4 +159,7 @@ pre[class*='language-'] {
 
 .prism-editor__textarea:focus {
   outline: none;
+}
+.prism-editor__container {
+  @apply h-full;
 }

@@ -1,10 +1,5 @@
 <template>
-  <prism-editor
-    v-model="model"
-    v-bind="$attrs"
-    class="editor p-3 border rounded default-border"
-    :highlight="highlighter"
-  />
+  <prism-editor v-model="model" v-bind="$attrs" class="custom-element editor p-3" :highlight="highlighter" />
 </template>
 
 <script>
