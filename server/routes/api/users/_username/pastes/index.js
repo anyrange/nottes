@@ -46,7 +46,7 @@ module.exports = async function (fastify) {
           .lean(),
         fastify.db.Paste.find(query)
           .countDocuments()
-          .then((pastes) => ({ pages: Math.ceil(pastes / range), entries: pastes })),
+          .then((pastes) => ({ pages: Math.ceil(pastes / range) || 1, entries: pastes })),
       ])
 
       reply.send({ pastes, pages, entries })

@@ -38,7 +38,7 @@ module.exports = async function (fastify) {
         title: { $regex: search, $options: 'gi' },
       }
 
-      const [pastes, { pages, entries }, groupedVisibility] = await Promise.all([
+      const [pastes, { pages = 1, entries }, groupedVisibility] = await Promise.all([
         fastify.db.Paste.find(q)
           .sort(sort)
           .skip((page - 1) * range)
@@ -46,7 +46,7 @@ module.exports = async function (fastify) {
           .lean(),
         fastify.db.Paste.find(q)
           .countDocuments()
-          .then((pastes) => ({ pages: Math.ceil(pastes / range), entries: pastes })),
+          .then((pastes) => ({ pages: Math.ceil(pastes / range) || 1, entries: pastes })),
         fastify.db.Paste.aggregate().group({
           _id: { visibility: '$visibility' },
           sum: { $sum: 1 },
