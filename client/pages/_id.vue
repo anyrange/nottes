@@ -278,7 +278,10 @@ export default {
             break
           }
           case 'delete': {
-            this.$router.push('/')
+            const paste = message.paste
+            if (this.$route.params.id === paste._id) {
+              this.$router.push('/')
+            }
             break
           }
           default:
