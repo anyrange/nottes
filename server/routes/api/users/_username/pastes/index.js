@@ -47,19 +47,16 @@ module.exports = async function (fastify) {
       if (isAuthor) delete query.visibility
 
       const [pastes, { pages, entries }] = await Promise.all([
-        fastify.db.Paste.find(query)
+        fastify.db.Paste.aggregate()
+          .match(query)
+          .project({ views: { $size: '$views' }, visibility: 1, date: 1, code: 1, title: 1 })
           .sort(sort)
           .skip((page - 1) * range)
-          .limit(range)
-          .lean(),
+          .limit(range),
         fastify.db.Paste.find(query)
           .countDocuments()
           .then((pastes) => ({ pages: Math.ceil(pastes / range) || 1, entries: pastes })),
       ])
-
-      pastes.forEach((paste) => {
-        paste.views = paste.views.length
-      })
 
       reply.send({ pastes, pages, entries })
     }
