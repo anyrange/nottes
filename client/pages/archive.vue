@@ -167,8 +167,7 @@ export default {
       immediate: true,
     },
     pageStateOptions: {
-      async handler({ range, page, search, sort }) {
-        const queryParams = { range, page, search, sort }
+      async handler(queryParams) {
         this.$router.push({ path: this.$route.path, query: queryParams })
         await this.loadArchive(queryParams)
       },
