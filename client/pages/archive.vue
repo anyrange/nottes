@@ -107,7 +107,7 @@ export default {
       range: 10,
       page: 1,
       search: '',
-      sort: 'date',
+      sort: '-date',
     }
   },
   rangeOptions,
@@ -194,7 +194,7 @@ export default {
       }
     },
     toggle(title) {
-      this.sort = this.sort === title ? `-${title}` : this.sort === `-${title}` ? '' : title
+      this.sort = this.sort === title ? `-${title}` : title
     },
     onPageChange(page) {
       this.page = page
