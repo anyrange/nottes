@@ -28,6 +28,7 @@
           type="search"
           autocomplete="off"
           placeholder="Search Query"
+          @input="page = 1"
         />
       </div>
       <div>
@@ -51,7 +52,7 @@
               No matching records found
             </div>
             <div
-              v-for="(paste, index) in loading ? parseInt(range) : pastes"
+              v-for="(paste, index) in loading ? range : pastes"
               :key="index"
               :class="{ 'animate-pulse': loading }"
               class="row hover:bg-gray-50 dark:hover:bg-gray-700-spotify"
@@ -73,19 +74,10 @@
         </div>
       </div>
       <div class="flex flex-col sm:flex-row gap-2 justify-between items-center">
-        <span>
-          Showing {{ fromEntries }} to
-          {{ toEntries }}
-          of {{ entries }} entries
-        </span>
+        <entries :page="page" :entries="entries" :range="range" />
         <div class="flex gap-2">
           <base-select v-model="range" :options="$options.rangeOptions" size="small" />
-          <pagination
-            :total-pages="pages"
-            :max-visible-buttons="3"
-            :current-page="parseInt(page)"
-            @pagechanged="onPageChange"
-          />
+          <pagination v-model="page" :total-pages="pages" />
         </div>
       </div>
     </div>
@@ -94,23 +86,22 @@
 
 <script>
 import { getArchive } from '@/api'
-import rangeOptions from '@/services/options/rangeOptions.json'
+import archive from '@/mixins.js/archive.js'
 
 export default {
+  mixins: [archive],
   data() {
     return {
       loading: true,
-      pastes: [],
       stats: {},
+      pastes: [],
       pages: 0,
       entries: 0,
-      range: 10,
-      page: 1,
-      search: '',
-      sort: '-date',
     }
   },
-  rangeOptions,
+  async fetch() {
+    await this.loadArchive(this.pageStateOptions)
+  },
   head() {
     const title = 'Pastes Archive'
     return {
@@ -123,56 +114,6 @@ export default {
         },
       ],
     }
-  },
-  computed: {
-    pageStateOptions() {
-      return {
-        search: this.search,
-        page: this.page,
-        sort: this.sort,
-        range: this.range,
-      }
-    },
-    fromEntries() {
-      return this.entries ? (this.page - 1) * parseInt(this.range) + 1 : 0
-    },
-    toEntries() {
-      const range = parseInt(this.range)
-      const maxEntries = (this.page - 1) * range + range
-      return maxEntries < this.entries ? maxEntries : this.entries
-    },
-    arrow() {
-      if (!this.sort) return { title: '' }
-      const isDescending = this.sort.charAt(0) === '-'
-      return {
-        direction: isDescending ? 'icon-arrow-down' : 'icon-arrow-up',
-        title: isDescending ? this.sort.substring(1) : this.sort,
-      }
-    },
-  },
-  watch: {
-    sort() {
-      this.page = 1
-    },
-    search() {
-      this.page = 1
-    },
-    $route: {
-      handler({ query: { page, search, sort, range } }) {
-        this.page = page || this.page
-        this.search = search || this.search
-        this.sort = sort || this.sort
-        this.range = range || this.range
-      },
-      immediate: true,
-    },
-    pageStateOptions: {
-      async handler(queryParams) {
-        this.$router.push({ path: this.$route.path, query: queryParams })
-        await this.loadArchive(queryParams)
-      },
-      immediate: true,
-    },
   },
   methods: {
     async loadArchive(params) {
@@ -193,17 +134,11 @@ export default {
         this.loading = false
       }
     },
-    toggle(title) {
-      this.sort = this.sort === title ? `-${title}` : title
-    },
-    onPageChange(page) {
-      this.page = page
-    },
   },
 }
 </script>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 .row {
   @apply truncate flex flex-row gap-3 items-center w-full h-10 px-4;
 }

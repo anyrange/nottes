@@ -85,8 +85,8 @@ export const getArchive = ({ page, range, search, sort }) => {
   })
 }
 
-export const getUserPastes = ({ username, page, range, search, sort }) => {
-  return api.get(`/pastes/${username}`, {
+export const getUserPastes = (username, { page, range, search, sort }) => {
+  return api.get(`/users/${username}/pastes`, {
     params: {
       page,
       range,

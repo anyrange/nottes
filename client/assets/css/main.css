@@ -87,8 +87,10 @@ hr {
   @apply rounded-full object-cover select-none;
 }
 .link {
-  @apply text-base text-blue-500 hover:underline;
+  color: var(--text-link);
+  @apply text-base hover:underline;
 }
+
 .icon {
   @apply text-gray-500 dark:text-gray-400-spotify;
 }
@@ -111,6 +113,7 @@ hr {
 }
 
 html:not(.dark) {
+  --text-link: #004bc6;
   --prism-foreground: #393a34;
   --prism-background: #f8f8f8;
   --prism-font-size: 1rem;
@@ -133,6 +136,7 @@ html:not(.dark) {
 }
 
 html.dark {
+  --text-link: #58a6ff;
   --prism-foreground: #d4d4d4;
   --prism-background: #1e1e1e;
   --prism-font-size: 1rem;
