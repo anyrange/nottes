@@ -65,7 +65,7 @@
                   <nuxt-link class="link" :to="`/${paste._id}`">{{ paste.title }}</nuxt-link>
                 </div>
                 <span :title="paste.date" class="row__created secondary-text">
-                  {{ $formatDistanceToNow(paste.date) }}
+                  <timer :time="paste.date" />
                 </span>
                 <span class="row__syntax secondary-text">{{ paste.code }}</span>
               </template>
