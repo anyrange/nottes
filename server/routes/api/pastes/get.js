@@ -6,7 +6,15 @@ module.exports = async function (fastify) {
     {
       schema: {
         description: 'Archive',
-        querystring: { $ref: 'pagination#' },
+        querystring: {
+          type: 'object',
+          properties: {
+            page: { type: 'number', minimum: 1, default: 1 },
+            range: { type: 'number', minimum: 3, default: 10 },
+            search: { type: 'string', default: null },
+            sort: { type: 'string', pattern: '^(|-)(date|title|code)$', default: '-date' },
+          },
+        },
         response: {
           200: {
             type: 'object',
@@ -38,7 +46,7 @@ module.exports = async function (fastify) {
         title: { $regex: search, $options: 'gi' },
       }
 
-      const [pastes, { pages = 1, entries }, groupedVisibility] = await Promise.all([
+      const [pastes, { pages, entries }, groupedVisibility] = await Promise.all([
         fastify.db.Paste.find(q)
           .sort(sort)
           .skip((page - 1) * range)

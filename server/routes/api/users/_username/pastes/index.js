@@ -9,7 +9,15 @@ module.exports = async function (fastify) {
           type: 'object',
           properties: { username: { type: 'string' } },
         },
-        query: { $ref: 'pagination#' },
+        query: {
+          type: 'object',
+          properties: {
+            page: { type: 'number', minimum: 1, default: 1 },
+            range: { type: 'number', minimum: 3, default: 10 },
+            search: { type: 'string', default: null },
+            sort: { type: 'string', pattern: '^(|-)(date|title|code|visibility|views)$', default: '-date' },
+          },
+        },
         response: {
           200: {
             type: 'object',
@@ -48,6 +56,10 @@ module.exports = async function (fastify) {
           .countDocuments()
           .then((pastes) => ({ pages: Math.ceil(pastes / range) || 1, entries: pastes })),
       ])
+
+      pastes.forEach((paste) => {
+        paste.views = paste.views.length
+      })
 
       reply.send({ pastes, pages, entries })
     }
