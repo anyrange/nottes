@@ -37,11 +37,17 @@ export const getUserPage = (username) => {
 }
 
 export const getRecentPastes = ({ range }) => {
-  return api.get(`/pastes/recent?range=${range}`)
+  return api.get('/pastes/recent', {
+    range,
+  })
 }
 
 export const getUserRecentPastes = ({ range }) => {
-  return api.get(`/pastes/me?range=${range}`)
+  return api.get('/pastes/me', {
+    params: {
+      range,
+    },
+  })
 }
 
 export const createPaste = (paste) => {
@@ -60,10 +66,32 @@ export const deletePaste = (id) => {
   return api.delete(`/pastes/${id}`)
 }
 
-export const getPaste = ({ id, password }) => {
-  return api.get(`/pastes/${id}?password=${password || ''}`)
+export const getPaste = ({ id, password = '' }) => {
+  return api.get(`/pastes/${id}`, {
+    params: {
+      password,
+    },
+  })
 }
 
 export const getArchive = ({ page, range, search, sort }) => {
-  return api.get(`/pastes?page=${page}&range=${range}${search && '&search=' + search}${sort && '&sort=' + sort}`)
+  return api.get('/pastes', {
+    params: {
+      page,
+      range,
+      search,
+      sort,
+    },
+  })
+}
+
+export const getUserPastes = ({ username, page, range, search, sort }) => {
+  return api.get(`/pastes/${username}`, {
+    params: {
+      page,
+      range,
+      search,
+      sort,
+    },
+  })
 }

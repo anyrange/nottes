@@ -107,7 +107,7 @@ export default {
       range: 10,
       page: 1,
       search: '',
-      sort: '',
+      sort: 'date',
     }
   },
   rangeOptions,
@@ -158,42 +158,38 @@ export default {
       this.page = 1
     },
     $route: {
-      handler(value) {
-        this.page = value.query.page || this.page
-        this.search = value.query.search || this.search
-        this.sort = value.query.sort || this.sort
-        this.range = value.query.range || this.range
+      handler({ query: { page, search, sort, range } }) {
+        this.page = page || this.page
+        this.search = search || this.search
+        this.sort = sort || this.sort
+        this.range = range || this.range
       },
       immediate: true,
     },
     pageStateOptions: {
-      async handler(value) {
-        if (typeof window !== 'undefined') {
-          window.history.pushState(
-            null,
-            document.title,
-            `${window.location.pathname}${value.page && '?page=' + value.page}${
-              value.search && '&search=' + value.search
-            }${value.sort && '&sort=' + value.sort}${value.range && '&range=' + value.range}`
-          )
-        }
-        await this.loadArchive({ range: value.range, page: value.page, search: value.search, sort: value.sort })
+      async handler({ range, page, search, sort }) {
+        const queryParams = { range, page, search, sort }
+        this.$router.push({ path: this.$route.path, query: queryParams })
+        await this.loadArchive(queryParams)
       },
       immediate: true,
     },
   },
   methods: {
-    async loadArchive({ range, page, search, sort }) {
+    async loadArchive(params) {
       try {
         this.loading = true
         this.pastes = []
-        const { pastes, pages, entries, stats } = await getArchive({ range, page, search, sort })
+        const { pastes, pages, entries, stats } = await getArchive(params)
         this.pastes = pastes
         this.pages = pages
         this.entries = entries
         this.stats = stats
       } catch (error) {
-        console.log(error)
+        this.$notify.show({
+          message: error.response.data.message,
+          type: 'danger',
+        })
       } finally {
         this.loading = false
       }
