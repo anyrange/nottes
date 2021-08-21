@@ -34,8 +34,7 @@ export default {
   },
   methods: {
     highlighter(code) {
-      const lang = this.language === 'md' ? 'js' : this.language
-      return Prism.highlight(code, Prism.languages[lang])
+      return Prism.highlight(code, Prism.languages[this.language])
     },
   },
 }

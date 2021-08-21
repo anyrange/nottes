@@ -1,6 +1,7 @@
 import * as Prism from 'prismjs'
 import 'prism-theme-vars/base.css'
 
+import 'prismjs/components/prism-markdown.js'
 import 'prismjs/components/prism-diff.js'
 import 'prismjs/components/prism-json.js'
 import 'prismjs/components/prism-yaml.js'
