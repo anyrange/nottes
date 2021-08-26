@@ -43,7 +43,7 @@ module.exports = async function (fastify) {
       if (paste.password && !(await bcrypt.compare(request.query.password, paste.password)))
         return reply.code(403).send({ message: 'Wrong password' })
 
-      paste.content = fastify.decrypt(paste.content)
+      if (paste.content) paste.content = fastify.decrypt(paste.content)
 
       const requestIp = request.ips[request.ips.length - 1]
 
@@ -94,7 +94,8 @@ module.exports = async function (fastify) {
               .populate({ path: 'contributors', populate: { path: 'contributors' } })
               .lean()
 
-            paste.content = fastify.decrypt(paste.content)
+            if (paste.content) paste.content = fastify.decrypt(paste.content)
+
             paste.views = paste.views.length
             conn.socket.send(stringify({ event: data.operationType, paste }))
           }
