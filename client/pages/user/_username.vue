@@ -71,7 +71,7 @@
             <component :is="arrow.direction" v-if="arrow.title === 'code'" class="icon w-5 h-5" />
             Syntax
           </button>
-          <span class="row__delete">Delete</span>
+          <span v-if="canDelete" class="row__delete">Delete</span>
         </div>
         <div class="overflow-y-auto fullwidth">
           <div class="flex flex-col divide-y default-divide">
@@ -89,7 +89,7 @@
               </template>
               <template v-else>
                 <div class="row__title">
-                  <nuxt-link class="link" :to="`/${paste._id}`">{{ paste.title }}</nuxt-link>
+                  <nuxt-link class="link truncate" :to="`/${paste._id}`">{{ paste.title }}</nuxt-link>
                 </div>
                 <span :title="paste.date" class="row__created secondary-text">
                   <timer :time="paste.date" />
@@ -101,7 +101,7 @@
                   {{ paste.views || 0 }}
                 </span>
                 <span class="row__syntax secondary-text">{{ paste.code }}</span>
-                <button class="row__delete secondary-text" @click="deletePaste(paste._id)">
+                <button v-if="canDelete" class="row__delete secondary-text" @click="deletePaste(paste._id)">
                   <icon-trash class="icon w-6 h-6" />
                 </button>
               </template>
@@ -165,6 +165,17 @@ export default {
       ],
     }
   },
+  computed: {
+    authenticated() {
+      return this.$store.state.authenticated
+    },
+    profile() {
+      return this.$store.state.user.profile
+    },
+    canDelete() {
+      return this.authenticated && this.profile.username === this.user.username
+    },
+  },
   methods: {
     async loadUserPastes(params) {
       try {
@@ -203,10 +214,10 @@ export default {
   @apply truncate flex flex-row gap-3 items-center w-full h-10 px-4;
 }
 .row__title {
-  @apply w-full flex items-center;
+  @apply w-full flex items-center truncate;
 }
 .row__created {
-  @apply w-full flex items-center justify-start;
+  @apply w-full flex items-center justify-end sm:justify-start;
 }
 .row__visibility {
   @apply w-full hidden sm:flex items-center justify-center;
@@ -218,6 +229,6 @@ export default {
   @apply w-full hidden sm:flex items-center justify-end;
 }
 .row__delete {
-  @apply w-full hidden sm:flex justify-end;
+  @apply w-full flex justify-end;
 }
 </style>
