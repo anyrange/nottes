@@ -198,6 +198,7 @@ export default {
   visibilityOptions,
   head() {
     const title = this.paste.title
+    const description = this.paste.content
     return {
       title,
       meta: [
@@ -210,6 +211,16 @@ export default {
           hid: 'og:type',
           property: 'og:type',
           content: 'article',
+        },
+        {
+          hid: 'description',
+          name: 'description',
+          content: description,
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: description,
         },
       ],
     }

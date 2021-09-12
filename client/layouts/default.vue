@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import ogImage from '@/assets/ogImage.png'
+
 export default {
   head() {
     const description =
@@ -47,6 +49,26 @@ export default {
           hid: 'og:description',
           property: 'og:description',
           content: description,
+        },
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: process.env.baseUrl + ogImage,
+        },
+        {
+          hid: 'og:image:type',
+          property: 'og:image:type',
+          content: 'image/png',
+        },
+        {
+          hid: 'og:image:width',
+          property: 'og:image:width',
+          content: '180',
+        },
+        {
+          hid: 'og:image:height',
+          property: 'og:image:height',
+          content: '180',
         },
       ],
     }
