@@ -46,6 +46,8 @@ module.exports = async function (fastify) {
         title: { $regex: search, $options: 'gi' },
       }
 
+      if (request.session.get('role') === 'admin') delete q.visibility
+
       const [pastes, { pages, entries }, groupedVisibility] = await Promise.all([
         fastify.db.Paste.find(q)
           .sort(sort)

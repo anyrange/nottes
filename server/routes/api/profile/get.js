@@ -12,6 +12,7 @@ module.exports = async function (fastify) {
               email: { type: 'string' },
               avatar: { type: 'string', default: '' },
               username: { type: 'string' },
+              role: { type: 'string', default: 'user' },
               platform: { type: 'string' },
               hasPassword: { type: 'boolean' },
               registered: { type: 'string', format: 'datetime' },
@@ -25,12 +26,13 @@ module.exports = async function (fastify) {
     async (request, reply) => {
       const user = await fastify.db.User.findById(
         request.session.get('_id'),
-        'avatar email username password registered platform'
+        'avatar email username role password registered platform'
       ).lean()
 
       if (!user) return reply.code(404).send({ message: 'User not found' })
 
       user.hasPassword = !!user.password
+      request.session.set('role', user.role)
 
       reply.send(user)
     }
