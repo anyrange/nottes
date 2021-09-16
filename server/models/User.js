@@ -10,7 +10,6 @@ const schema = new Schema(
     password: { type: String },
     avatar: { type: String },
     platform: { type: String, default: 'Direct', required: true },
-    role: { type: String, default: 'user' },
   },
   { timestamps: { createdAt: 'registered' } }
 )

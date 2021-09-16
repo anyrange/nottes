@@ -35,11 +35,7 @@ module.exports = async function (fastify) {
 
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
-      if (
-        paste.visibility === 'private' &&
-        request.session.get('_id') !== String(paste.author._id) &&
-        request.session.get('role') !== 'admin'
-      ) {
+      if (paste.visibility === 'private' && request.session.get('_id') !== String(paste.author._id)) {
         return reply.code(403).send({ message: 'Private paste' })
       }
 

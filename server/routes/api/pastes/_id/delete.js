@@ -18,7 +18,7 @@ module.exports = async function (fastify) {
       const paste = await fastify.db.Paste.findById(request.params.id).lean()
       if (!paste) return reply.code(404).send({ message: 'Paste not found' })
 
-      if (request.session.get('_id') !== String(paste.author) && request.session.get('role') !== 'admin')
+      if (request.session.get('_id') !== String(paste.author))
         return reply.code(403).send({ message: 'Not your paste' })
 
       await fastify.db.Paste.deleteOne({ _id: request.params.id })
