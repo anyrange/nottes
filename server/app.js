@@ -5,7 +5,7 @@ const AutoLoad = require('fastify-autoload')
 
 module.exports = async function (fastify) {
   fastify.register(require('fastify-cors'), {
-    origin: process.env.URL_LIST.split(','),
+    origin: process.env.BASE_URL,
     credentials: true,
   })
 
