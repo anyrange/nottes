@@ -91,4 +91,3 @@ sw.*
 
 # Lock files
 *.lock
-**/package-lock.json
