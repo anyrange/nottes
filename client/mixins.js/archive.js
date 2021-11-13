@@ -1,4 +1,5 @@
 import rangeOptions from '@/services/options/rangeOptions.json'
+import { debounce } from '@/utils'
 
 export default {
   data() {
@@ -37,10 +38,10 @@ export default {
       },
       immediate: true,
     },
-    pageStateOptions(query) {
+    pageStateOptions: debounce(function (query) {
       this.$router.push({ path: this.$route.path, query })
       this.$fetch()
-    },
+    }, 300),
   },
   methods: {
     toggle(title) {

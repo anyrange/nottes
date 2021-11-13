@@ -170,3 +170,10 @@ pre[class*='language-'] {
 .prism-editor__container {
   @apply h-full;
 }
+
+ol,
+ul {
+  list-style: inside;
+  margin: 0;
+  padding: 0;
+}

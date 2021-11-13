@@ -91,6 +91,9 @@
             <button title="Fullscreen" @click="fullscreen = !fullscreen">
               <icon-fullscreen class="tool-icon" />
             </button>
+            <button v-if="canDelete" title="Delete" @click="deletePaste(paste._id)">
+              <icon-trash class="tool-icon" />
+            </button>
           </div>
         </div>
         <div class="flex" :class="[split ? 'flex-row' : 'flex-col']">
@@ -161,11 +164,11 @@
 </template>
 
 <script>
-import { getPaste, forkPaste, editPaste } from '@/api'
+import { getPaste, forkPaste, editPaste, deletePaste } from '@/api'
 import languageOptions from '@/services/options/languageOptions.json'
 import expirationOptions from '@/services/options/expirationOptions.json'
 import visibilityOptions from '@/services/options/visibilityOptions.js'
-import { getCodeDiff } from '@/utils/diff.js'
+import { getCodeDiff } from '@/utils'
 
 export default {
   async asyncData({ route, params, error }) {
@@ -240,6 +243,12 @@ export default {
     },
     isContributor() {
       return !this.isAuthor && this.isShared
+    },
+    profile() {
+      return this.$store.state.user.profile
+    },
+    canDelete() {
+      return this.authenticated && this.profile.username === this.user.username
     },
     canEditPaste() {
       return (
@@ -350,6 +359,17 @@ export default {
           paste: { _id: pasteId },
         } = await forkPaste(this.paste._id)
         this.$router.push(`/${pasteId}`)
+      } catch (err) {
+        this.$notify.show({
+          message: err.response.data.message,
+          type: 'danger',
+        })
+      }
+    },
+    async deletePaste(id) {
+      try {
+        await deletePaste(id)
+        await this.$fetch()
       } catch (err) {
         this.$notify.show({
           message: err.response.data.message,
