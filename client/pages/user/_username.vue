@@ -42,6 +42,7 @@
         <base-input
           v-model="search"
           name="search-value"
+          size="small"
           label="Search"
           type="search"
           autocomplete="off"
