@@ -38,9 +38,12 @@ export default {
     prefetchLinks: false,
   },
   buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/color-mode', '@nuxtjs/tailwindcss'],
-  modules: ['@nuxtjs/axios', '@nuxtjs/sitemap'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/sitemap', '@nuxtjs/google-analytics'],
   axios: {
     baseURL: `${process.env.BASE_URL}/api`,
+  },
+  googleAnalytics: {
+    id: process.env.GOOGLE_ANALYTICS_ID,
   },
   tailwindcss: {
     exposeConfig: true,
