@@ -34,7 +34,7 @@
     "fastify-swagger": "^4.8.3",
     "fastify-websocket": "^3.2.0",
     "jsonwebtoken": "^8.5.1",
-    "marked": "^3.0.0",
+    "marked": "^4.0.10",
     "mongoose": "^5.13.3",
     "nanoevents": "^6.0.0",
     "nanoid": "^3.1.23",
