@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import marked from 'marked'
+import { parse } from 'marked'
 import DOMPurify from 'dompurify'
 import Prism from '@/plugins/prism.js'
 
@@ -40,7 +40,7 @@ export default {
         if (this.language === 'md') {
           const { markdown } = this.$refs
           const cleanHTML = DOMPurify.sanitize(this.code)
-          markdown.innerHTML = marked.parse(cleanHTML)
+          markdown.innerHTML = parse(cleanHTML)
         } else {
           const { code } = this.$refs
           code.textContent = this.code
