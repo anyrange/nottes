@@ -38,7 +38,7 @@
     "mongoose": "^5.13.3",
     "nanoevents": "^6.0.0",
     "nanoid": "^3.1.31",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "nuxt": "^2.15.7",
     "prism-theme-vars": "^0.2.2",
     "prismjs": "^1.24.1",
