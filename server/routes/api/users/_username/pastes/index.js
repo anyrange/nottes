@@ -39,7 +39,7 @@ module.exports = async function (fastify) {
 
       const query = {
         author: user._id,
-        title: { $regex: search, $options: 'gi' },
+        title: { $regex: search, $options: 'i' },
         visibility: { $ne: 'private' },
       }
 

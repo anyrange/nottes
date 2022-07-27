@@ -43,7 +43,7 @@ module.exports = async function (fastify) {
 
       const q = {
         visibility: { $ne: 'private' },
-        title: { $regex: search, $options: 'gi' },
+        title: { $regex: search, $options: 'i' },
       }
 
       const [pastes, { pages, entries }, groupedVisibility] = await Promise.all([
