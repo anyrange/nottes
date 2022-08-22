@@ -1,5 +1,4 @@
 export default {
-  srcDir: 'client/',
   server: {
     port: process.env.PORT,
   },

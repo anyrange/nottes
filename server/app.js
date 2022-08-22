@@ -1,10 +1,10 @@
 'use strict'
 
 const path = require('path')
-const AutoLoad = require('fastify-autoload')
+const AutoLoad = require('@fastify/autoload')
 
 module.exports = async function (fastify) {
-  fastify.register(require('fastify-cors'), {
+  fastify.register(require('@fastify/cors'), {
     origin: process.env.BASE_URL,
     credentials: true,
   })
