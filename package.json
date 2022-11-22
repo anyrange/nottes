@@ -27,7 +27,7 @@
     "diff": "^5.1.0",
     "dompurify": "^2.3.10",
     "dotenv": "^9.0.2",
-    "fastify": "^3.29.1",
+    "fastify": "^3.29.4",
     "fastify-nuxtjs": "^1.0.1",
     "fastify-plugin": "^3.0.1",
     "fastify-secure-session": "^2.3.1",
